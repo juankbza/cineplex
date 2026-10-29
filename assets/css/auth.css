@@ -1,0 +1,350 @@
+/* ==========================================
+   CinePleX - ESTILOS DE LOGIN Y REGISTRO
+   ========================================== */
+
+.auth-wrapper {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 1020px;
+  min-height: 620px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  overflow: hidden;
+  box-shadow: 0 25px 50px var(--shadow-color);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.auth-container.register-mode {
+  max-width: 1080px;
+  grid-template-columns: 0.85fr 1.15fr;
+}
+
+/* Panel Izquierdo Cinematográfico (Siempre Oscuro) */
+.auth-visual {
+  position: relative;
+  background: linear-gradient(160deg, rgba(126, 34, 206, 0.78) 0%, rgba(13, 8, 20, 0.95) 100%),
+              url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
+  padding: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+}
+
+.auth-visual.register-bg {
+  background: linear-gradient(160deg, rgba(126, 34, 206, 0.8) 0%, rgba(13, 8, 20, 0.95) 100%),
+              url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
+}
+
+.auth-visual-badge {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(192, 132, 252, 0.4);
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  backdrop-filter: blur(6px);
+}
+
+.auth-visual-content h2 {
+  font-size: 2.4rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.auth-visual-content p {
+  font-size: 0.93rem;
+  color: #e9d5ff;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.benefits-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.benefits-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.check-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #c084fc;
+  box-shadow: 0 0 8px #c084fc;
+}
+
+.auth-visual-footer {
+  font-size: 0.8rem;
+  color: #c084fc;
+  font-weight: 600;
+}
+
+/* Panel Derecho (Formulario) */
+.auth-form-box {
+  padding: 3rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-header {
+  margin-bottom: 1.4rem;
+}
+
+.auth-header h1 {
+  font-size: 1.95rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.3rem;
+}
+
+.auth-header p {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* Botones Sociales (Google & Apple) */
+.social-auth-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.btn-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  background-color: var(--bg-input);
+  color: var(--text-white);
+  border: 1px solid var(--border-color);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-social:hover {
+  border-color: var(--primary-purple);
+  background-color: rgba(126, 34, 206, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px var(--shadow-color);
+}
+
+.social-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Separador */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.4rem;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.auth-divider span {
+  padding: 0 1rem;
+}
+
+/* Campos del Formulario */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem;
+}
+
+.form-group {
+  margin-bottom: 1.1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-white);
+  margin-bottom: 0.4rem;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.95rem;
+  width: 17px;
+  height: 17px;
+  stroke: var(--primary-purple);
+  pointer-events: none;
+}
+
+.auth-input {
+  width: 100%;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.78rem 1rem 0.78rem 2.65rem;
+  color: var(--text-white);
+  font-size: 0.88rem;
+  font-family: var(--font-main);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.auth-input:focus {
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.2);
+}
+
+.auth-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.6rem;
+  font-size: 0.85rem;
+}
+
+.remember-me,
+.terms-check {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.terms-check {
+  align-items: flex-start;
+  margin: 0.4rem 0 1.4rem 0;
+  font-size: 0.8rem;
+}
+
+.remember-me input,
+.terms-check input {
+  accent-color: var(--primary-purple);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.terms-check input {
+  margin-top: 0.15rem;
+}
+
+.forgot-link,
+.terms-check span a {
+  color: var(--primary-purple);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.forgot-link:hover,
+.terms-check span a:hover {
+  text-decoration: underline;
+}
+
+.btn-submit-auth {
+  width: 100%;
+  background: linear-gradient(135deg, #7e22ce, #6b21a8);
+  color: #ffffff;
+  border: 1px solid #c084fc;
+  padding: 0.92rem;
+  border-radius: 50px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 8px 20px var(--shadow-color);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-submit-auth:hover {
+  background: linear-gradient(135deg, #9333ea, #7e22ce);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(126, 34, 206, 0.45);
+}
+
+.auth-switch {
+  margin-top: 1.4rem;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.auth-switch a {
+  color: var(--primary-purple);
+  font-weight: 800;
+  text-decoration: none;
+  margin-left: 0.3rem;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 850px) {
+  .auth-container,
+  .auth-container.register-mode {
+    grid-template-columns: 1fr;
+  }
+  .auth-visual {
+    display: none;
+  }
+  .form-grid-2,
+  .social-auth-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+}

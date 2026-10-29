@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinePleX - Caramelería</title>
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/navbar.css">
+  <link rel="stylesheet" href="../assets/css/footer.css">
+  <style>
+    /* ==========================================
+       ESTILOS: CARAMELERÍA A ANCHO COMPLETO & SLIDER 3 EN 3
+       ========================================== */
+    .candy-main-container {
+      max-width: 1380px;
+      margin: 2.5rem auto 5rem auto;
+      padding: 0 2rem;
+    }
+
+    .candy-category-block {
+      margin-bottom: 3.5rem;
+    }
+
+    .category-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .category-top-bar h2 {
+      font-size: 1.3rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-white);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .category-top-bar h2 span {
+      display: inline-block;
+      width: 4px;
+      height: 20px;
+      background: var(--primary-purple);
+      border-radius: 2px;
+    }
+
+    .scroll-hint-text {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary-light);
+    }
+
+    /* CONTENEDOR DESLIZABLE DE ANCHO COMPLETO (FILAS DE 3) */
+    .candy-slider-row {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: calc((100% - 3rem) / 3);
+      gap: 1.5rem;
+      overflow-x: auto;
+      padding: 0.4rem 0.1rem 1.5rem 0.1rem;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary-purple) var(--bg-card);
+    }
+
+    .candy-slider-row::-webkit-scrollbar {
+      height: 8px;
+    }
+    .candy-slider-row::-webkit-scrollbar-track {
+      background: var(--bg-card);
+      border-radius: 4px;
+    }
+    .candy-slider-row::-webkit-scrollbar-thumb {
+      background: var(--primary-purple);
+      border-radius: 4px;
+    }
+
+    /* Tarjeta Cuadrada y Robusta */
+    .product-card-square {
+      scroll-snap-align: start;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      height: 100%;
+    }
+
+    .product-card-square:hover {
+      border-color: var(--primary-light);
+      box-shadow: 0 10px 25px var(--shadow-color);
+      transform: translateY(-4px);
+    }
+
+    /* ESTILO ESPECIAL PARA EL COMBO DESTACADO DEL DÍA */
+    .product-card-square.destacado-dia {
+      border: 2px solid var(--primary-light);
+      background: linear-gradient(145deg, var(--bg-card) 0%, #221238 100%);
+    }
+
+    .product-thumb-box {
+      height: 170px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .product-thumb-box::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.1) 40%, rgba(24,15,36,0.95) 100%);
+    }
+
+    .product-badge-sq {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 2;
+      background: var(--primary-purple);
+      color: #ffffff;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .product-info-box {
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .product-info-box h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-white);
+      line-height: 1.2;
+      margin-bottom: 0.3rem;
+    }
+
+    .product-info-box p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-color);
+      padding-top: 0.9rem;
+    }
+
+    .product-price-txt {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--primary-light);
+    }
+
+    .btn-square-add {
+      background: var(--primary-purple);
+      color: #ffffff;
+      border: none;
+      padding: 0.45rem 1.1rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-square-add:hover {
+      background: var(--primary-hover);
+      transform: scale(1.03);
+    }
+
+    @media (max-width: 1024px) {
+      .candy-slider-row {
+        grid-auto-columns: calc((100% - 1.5rem) / 2);
+      }
+    }
+
+    @media (max-width: 650px) {
+      .candy-slider-row {
+        grid-auto-columns: 100%;
+      }
+      .candy-main-container {
+        padding: 0 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- APPBAR INYECTADO POR LAYOUT.JS -->
+  <div id="app-navbar"></div>
+
+  <!-- CONTENEDOR PRINCIPAL A ANCHO COMPLETO -->
+  <main class="candy-main-container">
+
+    <!-- CATEGORÍA: COMBOS (INCLUYE COMBO DESTACADO DEL DÍA) -->
+    <div class="candy-category-block">
+      <div class="category-top-bar">
+        <h2><span></span> Combos Exclusivos & Coleccionables</h2>
+        <span class="scroll-hint-text">DESLIZA ➔</span>
+      </div>
+      <div class="candy-slider-row">
+        
+        <!-- COMBO DESTACADO DEL DÍA (PRIMER ELEMENTO) -->
+        <div class="product-card-square destacado-dia">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80');">
+            <span class="product-badge-sq" style="background: linear-gradient(135deg, #7e22ce, #c084fc);">Destacado del Día</span>
+          </div>
+          <div class="product-info-box">
+            <div>
+              <h3>Combo Temporada Siniestra</h3>
+              <p>Vasos coleccionables exclusivos + 2 Cotufas grandes + 2 bebidas grandes. ¡Ahorra 25%!</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$19.99</span>
+              <button class="btn-square-add" onclick="handleAgregar('Combo Temporada Siniestra')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1585647347382-223bdb0dca9df?auto=format&fit=crop&w=400&q=80');">
+            <span class="product-badge-sq">Coleccionable</span>
+          </div>
+          <div class="product-info-box">
+            <div>
+              <h3>Combo Gladiador Neon</h3>
+              <p>Vaso coleccionable con iluminación LED + Cotufa grande + 2 bebidas.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$18.50</span>
+              <button class="btn-square-add" onclick="handleAgregar('Combo Gladiador Neon')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=400&q=80');">
+            <span class="product-badge-sq">Popular</span>
+          </div>
+          <div class="product-info-box">
+            <div>
+              <h3>Combo Pareja Suprema</h3>
+              <p>1 Cotufa grande para compartir + 2 refrescos medianos + chocolate.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$12.50</span>
+              <button class="btn-square-add" onclick="handleAgregar('Combo Pareja Suprema')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1578849278619-e73505e9610f?auto=format&fit=crop&w=400&q=80');">
+            <span class="product-badge-sq">Ahorro</span>
+          </div>
+          <div class="product-info-box">
+            <div>
+              <h3>Combo Individual</h3>
+              <p>1 Cotufa mediana + 1 refresco mediano + tequeños calientes.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$8.00</span>
+              <button class="btn-square-add" onclick="handleAgregar('Combo Individual')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CATEGORÍA: COTUFAS (INCLUYE NORMALES Y GOURMET) -->
+    <div class="candy-category-block">
+      <div class="category-top-bar">
+        <h2><span></span> Cotufas de Autor & Palomitas</h2>
+        <span class="scroll-hint-text">DESLIZA ➔</span>
+      </div>
+      <div class="candy-slider-row">
+        
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1578849278619-e73505e9610f?auto=format&fit=crop&w=600&q=80');">
+            <span class="product-badge-sq">Clásico</span>
+          </div>
+          <div class="product-info-box">
+            <div>
+              <h3>Cotufa Grande (Sal / Mantequilla)</h3>
+              <p>El clásico inconfundible del cine, crujiente y caliente con toque de mantequilla.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$5.00</span>
+              <button class="btn-square-add" onclick="handleAgregar('Cotufa Grande')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1585647347382-223bdb0dca9df?auto=format&fit=crop&w=400&q=80');">
+            <span class="product-badge-sq">Clásico</span>
+          </div>
+          <div class="product-info-box">
+            <div>
+              <h3>Cotufa Mediana</h3>
+              <p>Porción individual recién horneada, crujiente y deliciosa.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$3.50</span>
+              <button class="btn-square-add" onclick="handleAgregar('Cotufa Mediana')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1578849278619-e73505e9610f?auto=format&fit=crop&w=400&q=80');">
+            <span class="product-badge-sq">Gourmet</span>
+          </div>
+          <div class="product-info-box">
+            <div>
+              <h3>Popcorn Trufa Negra & Mantequilla</h3>
+              <p>Palomitas de maíz fresco infusionadas con aceite de trufa y mantequilla.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$7.25</span>
+              <button class="btn-square-add" onclick="handleAgregar('Popcorn Trufa Negra')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1585647347382-223bdb0dca9df?auto=format&fit=crop&w=400&q=80');"></div>
+          <div class="product-info-box">
+            <div>
+              <h3>Popcorn Queso Cheddar Picante</h3>
+              <p>Crocantes y cubiertas con auténtico polvo de queso cheddar picante.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$6.50</span>
+              <button class="btn-square-add" onclick="handleAgregar('Popcorn Cheddar Picante')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80');"></div>
+          <div class="product-info-box">
+            <div>
+              <h3>Cotufa Acaramelada</h3>
+              <p>Dulce, crocante y cubierta con caramelo artesanal crujiente.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$6.00</span>
+              <button class="btn-square-add" onclick="handleAgregar('Cotufa Acaramelada')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CATEGORÍA: BEBIDAS -->
+    <div class="candy-category-block">
+      <div class="category-top-bar">
+        <h2><span></span> Bebidas Refrescantes</h2>
+        <span class="scroll-hint-text">DESLIZA ➔</span>
+      </div>
+      <div class="candy-slider-row">
+        
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80');">
+            <span class="product-badge-sq">Popular</span>
+          </div>
+          <div class="product-info-box">
+            <div>
+              <h3>Refresco Grande (32 oz)</h3>
+              <p>Coca-Cola, Sprite, Fanta o Chinotto bien frío con refill.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$3.00</span>
+              <button class="btn-square-add" onclick="handleAgregar('Refresco Grande')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=400&q=80');"></div>
+          <div class="product-info-box">
+            <div>
+              <h3>Té Frío / Nestea</h3>
+              <p>Refrescante infusión sabor a durazno o limón bien helado.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$2.50</span>
+              <button class="btn-square-add" onclick="handleAgregar('Té Frío')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=400&q=80');"></div>
+          <div class="product-info-box">
+            <div>
+              <h3>Agua Mineral (600 ml)</h3>
+              <p>Agua purificada sin gas bien fría.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$1.50</span>
+              <button class="btn-square-add" onclick="handleAgregar('Agua Mineral')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CATEGORÍA: SNACKS -->
+    <div class="candy-category-block">
+      <div class="category-top-bar">
+        <h2><span></span> Snacks Calientes & Nachos Supreme</h2>
+        <span class="scroll-hint-text">DESLIZA ➔</span>
+      </div>
+      <div class="candy-slider-row">
+        
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80');">
+            <span class="product-badge-sq">Especial</span>
+          </div>
+          <div class="product-info-box">
+            <div>
+              <h3>Nachos Supreme con Queso & Jalapeños</h3>
+              <p>Totopos de maíz crujientes bañados en abundante queso cheddar y rodajas de jalapeño.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$6.50</span>
+              <button class="btn-square-add" onclick="handleAgregar('Nachos Supreme')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80');"></div>
+          <div class="product-info-box">
+            <div>
+              <h3>Hot Dog Gigante Frankfurt</h3>
+              <p>Salchicha alemana en pan artesanal suave con papitas crujientes y salsas.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$7.50</span>
+              <button class="btn-square-add" onclick="handleAgregar('Hot Dog Frankfurt')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card-square">
+          <div class="product-thumb-box" style="background-image: url('https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=400&q=80');"></div>
+          <div class="product-info-box">
+            <div>
+              <h3>Tequeños de Queso (6 pzas)</h3>
+              <p>Deditos de queso blanco envueltos en masa crujiente doradita.</p>
+            </div>
+            <div class="product-action-row">
+              <span class="product-price-txt">$4.50</span>
+              <button class="btn-square-add" onclick="handleAgregar('Tequeños de Queso')">Agregar</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER INYECTADO POR LAYOUT.JS -->
+  <div id="app-footer"></div>
+
+  <!-- SCRIPT DE VALIDACIÓN DE SESIÓN -->
+  <script>
+    function handleAgregar(nombreProducto) {
+      const usuarioLogueado = localStorage.getItem('isLoggedIn');
+
+      if (!usuarioLogueado || usuarioLogueado === 'false') {
+        window.location.href = 'login.html';
+      } else {
+        alert(`¡"${nombreProducto}" añadido correctamente a tu cuenta!`);
+      }
+    }
+  </script>
+
+  <script src="../assets/js/layout.js"></script>
+</body>
+</html>

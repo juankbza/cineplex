@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinePleX - Inicio</title>
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/navbar.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/footer.css">
+  <style>
+    /* Estilos para las flechas y desplazamiento horizontal en las secciones */
+    .section-nav-arrows {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn-section-arrow {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-white);
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .btn-section-arrow:hover {
+      background-color: var(--primary-purple);
+      border-color: var(--primary-light);
+    }
+    .movies-grid-scroll {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: calc((100% - 4.5rem) / 4);
+      gap: 1.5rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+    }
+    .movies-grid-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .movies-grid-scroll .movie-card-item {
+      min-width: 260px;
+    }
+    @media (max-width: 1024px) {
+      .movies-grid-scroll {
+        grid-auto-columns: calc((100% - 1.5rem) / 2);
+      }
+    }
+    @media (max-width: 600px) {
+      .movies-grid-scroll {
+        grid-auto-columns: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- APPBAR INYECTADO POR LAYOUT.JS -->
+  <div id="app-navbar"></div>
+
+  <!-- ================= HERO BANNER SLIDER ================= -->
+  <section class="hero-banner-container">
+    <div class="hero-banner-card">
+      <div class="banner-content-left">
+        <p class="banner-subtitle">Temporada</p>
+        <h1 class="banner-title">Siniestra</h1>
+        <p class="banner-tagline">Invoca todos tus sentidos</p>
+        <button class="btn-banner-buy">Comprar Entradas</button>
+      </div>
+
+      <div class="banner-content-right">
+        <div class="banner-dates">
+          Del 29 de Octubre al 4 de Noviembre
+        </div>
+
+        <div class="banner-price-card">
+          <span class="banner-price-label">Entrada</span>
+          <div class="banner-price-value">$7.000</div>
+          <span class="banner-price-sub">Precio sugerido final</span>
+        </div>
+
+        <div class="banner-slider-arrows">
+          <button class="btn-slider-arrow">‹</button>
+          <button class="btn-slider-arrow">›</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="slider-dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </section>
+
+  <!-- ================= SECCIÓN 1: PELÍCULAS EN CARTELERA ================= -->
+  <section class="movies-section" id="cartelera">
+    <div class="movies-section-header" style="display: flex; align-items: center; justify-content: space-between;">
+      <div class="movies-title-wrapper" style="margin-bottom: 0;">
+        <h2>Películas en Cartelera</h2>
+        <span class="badge-purple">Destacado</span>
+      </div>
+      <div class="section-nav-arrows">
+        <button class="btn-section-arrow" onclick="scrollSeccion('carteleraGrid', -300)">‹</button>
+        <button class="btn-section-arrow" onclick="scrollSeccion('carteleraGrid', 300)">›</button>
+      </div>
+    </div>
+
+    <!-- BARRA DE FILTROS -->
+    <div class="movies-filters-bar" style="margin-top: 1.5rem;">
+      <div class="filter-label">
+        <svg class="filter-label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        </svg>
+        <span>Filtrar por:</span>
+      </div>
+
+      <div class="movies-filters">
+        <button class="filter-dropdown-btn">
+          <svg class="btn-filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+            <line x1="7" y1="2" x2="7" y2="22"></line>
+            <line x1="17" y1="2" x2="17" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+          </svg>
+          <span>Formatos</span>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <button class="filter-dropdown-btn">
+          <svg class="btn-filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          <span>Idioma</span>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="movies-grid-scroll" id="carteleraGrid">
+      <a href="detalle.html?pelicula=dune-2" class="movie-card-item" style="text-decoration: none;">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-age-rating">+13</span>
+            <span class="movie-duration">2h 46m</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>Dune: Parte Dos</h4>
+            <p>Ciencia Ficción • 2D / 4D / VIP</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="detalle.html?pelicula=spider-verse" class="movie-card-item" style="text-decoration: none;">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1635805737707-575885ab0820?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-age-rating">ATP</span>
+            <span class="movie-duration">2h 20m</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>Spider-Man: Across the Spider-Verse</h4>
+            <p>Animación / Acción • 2D / 3D</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="detalle.html?pelicula=oppenheimer" class="movie-card-item" style="text-decoration: none;">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-age-rating">+16</span>
+            <span class="movie-duration">3h 00m</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>Oppenheimer</h4>
+            <p>Drama / Historia • IMAX / 2D</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="detalle.html?pelicula=deadpool" class="movie-card-item" style="text-decoration: none;">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-age-rating age-18">+18</span>
+            <span class="movie-duration">2h 08m</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>Deadpool & Wolverine</h4>
+            <p>Acción / Comedia • 2D / 4D</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ================= SECCIÓN 2: PREVENTA ================= -->
+  <section class="movies-section" id="preventa">
+    <div class="movies-section-header" style="display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <div class="movies-title-wrapper" style="margin-bottom: 0.2rem;">
+          <h2>Preventa Exclusiva</h2>
+          <span class="badge-purple">Preventa Activa</span>
+        </div>
+        <p class="section-subtitle">Asegura tus mejores asientos antes del día de estreno en nuestra sala.</p>
+      </div>
+      <div class="section-nav-arrows">
+        <button class="btn-section-arrow" onclick="scrollSeccion('preventaGrid', -300)">‹</button>
+        <button class="btn-section-arrow" onclick="scrollSeccion('preventaGrid', 300)">›</button>
+      </div>
+    </div>
+
+    <div class="movies-grid-scroll" id="preventaGrid" style="margin-top: 1.5rem;">
+      <div class="movie-card-item">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-presale-badge">Preventa</span>
+            <span class="movie-duration">2h 18m</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>Joker: Folie à Deux</h4>
+            <p>Estreno 07 Nov • Sala VIP / 2D</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="movie-card-item">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-presale-badge">Preventa</span>
+            <span class="movie-duration">2h 28m</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>Gladiador II</h4>
+            <p>Estreno 14 Nov • 4D / IMAX</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="movie-card-item">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-presale-badge">Preventa</span>
+            <span class="movie-duration">1h 50m</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>Venom: El Último Baile</h4>
+            <p>Estreno 05 Nov • 2D / 3D / 4D</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="movie-card-item">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-presale-badge">Preventa</span>
+            <span class="movie-duration">2h 14m</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>El Señor de los Anillos: Rohirrim</h4>
+            <p>Estreno 21 Nov • 2D / VIP</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SECCIÓN 3: PRÓXIMAMENTE ================= -->
+  <section class="movies-section" id="proximamente">
+    <div class="movies-section-header" style="display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <div class="movies-title-wrapper" style="margin-bottom: 0.2rem;">
+          <h2>Próximamente</h2>
+          <span class="badge-purple">Próximos Estrenos</span>
+        </div>
+        <p class="section-subtitle">Lanzamientos confirmados que llegarán muy pronto a CinePleX.</p>
+      </div>
+      <div class="section-nav-arrows">
+        <button class="btn-section-arrow" onclick="scrollSeccion('proximamenteGrid', -300)">‹</button>
+        <button class="btn-section-arrow" onclick="scrollSeccion('proximamenteGrid', 300)">›</button>
+      </div>
+    </div>
+
+    <div class="movies-grid-scroll" id="proximamenteGrid" style="margin-top: 1.5rem;">
+      <div class="movie-card-item">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-release-date">12 Diciembre</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>Kraven el Cazador</h4>
+            <p>Acción / Suspenso</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="movie-card-item">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-release-date">19 Diciembre</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>Mufasa: El Rey León</h4>
+            <p>Aventura / Familiar</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="movie-card-item">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-release-date">25 Diciembre</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>Sonic 3: La Película</h4>
+            <p>Acción / Aventura</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="movie-card-item">
+        <div class="movie-poster-box" style="background-image: url('https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=600&q=80');">
+          <div class="movie-top-badges">
+            <span class="movie-release-date">02 Enero</span>
+          </div>
+          <div class="movie-card-overlay">
+            <h4>Nosferatu</h4>
+            <p>Terror / Gótico</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER INYECTADO POR LAYOUT.JS -->
+  <div id="app-footer"></div>
+
+  <!-- SCRIPT PARA MOVER LAS FLECHAS DE CADA SECCIÓN -->
+  <script>
+    function scrollSeccion(elementId, distancia) {
+      const contenedor = document.getElementById(elementId);
+      if (contenedor) {
+        contenedor.scrollBy({ left: distancia, behavior: 'smooth' });
+      }
+    }
+  </script>
+
+  <script src="../assets/js/layout.js"></script>
+</body>
+</html>

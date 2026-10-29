@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinePleX - Detalle de Película</title>
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/navbar.css">
+  <link rel="stylesheet" href="../assets/css/footer.css">
+  <style>
+    /* ==========================================
+       ESTILOS: DETALLE DE PELÍCULA & HORARIOS
+       ========================================== */
+    .movie-detail-main {
+      max-width: 1280px;
+      margin: 2.5rem auto 5rem auto;
+      padding: 0 2rem;
+    }
+
+    .movie-top-section {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 3.5rem;
+      align-items: start;
+      margin-bottom: 3.5rem;
+    }
+
+    /* Columna Izquierda: Póster con etiquetas */
+    .poster-card-wrapper {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 20px 40px var(--shadow-color);
+      background-color: var(--bg-card);
+    }
+
+    .poster-img-el {
+      width: 100%;
+      height: 520px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .poster-top-bar {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .poster-tag {
+      background: rgba(13, 8, 20, 0.8);
+      color: #ffffff;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .poster-actors-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, transparent, rgba(13,8,20,0.95) 70%);
+      padding: 1.5rem 1rem 1rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #c084fc;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Columna Derecha: Horarios y Selector de Días */
+    .schedule-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+
+    .movie-title-header h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: var(--text-white);
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .horarios-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.6rem;
+    }
+
+    .horarios-title-row h3 {
+      font-size: 1.4rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-white);
+    }
+
+    .link-cartelera-cine {
+      font-size: 0.82rem;
+      color: var(--primary-light);
+      text-decoration: none;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .link-cartelera-cine:hover {
+      text-decoration: underline;
+    }
+
+    /* Selector de Días de la Semana */
+    .days-slider-container {
+      display: flex;
+      gap: 0.8rem;
+      overflow-x: auto;
+      padding: 0.2rem 0;
+    }
+
+    .day-btn {
+      flex: 1;
+      min-width: 90px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.8rem 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+
+    .day-btn span {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+
+    .day-btn strong {
+      font-size: 0.85rem;
+      color: var(--text-white);
+    }
+
+    .day-btn:hover, .day-btn.active {
+      background: linear-gradient(135deg, #7e22ce, #6b21a8);
+      border-color: #c084fc;
+      color: #ffffff;
+      box-shadow: 0 6px 15px var(--shadow-color);
+      transform: translateY(-2px);
+    }
+
+    .day-btn.active strong {
+      color: #ffffff;
+    }
+
+    /* Filtros y Botón de Compra */
+    .schedule-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filters-group {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .filter-select-box {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-white);
+      padding: 0.75rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-buy-ticket-action {
+      background: linear-gradient(135deg, #7e22ce, #6b21a8);
+      color: #ffffff;
+      border: 1px solid #c084fc;
+      padding: 0.85rem 2rem;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      box-shadow: 0 8px 20px var(--shadow-color);
+      transition: all 0.2s ease;
+    }
+
+    .btn-buy-ticket-action:hover {
+      background: linear-gradient(135deg, #9333ea, #7e22ce);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(126, 34, 206, 0.45);
+    }
+
+    /* Disponibilidad de Butacas */
+    .seats-legend-box {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .seats-legend-box h4 {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-white);
+    }
+
+    .seats-status-row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .seat-status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .seat-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .seat-dot.alta { background-color: #10b981; }
+    .seat-dot.media { background-color: #f59e0b; }
+    .seat-dot.baja { background-color: #ef4444; }
+    .seat-dot.completa { background-color: #64748b; }
+
+    /* SECCIÓN INFERIOR: SINOPSIS Y TRAILER LOCAL */
+    .movie-bottom-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      box-shadow: 0 20px 40px var(--shadow-color);
+    }
+
+    .info-block h3 {
+      font-size: 1.4rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-white);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .info-block h3 span {
+      display: inline-block;
+      width: 4px;
+      height: 18px;
+      background: var(--primary-purple);
+      border-radius: 2px;
+    }
+
+    .info-block p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .local-video-player {
+      width: 100%;
+      height: 260px;
+      border-radius: var(--radius-md);
+      background: #000000;
+      border: 1px solid var(--border-color);
+      outline: none;
+    }
+
+    @media (max-width: 950px) {
+      .movie-top-section, .movie-bottom-content {
+        grid-template-columns: 1fr;
+      }
+      .poster-img-el {
+        height: 420px;
+        max-width: 320px;
+        margin: 0 auto;
+      }
+      .movie-title-header h1 {
+        font-size: 2.2rem;
+      }
+      .schedule-action-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-buy-ticket-action {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- APPBAR INYECTADO POR LAYOUT.JS -->
+  <div id="app-navbar"></div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="movie-detail-main">
+
+    <!-- SECCIÓN SUPERIOR: PÓSTER Y HORARIOS -->
+    <div class="movie-top-section">
+      
+      <!-- LADO IZQUIERDO: PÓSTER -->
+      <div class="poster-card-wrapper">
+        <div class="poster-top-bar">
+          <span class="poster-tag" id="pDuracion">1h 48m</span>
+          <span class="poster-tag" id="pIdiomaBadge">SUB</span>
+        </div>
+        <img id="pPoster" src="" alt="Póster" class="poster-img-el">
+        <div class="poster-actors-bar">
+          <span id="pActor1">Wanda Nara</span>
+          <span id="pActor2">Agustín Bernasconi</span>
+        </div>
+      </div>
+
+      <!-- LADO DERECHO: HORARIOS -->
+      <div class="schedule-panel">
+        <div class="movie-title-header">
+          <h1 id="pTitulo">Cargando...</h1>
+        </div>
+
+        <div class="horarios-title-row">
+          <h3>Horarios</h3>
+          <a href="#" class="link-cartelera-cine">Ver la cartelera por cine &gt;</a>
+        </div>
+
+        <!-- SELECTOR DE DÍAS -->
+        <div class="days-slider-container">
+          <button class="day-btn active">
+            <span>Jue</span>
+            <strong>29/OCT</strong>
+          </button>
+          <button class="day-btn">
+            <span>Vie</span>
+            <strong>30/OCT</strong>
+          </button>
+          <button class="day-btn">
+            <span>Sáb</span>
+            <strong>31/OCT</strong>
+          </button>
+          <button class="day-btn">
+            <span>Dom</span>
+            <strong>1/NOV</strong>
+          </button>
+          <button class="day-btn">
+            <span>Lun</span>
+            <strong>2/NOV</strong>
+          </button>
+        </div>
+
+        <!-- FILTROS Y BOTÓN DE COMPRA -->
+        <div class="schedule-action-bar">
+          <div class="filters-group">
+            <select class="filter-select-box">
+              <option>Formatos ▾</option>
+              <option>2D</option>
+              <option>3D / VIP</option>
+              <option>4D</option>
+            </select>
+            <select class="filter-select-box">
+              <option>Idioma ▾</option>
+              <option>Español</option>
+              <option>Subtitulada</option>
+            </select>
+          </div>
+
+          <button type="button" class="btn-buy-ticket-action" onclick="handleComprarTicket()">
+            Comprar Entradas
+          </button>
+        </div>
+
+        <!-- LEYENDA DE DISPONIBILIDAD -->
+        <div class="seats-legend-box">
+          <h4>Disponibilidad de Butacas</h4>
+          <div class="seats-status-row">
+            <div class="seat-status-item"><span class="seat-dot alta"></span> Alta</div>
+            <div class="seat-status-item"><span class="seat-dot media"></span> Media</div>
+            <div class="seat-status-item"><span class="seat-dot baja"></span> Baja</div>
+            <div class="seat-status-item"><span class="seat-dot completa"></span> Completa</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SECCIÓN INFERIOR: SINOPSIS Y TRAILER LOCAL -->
+    <div class="movie-bottom-content">
+      
+      <div class="info-block">
+        <h3><span></span> Sinopsis</h3>
+        <p id="pSinopsis">Cargando descripción de la película...</p>
+      </div>
+
+      <div class="info-block">
+        <h3><span></span> Tráiler Oficial</h3>
+        <video class="local-video-player" controls poster="">
+          <source id="pVideoSource" src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+          Tu navegador no soporta la reproducción de video.
+        </video>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER INYECTADO POR LAYOUT.JS -->
+  <div id="app-footer"></div>
+
+  <!-- SCRIPT DINÁMICO Y VALIDACIÓN DE COMPRA -->
+  <script>
+    const peliculasDB = {
+      "dune-2": {
+        titulo: "Dune: Parte Dos",
+        duracion: "2h 46m",
+        idioma: "SUB",
+        actor1: "Timothée Chalamet",
+        actor2: "Zendaya",
+        sinopsis: "Paul Atreides se une a Chani y a los Fremen mientras busca venganza contra los conspiradores que destruyeron a su familia. Ante la disyuntiva de elegir entre el amor de su vida y el destino del universo conocido, se esfuerza por evitar un futuro terrible.",
+        poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=800&q=80",
+        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+      },
+      "spider-verse": {
+        titulo: "Spider-Man: Across the Spider-Verse",
+        duracion: "2h 20m",
+        idioma: "ESP",
+        actor1: "Shameik Moore",
+        actor2: "Hailee Steinfeld",
+        sinopsis: "Miles Morales catpulta a través del Multiverso, donde se encuentra con un equipo de Spider-People encargados de proteger su propia existencia. Cuando los héroes chocan sobre cómo manejar una nueva amenaza, Miles se enfrenta a las otras arañas.",
+        poster: "https://images.unsplash.com/photo-1635805737707-575885ab0820?auto=format&fit=crop&w=800&q=80",
+        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+      },
+      "oppenheimer": {
+        titulo: "Oppenheimer",
+        duracion: "3h 00m",
+        idioma: "SUB",
+        actor1: "Cillian Murphy",
+        actor2: "Emily Blunt",
+        sinopsis: "Película biográfica sobre el físico teórico J. Robert Oppenheimer, director del Laboratorio de Los Álamos y el proyecto secreto conocido como el Proyecto Manhattan, que desarrolló las primeras armas nucleares del mundo.",
+        poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=800&q=80",
+        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+      },
+      "deadpool": {
+        titulo: "Deadpool & Wolverine",
+        duracion: "2h 08m",
+        idioma: "SUB",
+        actor1: "Ryan Reynolds",
+        actor2: "Hugh Jackman",
+        sinopsis: "Un apático Wade Wilson se afana en la vida civil. Sus días como el mercenario moralmente flexible Deadpool han quedado atrás. Cuando su mundo natal se enfrenta a una amenaza existencial, Wade debe ponerse el traje de nuevo.",
+        poster: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
+        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+      }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const idPelicula = urlParams.get('pelicula') || 'dune-2';
+    const pelicula = peliculasDB[idPelicula] || peliculasDB['dune-2'];
+
+    document.getElementById('pTitulo').innerText = pelicula.titulo;
+    document.getElementById('pDuracion').innerText = pelicula.duracion;
+    document.getElementById('pIdiomaBadge').innerText = pelicula.idioma;
+    document.getElementById('pActor1').innerText = pelicula.actor1;
+    document.getElementById('pActor2').innerText = pelicula.actor2;
+    document.getElementById('pSinopsis').innerText = pelicula.sinopsis;
+    document.getElementById('pPoster').src = pelicula.poster;
+    document.getElementById('pVideoSource').src = pelicula.videoUrl;
+    document.title = `CinePleX - ${pelicula.titulo}`;
+
+    // Función del botón Comprar Entradas
+    function handleComprarTicket() {
+      const usuarioLogueado = localStorage.getItem('isLoggedIn');
+
+      if (!usuarioLogueado || usuarioLogueado === 'false') {
+        // Si no ha iniciado sesión, lo manda al login
+        window.location.href = 'login.html';
+      } else {
+        // Si ya está logueado, lo manda a la sección o pantalla de compra de ticket
+        window.location.href = 'home.html#comprar-ticket';
+      }
+    }
+  </script>
+
+  <script src="../assets/js/layout.js"></script>
+</body>
+</html>

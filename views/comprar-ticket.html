@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinePleX - Proceso de Compra</title>
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/navbar.css">
+  <link rel="stylesheet" href="../assets/css/footer.css">
+  <style>
+    /* ==========================================
+       ESTILOS: FLUJO DE COMPRA DE TICKETS & CHECKOUT
+       ========================================== */
+    .checkout-main-container {
+      max-width: 1200px;
+      margin: 2.5rem auto 5rem auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Stepper / Indicador de Pasos */
+    .checkout-stepper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .checkout-stepper::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: var(--border-color);
+      z-index: 1;
+      transform: translateY(-50%);
+    }
+
+    .step-item {
+      position: relative;
+      z-index: 2;
+      background-color: var(--bg-card);
+      border: 2px solid var(--border-color);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+    }
+
+    .step-item.active {
+      border-color: var(--primary-light);
+      background-color: var(--primary-purple);
+      color: #ffffff;
+      box-shadow: 0 0 15px var(--shadow-color);
+    }
+
+    .step-item.completed {
+      border-color: #10b981;
+      background-color: #10b981;
+      color: #ffffff;
+    }
+
+    /* Contenedor de Pasos */
+    .checkout-step-content {
+      display: none;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      box-shadow: 0 20px 40px var(--shadow-color);
+    }
+
+    .checkout-step-content.active {
+      display: block;
+    }
+
+    .step-title-header {
+      font-size: 1.6rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-white);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .step-title-header span {
+      display: inline-block;
+      width: 5px;
+      height: 20px;
+      background: var(--primary-purple);
+      border-radius: 2px;
+    }
+
+    .step-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+    }
+
+    /* PASO 1: CANTIDAD DE ENTRADAS */
+    .tickets-type-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .ticket-row-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      padding: 1.2rem 1.8rem;
+      border-radius: var(--radius-md);
+    }
+
+    .ticket-info h4 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-white);
+      margin-bottom: 0.2rem;
+    }
+
+    .ticket-info span {
+      font-size: 0.82rem;
+      color: var(--primary-light);
+      font-weight: 700;
+    }
+
+    .counter-control {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-counter {
+      width: 36px;
+      height: 36px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-white);
+      border-radius: 50%;
+      font-weight: 900;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-counter:hover {
+      background-color: var(--primary-purple);
+      border-color: var(--primary-light);
+    }
+
+    .counter-value {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--text-white);
+      min-width: 24px;
+      text-align: center;
+    }
+
+    /* PASO 2: MAPA DE BUTACAS */
+    .cinema-screen-indicator {
+      width: 80%;
+      height: 10px;
+      background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+      margin: 0 auto 2.5rem auto;
+      border-radius: 50%;
+      box-shadow: 0 10px 20px var(--shadow-color);
+      text-align: center;
+    }
+    .screen-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      display: block;
+      padding-top: 15px;
+    }
+
+    .seats-grid-layout {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 0.75rem;
+      max-width: 600px;
+      margin: 0 auto 2.5rem auto;
+    }
+
+    .seat-box {
+      aspect-ratio: 1;
+      background-color: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .seat-box:hover:not(.occupied) {
+      border-color: var(--primary-light);
+      background-color: rgba(126, 34, 206, 0.2);
+      color: #ffffff;
+    }
+
+    .seat-box.selected {
+      background-color: var(--primary-purple);
+      border-color: #c084fc;
+      color: #ffffff;
+      box-shadow: 0 0 12px var(--shadow-color);
+    }
+
+    .seat-box.occupied {
+      background-color: #262626;
+      border-color: #404040;
+      color: #737373;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .seats-legend-row {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .legend-item-flex {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-box-sample {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+    }
+
+    /* PASO 3: SNACKS Y CARAMELERÍA */
+    .snacks-grid-checkout {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .snack-card-item {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .snack-card-item h5 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-white);
+      margin-bottom: 0.2rem;
+    }
+
+    .snack-card-item p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .snack-footer-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* PASO 4: PAGO Y RESUMEN */
+    .checkout-final-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2.5rem;
+    }
+
+    .payment-methods-box {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .payment-method-card {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      padding: 1.2rem 1.5rem;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .payment-method-card input {
+      accent-color: var(--primary-purple);
+      width: 18px;
+      height: 18px;
+    }
+
+    .payment-method-card label {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--text-white);
+      cursor: pointer;
+    }
+
+    .order-summary-box {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .summary-row-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .summary-row-line.total {
+      border-top: 1px solid var(--border-color);
+      padding-top: 1rem;
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--text-white);
+    }
+
+    .summary-row-line.total span:last-child {
+      color: var(--primary-light);
+    }
+
+    /* Botones de Navegación del Flujo */
+    .checkout-buttons-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2.5rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.5rem;
+    }
+
+    .btn-step-action {
+      background: linear-gradient(135deg, #7e22ce, #6b21a8);
+      color: #ffffff;
+      border: 1px solid #c084fc;
+      padding: 0.85rem 2.2rem;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      box-shadow: 0 8px 20px var(--shadow-color);
+      transition: all 0.2s ease;
+    }
+
+    .btn-step-action:hover {
+      background: linear-gradient(135deg, #9333ea, #7e22ce);
+      transform: translateY(-2px);
+    }
+
+    .btn-step-back {
+      background: var(--bg-main);
+      color: var(--text-white);
+      border: 1px solid var(--border-color);
+      padding: 0.85rem 2rem;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .btn-step-back:hover {
+      border-color: var(--primary-purple);
+    }
+
+    @media (max-width: 900px) {
+      .checkout-final-grid {
+        grid-template-columns: 1fr;
+      }
+      .checkout-step-content {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- APPBAR INYECTADO POR LAYOUT.JS -->
+  <div id="app-navbar"></div>
+
+  <main class="checkout-main-container">
+
+    <!-- STEPPER INDICADOR -->
+    <div class="checkout-stepper">
+      <div class="step-item active" id="indicator1">1</div>
+      <div class="step-item" id="indicator2">2</div>
+      <div class="step-item" id="indicator3">3</div>
+      <div class="step-item" id="indicator4">4</div>
+    </div>
+
+    <!-- ================= PASO 1: ENTRADAS ================= -->
+    <div class="checkout-step-content active" id="step1">
+      <h2 class="step-title-header"><span></span> Selección de Entradas</h2>
+      <p class="step-subtitle">Elige la cantidad de boletos que necesitas para tu función.</p>
+
+      <div class="tickets-type-grid">
+        <div class="ticket-row-item">
+          <div class="ticket-info">
+            <h4>Entrada General (2D)</h4>
+            <span>$7.00 USD c/u</span>
+          </div>
+          <div class="counter-control">
+            <button class="btn-counter" onclick="cambiarCantidad('general', -1)">-</button>
+            <span class="counter-value" id="countGeneral">1</span>
+            <button class="btn-counter" onclick="cambiarCantidad('general', 1)">+</button>
+          </div>
+        </div>
+
+        <div class="ticket-row-item">
+          <div class="ticket-info">
+            <h4>Entrada Sala VIP Reclinable</h4>
+            <span>$10.00 USD c/u</span>
+          </div>
+          <div class="counter-control">
+            <button class="btn-counter" onclick="cambiarCantidad('vip', -1)">-</button>
+            <span class="counter-value" id="countVip">0</span>
+            <button class="btn-counter" onclick="cambiarCantidad('vip', 1)">+</button>
+          </div>
+        </div>
+
+        <div class="ticket-row-item">
+          <div class="ticket-info">
+            <h4>Experiencia 4D E-Motion</h4>
+            <span>$12.50 USD c/u</span>
+          </div>
+          <div class="counter-control">
+            <button class="btn-counter" onclick="cambiarCantidad('4d', -1)">-</button>
+            <span class="counter-value" id="count4d">0</span>
+            <button class="btn-counter" onclick="cambiarCantidad('4d', 1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkout-buttons-row">
+        <div></div>
+        <button type="button" class="btn-step-action" onclick="irAlPaso(2)">Siguiente: Elegir Butacas ➔</button>
+      </div>
+    </div>
+
+
+    <!-- ================= PASO 2: BUTACAS ================= -->
+    <div class="checkout-step-content" id="step2">
+      <h2 class="step-title-header"><span></span> Mapa de Butacas</h2>
+      <p class="step-subtitle">Selecciona tus asientos favoritos en la sala. Debes elegir exactamente la cantidad de boletos solicitados.</p>
+
+      <div class="cinema-screen-indicator">
+        <span class="screen-label">Pantalla CinePleX</span>
+      </div>
+
+      <div class="seats-grid-layout" id="seatsContainer">
+        <!-- Generado dinámicamente por JS -->
+      </div>
+
+      <div class="seats-legend-row">
+        <div class="legend-item-flex"><span class="legend-box-sample" style="background:var(--bg-main); border:1px solid var(--border-color);"></span> Disponible</div>
+        <div class="legend-item-flex"><span class="legend-box-sample" style="background:var(--primary-purple);"></span> Seleccionada</div>
+        <div class="legend-item-flex"><span class="legend-box-sample" style="background:#262626;"></span> Ocupada</div>
+      </div>
+
+      <div class="checkout-buttons-row">
+        <button type="button" class="btn-step-back" onclick="irAlPaso(1)">‹ Volver</button>
+        <button type="button" class="btn-step-action" onclick="irAlPaso(3)">Siguiente: Añadir Snacks ➔</button>
+      </div>
+    </div>
+
+
+    <!-- ================= PASO 3: SNACKS / CARAMELERÍA ================= -->
+    <div class="checkout-step-content" id="step3">
+      <h2 class="step-title-header"><span></span> ¿Deseas acompañarlo con algo de Caramelería?</h2>
+      <p class="step-subtitle">Añade tus favoritos sin hacer filas y recójalos listos al ingresar.</p>
+
+      <div class="snacks-grid-checkout">
+        
+        <div class="snack-card-item">
+          <div>
+            <h5>Combo Pareja Suprema</h5>
+            <p>1 Cotufa grande + 2 refrescos medianos + chocolate.</p>
+          </div>
+          <div class="snack-footer-flex">
+            <span class="product-price-txt" style="font-weight:900; color:var(--primary-light);">$12.50</span>
+            <button class="btn-square-add" onclick="agregarSnackCheckout('Combo Pareja Suprema', 12.50)">Agregar</button>
+          </div>
+        </div>
+
+        <div class="snack-card-item">
+          <div>
+            <h5>Cotufa Grande Mantequilla</h5>
+            <p>Clásica, crujiente y caliente con toque de mantequilla.</p>
+          </div>
+          <div class="snack-footer-flex">
+            <span class="product-price-txt" style="font-weight:900; color:var(--primary-light);">$5.00</span>
+            <button class="btn-square-add" onclick="agregarSnackCheckout('Cotufa Grande Mantequilla', 5.00)">Agregar</button>
+          </div>
+        </div>
+
+        <div class="snack-card-item">
+          <div>
+            <h5>Tequeños de Queso (6 pzas)</h5>
+            <p>Deditos de queso blanco crujientes con salsa.</p>
+          </div>
+          <div class="snack-footer-flex">
+            <span class="product-price-txt" style="font-weight:900; color:var(--primary-light);">$4.50</span>
+            <button class="btn-square-add" onclick="agregarSnackCheckout('Tequeños de Queso', 4.50)">Agregar</button>
+          </div>
+        </div>
+
+        <div class="snack-card-item">
+          <div>
+            <h5>Refresco Grande (32 oz)</h5>
+            <p>Coca-Cola o Sprite bien frío con refill.</p>
+          </div>
+          <div class="snack-footer-flex">
+            <span class="product-price-txt" style="font-weight:900; color:var(--primary-light);">$3.00</span>
+            <button class="btn-square-add" onclick="agregarSnackCheckout('Refresco Grande', 3.00)">Agregar</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; font-weight: 700;" id="snacksAgregadosMsg">
+        Snacks en la orden: Ninguno
+      </div>
+
+      <div class="checkout-buttons-row">
+        <button type="button" class="btn-step-back" onclick="irAlPaso(2)">‹ Volver</button>
+        <button type="button" class="btn-step-action" onclick="irAlPaso(4)">Siguiente: Pagar ➔</button>
+      </div>
+    </div>
+
+
+    <!-- ================= PASO 4: PAGO Y RESUMEN ================= -->
+    <div class="checkout-step-content" id="step4">
+      <h2 class="step-title-header"><span></span> Resumen y Pago Seguro</h2>
+      <p class="step-subtitle">Confirma tu pedido y selecciona tu método de pago preferido.</p>
+
+      <div class="checkout-final-grid">
+        
+        <div class="payment-methods-box">
+          <div class="payment-method-card">
+            <input type="radio" name="pago" id="pago1" checked>
+            <label for="pago1">Tarjeta de Crédito / Débito (Visa / Mastercard)</label>
+          </div>
+          <div class="payment-method-card">
+            <input type="radio" name="pago" id="pago2">
+            <label for="pago2">Pago Móvil Nacional</label>
+          </div>
+          <div class="payment-method-card">
+            <input type="radio" name="pago" id="pago3">
+            <label for="pago3">USDT / Criptomonedas</label>
+          </div>
+        </div>
+
+        <div class="order-summary-box">
+          <div class="summary-row-line">
+            <span>Entradas seleccionadas</span>
+            <span id="sumEntradas">$7.00</span>
+          </div>
+          <div class="summary-row-line">
+            <span>Caramelería / Snacks</span>
+            <span id="sumSnacks">$0.00</span>
+          </div>
+          <div class="summary-row-line">
+            <span>Tasas e Impuestos</span>
+            <span>$0.50</span>
+          </div>
+          <div class="summary-row-line total">
+            <span>Total a Pagar</span>
+            <span id="sumTotal">$7.50 USD</span>
+          </div>
+
+          <button type="button" class="btn-step-action" style="width: 100%; text-align: center; margin-top: 1rem;" onclick="finalizarCompra()">
+            Completar Compra ➔
+          </button>
+        </div>
+
+      </div>
+
+      <div class="checkout-buttons-row">
+        <button type="button" class="btn-step-back" onclick="irAlPaso(3)">‹ Volver</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER INYECTADO POR LAYOUT.JS -->
+  <div id="app-footer"></div>
+
+  <!-- SCRIPT DE LÓGICA DEL FLUJO DE COMPRA -->
+  <script>
+    let estadoCompra = {
+      entradas: { general: 1, vip: 0, '4d': 0 },
+      precios: { general: 7.00, vip: 10.00, '4d': 12.50 },
+      butacasSeleccionadas: [],
+      snacks: []
+    };
+
+    function cambiarCantidad(tipo, cambio) {
+      if (estadoCompra.entradas[tipo] + cambio >= 0) {
+        if (tipo === 'general' && estadoCompra.entradas.general + cambio === 0 && getTotalEntradas() === 1) return;
+        estadoCompra.entradas[tipo] += cambio;
+        document.getElementById(`count${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`).innerText = estadoCompra.entradas[tipo];
+      }
+    }
+
+    function getTotalEntradas() {
+      return estadoCompra.entradas.general + estadoCompra.entradas.vip + estadoCompra.entradas['4d'];
+    }
+
+    function generarMapaButacas() {
+      const container = document.getElementById('seatsContainer');
+      container.innerHTML = '';
+      const filas = ['A', 'B', 'C', 'D'];
+      filas.forEach(fila => {
+        for (let i = 1; i <= 10; i++) {
+          const seatId = `${fila}${i}`;
+          const seat = document.createElement('div');
+          seat.className = 'seat-box';
+          seat.innerText = seatId;
+          
+          // Simular algunas butacas ocupadas al azar
+          if (seatId === 'A3' || seatId === 'B7' || seatId === 'C2') {
+            seat.classList.add('occupied');
+          } else {
+            seat.addEventListener('click', () => {
+              if (seat.classList.contains('selected')) {
+                seat.classList.remove('selected');
+                estadoCompra.butacasSeleccionadas = estadoCompra.butacasSeleccionadas.filter(s => s !== seatId);
+              } else {
+                if (estadoCompra.butacasSeleccionadas.length < getTotalEntradas()) {
+                  seat.classList.add('selected');
+                  estadoCompra.butacasSeleccionadas.push(seatId);
+                } else {
+                  alert(`Solo puedes seleccionar ${getTotalEntradas()} butacas según los boletos elegidos.`);
+                }
+              }
+            });
+          }
+          container.appendChild(seat);
+        }
+      });
+    }
+
+    function agregarSnackCheckout(nombre, precio) {
+      estadoCompra.snacks.push({ nombre, precio });
+      const nombres = estadoCompra.snacks.map(s => s.nombre).join(', ');
+      document.getElementById('snacksAgregadosMsg').innerText = `Snacks en la orden: ${nombres}`;
+    }
+
+    function calcularTotales() {
+      let subTotalEntradas = (estadoCompra.entradas.general * estadoCompra.precios.general) +
+                             (estadoCompra.entradas.vip * estadoCompra.precios.vip) +
+                             (estadoCompra.entradas['4d'] * estadoCompra.precios['4d']);
+      
+      let subTotalSnacks = estadoCompra.snacks.reduce((acc, curr) => acc + curr.precio, 0);
+      let totalFinal = subTotalEntradas + subTotalSnacks + 0.50;
+
+      document.getElementById('sumEntradas').innerText = `$${subTotalEntradas.toFixed(2)}`;
+      document.getElementById('sumSnacks').innerText = `$${subTotalSnacks.toFixed(2)}`;
+      document.getElementById('sumTotal').innerText = `$${totalFinal.toFixed(2)} USD`;
+    }
+
+    function irAlPaso(paso) {
+      if (paso === 2) {
+        generarMapaButacas();
+      }
+      if (paso === 4) {
+        calcularTotales();
+      }
+
+      // Cambiar clases activas del contenido
+      document.querySelectorAll('.checkout-step-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(`step${paso}`).classList.add('active');
+
+      // Actualizar indicadores del stepper
+      for (let i = 1; i <= 4; i++) {
+        const ind = document.getElementById(`indicator${i}`);
+        ind.classList.remove('active', 'completed');
+        if (i < paso) ind.classList.add('completed');
+        if (i === paso) ind.classList.add('active');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function finalizarCompra() {
+      alert('¡Compra realizada con éxito! Tus entradas y código QR han sido enviados a tu correo.');
+      window.location.href = 'home.html';
+    }
+  </script>
+
+  <script src="../assets/js/layout.js"></script>
+</body>
+</html>

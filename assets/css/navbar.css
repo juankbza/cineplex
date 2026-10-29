@@ -1,0 +1,178 @@
+/* ==========================================
+   CinePleX - APPBAR / NAVBAR EXCLUSIVO
+   ========================================== */
+
+.navbar {
+  position: fixed;   /* Se queda fijo flotando arriba al hacer scroll */
+  top: 0;
+  left: 0;
+  width: 100%;       /* Ocupa todo el ancho de la pantalla */
+  z-index: 1000;     /* Siempre por encima del contenido y banners */
+  background-color: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+  box-shadow: 0 4px 20px var(--shadow-color);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.nav-logo-container {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-logo-img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-item {
+  color: var(--text-white);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  color: var(--primary-purple);
+}
+
+.btn-highlight-ticket {
+  color: #ffffff;
+  border: 1px solid var(--primary-purple);
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  background: var(--primary-purple);
+  box-shadow: 0 0 15px var(--shadow-color);
+  transition: all 0.2s ease;
+}
+
+.btn-highlight-ticket:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+/* BOTÓN INTERRUPTOR DE TEMA (DARK / LIGHT) */
+.btn-theme-toggle {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-white);
+  transition: border-color 0.2s, background-color 0.2s, transform 0.2s;
+}
+
+.btn-theme-toggle:hover {
+  border-color: var(--primary-purple);
+  background-color: rgba(126, 34, 206, 0.15);
+  transform: rotate(15deg);
+}
+
+.btn-theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--primary-purple);
+}
+
+/* CARRITO DE COMPRAS */
+.nav-cart-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem;
+  border-radius: 50%;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  transition: border-color 0.2s, background-color 0.2s;
+  text-decoration: none;
+}
+
+.nav-cart-btn:hover {
+  border-color: var(--primary-purple);
+  background-color: rgba(126, 34, 206, 0.15);
+}
+
+.cart-icon {
+  width: 20px;
+  height: 20px;
+  stroke: var(--text-white);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: var(--primary-purple);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-main);
+}
+
+/* BOTÓN DE USUARIO / INICIAR SESIÓN */
+.icon-user {
+  width: 18px;
+  height: 18px;
+  stroke: var(--primary-purple);
+}
+
+.btn-user-icon {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+  text-decoration: none;
+}
+
+.btn-user-icon:hover {
+  border-color: var(--primary-purple);
+  background-color: rgba(126, 34, 206, 0.15);
+}
