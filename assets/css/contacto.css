@@ -1,0 +1,99 @@
+.contact-page {
+  width: min(100% - 3rem, 1200px);
+  margin: 2rem auto 4rem;
+}
+
+.contact-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  min-height: 390px;
+  overflow: hidden;
+  align-items: center;
+  padding: clamp(2rem, 6vw, 4.5rem);
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(ellipse at 82% 45%, rgba(109, 40, 217, 0.2), transparent 42%),
+    linear-gradient(120deg, var(--bg-card), var(--bg-main));
+  box-shadow: 0 24px 60px var(--shadow-color);
+}
+
+.contact-hero-copy { position: relative; z-index: 1; }
+.contact-eyebrow { color: #a78bfa; font-size: 0.67rem; font-weight: 900; letter-spacing: 0.15em; }
+.contact-hero h1 { margin: 1rem 0 0.85rem; color: var(--text-white); font-size: clamp(2.1rem, 5vw, 3.6rem); font-weight: 900; letter-spacing: -0.045em; line-height: 1.05; }
+.contact-hero h1 span { color: #a78bfa; }
+.contact-hero-copy > p { max-width: 520px; color: var(--text-muted); font-size: 0.94rem; line-height: 1.75; }
+.contact-primary-link { display: inline-flex; align-items: center; gap: 1rem; margin-top: 1.4rem; padding: 0.8rem 1.1rem; border: 1px solid #8b5cf6; border-radius: 9px; color: #fff; background: #6d28d9; box-shadow: 0 8px 22px rgba(109, 40, 217, 0.27); text-decoration: none; font-size: 0.8rem; font-weight: 850; transition: background 0.2s, transform 0.2s; }
+.contact-primary-link:hover { background: #5b21b6; transform: translateY(-2px); }
+.contact-primary-link span { font-size: 1.1rem; line-height: 1; }
+
+.contact-hero-art { position: relative; display: grid; min-height: 270px; place-items: center; }
+.contact-film-frame { position: relative; z-index: 1; display: flex; width: 220px; height: 270px; flex-direction: column; justify-content: space-between; padding: 1rem 1.15rem; border: 1px solid rgba(196, 181, 253, 0.65); border-radius: 12px; color: #fff; background: linear-gradient(145deg, rgba(109, 40, 217, 0.95), rgba(30, 18, 54, 0.96) 62%, rgba(6, 182, 212, 0.65)); box-shadow: 0 24px 55px rgba(0, 0, 0, 0.45); transform: rotate(5deg); }
+.contact-film-frame > span { width: fit-content; padding: 0.25rem 0.4rem; border: 1px solid rgba(255,255,255,.55); border-radius: 5px; font-size: 0.65rem; font-weight: 900; letter-spacing: 0.1em; }
+.contact-film-frame strong { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.04em; line-height: 1.05; }
+.contact-film-frame i { font-size: 0.75rem; font-style: normal; letter-spacing: 0.18em; }
+.contact-orbit { position: absolute; width: 290px; height: 290px; border: 1px solid rgba(139, 92, 246, 0.22); border-radius: 50%; }
+.contact-orbit-one { transform: scaleX(0.6) rotate(35deg); }
+.contact-orbit-two { transform: scaleX(0.6) rotate(-35deg); }
+
+.contact-company,
+.contact-methods { padding: clamp(2.4rem, 6vw, 4.5rem) 0 0; }
+.contact-section-heading { max-width: 700px; }
+.contact-section-heading h2,
+.contact-locations h2,
+.contact-help-strip h2 { margin-top: 0.4rem; color: var(--text-white); font-size: clamp(1.55rem, 3vw, 2.2rem); font-weight: 900; letter-spacing: -0.035em; }
+.contact-section-heading > p,
+.contact-locations > div:first-child > p { margin-top: 0.55rem; color: var(--text-muted); font-size: 0.84rem; line-height: 1.7; }
+.contact-company-copy { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.2rem; }
+.contact-company-copy p { color: var(--text-muted); font-size: 0.84rem; line-height: 1.8; }
+.contact-values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-top: 1.4rem; }
+.contact-values article { padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-card); }
+.contact-values article > span { color: #a78bfa; font-size: 0.62rem; font-weight: 900; letter-spacing: 0.1em; }
+.contact-values h3 { margin-top: 0.45rem; color: var(--text-white); font-size: 0.85rem; }
+.contact-values p { margin-top: 0.3rem; color: var(--text-muted); font-size: 0.7rem; line-height: 1.6; }
+
+.contact-methods { padding-top: clamp(2.8rem, 7vw, 5rem); }
+.contact-method-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.9rem; margin-top: 1.4rem; }
+.contact-method-card { position: relative; display: flex; min-height: 195px; flex-direction: column; align-items: flex-start; padding: 1.25rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-white); background: var(--bg-card); text-decoration: none; transition: border-color 0.22s, transform 0.22s, box-shadow 0.22s; }
+.contact-method-card:hover { border-color: #8b5cf6; box-shadow: 0 14px 34px var(--shadow-color); transform: translateY(-3px); }
+.contact-method-icon { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(139, 92, 246, 0.24); border-radius: 11px; color: #c4b5fd; background: rgba(109, 40, 217, 0.15); }
+.contact-method-icon svg { width: 21px; height: 21px; }
+.whatsapp-icon { color: #86efac; border-color: rgba(34, 197, 94, 0.22); background: rgba(34, 197, 94, 0.1); }
+.contact-method-label { margin-top: 1rem; color: var(--text-muted); font-size: 0.65rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
+.contact-method-card strong { margin-top: 0.25rem; color: var(--text-white); font-size: clamp(0.82rem, 1.4vw, 1rem); overflow-wrap: anywhere; }
+.contact-method-detail { margin-top: 0.35rem; color: var(--text-muted); font-size: 0.68rem; }
+.contact-method-arrow { position: absolute; top: 1.2rem; right: 1.25rem; color: #a78bfa; font-size: 1rem; }
+
+.contact-locations { display: grid; grid-template-columns: 0.85fr 1.15fr; align-items: center; gap: 2rem; margin-top: clamp(2.8rem, 7vw, 5rem); padding: clamp(1.4rem, 4vw, 2.4rem); border: 1px solid var(--border-color); border-radius: var(--radius-lg); background: linear-gradient(120deg, rgba(109, 40, 217, 0.08), transparent 60%), var(--bg-card); }
+.contact-location-list { display: grid; gap: 0.65rem; }
+.contact-location-list article { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-main); }
+.location-pin { display: grid; width: 36px; height: 36px; flex: 0 0 36px; place-items: center; border-radius: 9px; color: #c4b5fd; background: rgba(109, 40, 217, 0.17); font-size: 1.2rem; }
+.contact-location-list h3 { color: var(--text-white); font-size: 0.8rem; }
+.contact-location-list p { margin-top: 0.15rem; color: var(--text-muted); font-size: 0.65rem; }
+.location-tag { margin-left: auto; padding: 0.25rem 0.45rem; border: 1px solid var(--border-color); border-radius: 999px; color: var(--text-muted); font-size: 0.56rem; white-space: nowrap; }
+.contact-help-strip { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; padding: 1.4rem 1.6rem; border: 1px solid rgba(139, 92, 246, 0.22); border-radius: var(--radius-md); background: radial-gradient(ellipse at 90% 50%, rgba(109, 40, 217, 0.2), transparent 50%), var(--bg-card); }
+.contact-help-strip h2 { font-size: 1.35rem; }
+.contact-help-strip .contact-primary-link { flex: 0 0 auto; margin: 0; }
+
+@media (max-width: 800px) {
+  .contact-page { width: min(100% - 1.5rem, 1200px); margin-top: 1.25rem; }
+  .contact-hero { grid-template-columns: 1fr; padding: 2rem; }
+  .contact-hero-art { min-height: 250px; margin-top: 1rem; }
+  .contact-method-grid { grid-template-columns: 1fr; }
+  .contact-method-card { min-height: 165px; }
+  .contact-locations { grid-template-columns: 1fr; gap: 1.1rem; }
+}
+
+@media (max-width: 560px) {
+  .contact-hero { padding: 1.4rem; }
+  .contact-hero h1 { font-size: 2rem; }
+  .contact-company-copy,
+  .contact-values { grid-template-columns: 1fr; gap: 0.8rem; }
+  .contact-help-strip { align-items: flex-start; flex-direction: column; padding: 1.1rem; }
+  .location-tag { white-space: normal; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-page *, .contact-page *::before, .contact-page *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

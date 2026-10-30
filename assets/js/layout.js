@@ -28,7 +28,7 @@ function getNavbarHTML() {
       <a href="${viewBase}home.html#cartelera" class="nav-item" data-section="cartelera">Cartelera</a>
       <a href="${viewBase}home.html#preventa" class="nav-item" data-section="preventa">Preventa</a>
       <a href="${viewBase}home.html#proximamente" class="nav-item" data-section="proximamente">Próximamente</a>
-      <a href="${viewBase}home.html#contacto" class="nav-item" data-section="contacto">Contacto</a>
+      <a href="${viewBase}contacto.html" class="nav-item" data-section="contacto">Contacto</a>
       <a href="${viewBase}carameleria.html" class="nav-item" data-section="carameleria">Caramelería</a>
       <span class="nav-indicator"></span>
     </nav>
@@ -119,7 +119,7 @@ function getNavbarHTML() {
 function getFooterHTML() {
   const { assetBase, viewBase } = getLayoutConfig();
   return `
-  <footer class="site-footer" id="contacto">
+  <footer class="site-footer">
     <div class="footer-glow-line"></div>
     <div class="footer-container">
       
@@ -187,7 +187,7 @@ function getFooterHTML() {
           <li><a href="#">Validación de Edad (+18)</a></li>
           <li><a href="#">Términos y Condiciones</a></li>
           <li><a href="#">Políticas de Privacidad</a></li>
-          <li><a href="#contacto">Contacto y Ayuda</a></li>
+          <li><a href="${viewBase}contacto.html">Contacto y Ayuda</a></li>
         </ul>
       </div>
 
@@ -205,51 +205,6 @@ function getFooterHTML() {
         </div>
       </div>
 
-      <!-- NUEVO DISEÑO DE CANALES DE CONTACTO (MISMO FONDO QUE TIPOS DE PAGO) -->
-      <div class="footer-contact-grid">
-        
-        <a href="tel:+582125552463" class="contact-card-item" title="Llamar a taquillas">
-          <div class="contact-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-            </svg>
-          </div>
-          <div class="contact-card-body">
-            <span class="contact-card-title">Atención y Taquillas</span>
-            <span class="contact-card-val">+58 (212) 555-CINE</span>
-            <span class="contact-card-sub">WhatsApp: +58 (412) 123-4567</span>
-          </div>
-        </a>
-
-        <a href="mailto:contacto@cineplex.com.ve" class="contact-card-item" title="Escribir correo">
-          <div class="contact-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-              <polyline points="22,6 12,13 2,6"></polyline>
-            </svg>
-          </div>
-          <div class="contact-card-body">
-            <span class="contact-card-title">Correo Electrónico</span>
-            <span class="contact-card-val">contacto@cineplex.com.ve</span>
-            <span class="contact-card-sub">Atención 24/7 &bull; Soporte</span>
-          </div>
-        </a>
-
-        <div class="contact-card-item" title="Sedes CinePleX">
-          <div class="contact-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-          </div>
-          <div class="contact-card-body">
-            <span class="contact-card-title">Salas y Complejos</span>
-            <span class="contact-card-val">C.C. Tolón &bull; C.C. Líder</span>
-            <span class="contact-card-sub">Caracas, Venezuela</span>
-          </div>
-        </div>
-
-      </div>
     </div>
   </footer>
   `;
@@ -510,14 +465,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentPath = window.location.pathname.replace(/\\/g, '/').split('/').pop() || 'home.html';
     
     // Activar pestaña según la página actual o hash
-    if (currentPath === 'carameleria.html') {
+    if (currentPath === 'contacto.html') {
+      actualizarNavActive('contacto');
+    } else if (currentPath === 'carameleria.html') {
       actualizarNavActive('carameleria');
     } else if (currentPath === 'home.html' || currentPath === '' || currentPath === 'index.html') {
       const currentHash = window.location.hash ? window.location.hash.replace('#', '') : 'cartelera';
       actualizarNavActive(currentHash);
 
       // ScrollSpy dinámico en home.html: Al deslizar con la rueda o trackpad, mueve la raya morada a la sección visible
-      const sections = ['cartelera', 'preventa', 'proximamente', 'contacto'];
+      const sections = ['cartelera', 'preventa', 'proximamente'];
       let scrollTimer = null;
       window.addEventListener('scroll', () => {
         if (scrollTimer) clearTimeout(scrollTimer);

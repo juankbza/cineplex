@@ -1,0 +1,34 @@
+body.candy-page {
+  background-color: var(--bg-main);
+  color: var(--text-white);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="light"] .candy-card {
+  border-color: var(--border-color);
+  background-color: var(--bg-card);
+}
+
+[data-theme="light"] .candy-card h3,
+[data-theme="light"] .candy-card h4,
+[data-theme="light"] .candy-card span.text-2xl,
+[data-theme="light"] .candy-card span.text-3xl,
+[data-theme="light"] .candy-card span.text-xl {
+  color: var(--text-white);
+}
+
+[data-theme="light"] .candy-card p.text-gray-300,
+[data-theme="light"] .candy-card p.text-gray-400 {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .candy-filter {
+  border-color: var(--border-color);
+  background-color: var(--bg-input);
+  color: var(--text-white);
+}
+
+[data-theme="light"] .candy-filter:hover {
+  border-color: var(--primary-light);
+  background-color: rgba(109, 40, 217, 0.1);
+}

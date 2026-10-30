@@ -173,98 +173,9 @@
   text-transform: uppercase;
 }
 
-/* ==========================================
-   CANALES DE CONTACTO (NUEVO DISEÑO CON EL MISMO FONDO DE PAGOS)
-   ========================================== */
-.footer-contact-grid {
-  max-width: 1280px;
-  margin: 1.5rem auto 0 auto;
-  padding-top: 1.4rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
-}
-
-.contact-card-item {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 1rem 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  text-decoration: none;
-  color: var(--text-white);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.contact-card-item:hover {
-  border-color: var(--primary-purple);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-}
-
-.contact-card-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background-color: var(--bg-main);
-  border: 1px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: border-color 0.2s;
-}
-
-.contact-card-item:hover .contact-card-icon {
-  border-color: var(--primary-purple);
-}
-
-.contact-card-icon svg {
-  width: 20px;
-  height: 20px;
-  stroke: #ffffff;
-}
-
-.contact-card-body {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.contact-card-title {
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: #ffffff;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 2px;
-}
-
-.contact-card-val {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #f1f5f9;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.contact-card-sub {
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
 @media (max-width: 900px) {
   .footer-container {
     grid-template-columns: 1fr 1fr;
-  }
-  .footer-contact-grid {
-    grid-template-columns: 1fr;
-    gap: 0.85rem;
   }
 }
 

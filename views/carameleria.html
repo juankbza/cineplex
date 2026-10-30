@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +8,12 @@
     <!-- Global CSS & Navbar System del Proyecto (Idéntico a home.html) -->
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/navbar.css">
+    <link rel="stylesheet" href="../assets/css/footer.css">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/carameleria.css">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -32,7 +34,7 @@
         }
     </script>
 </head>
-<body class="bg-[#0c0c11] text-gray-100 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-[#6d28d9] selection:text-white">
+<body class="candy-page font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-[#6d28d9] selection:text-white">
 
     <!-- NAVBAR OFICIAL INYECTADO POR LAYOUT.JS (IDÉNTICO A HOME.HTML) -->
     <div id="app-navbar"></div>
@@ -42,11 +44,11 @@
 
         <!-- FILTROS DE CATEGORÍA -->
         <div class="flex items-center space-x-3 overflow-x-auto pb-6 mb-2 scrollbar-none">
-            <button class="bg-[#6d28d9] text-white px-6 py-2.5 rounded-full font-medium text-sm shadow-md shadow-black/30 border border-purple-400">Combos</button>
-            <button class="bg-[#181822] text-gray-300 hover:bg-purple-950/50 border border-[#242430] px-6 py-2.5 rounded-full font-medium text-sm transition">Cotufas & Palomitas</button>
-            <button class="bg-[#181822] text-gray-300 hover:bg-purple-950/50 border border-[#242430] px-6 py-2.5 rounded-full font-medium text-sm transition">Bebidas</button>
-            <button class="bg-[#181822] text-gray-300 hover:bg-purple-950/50 border border-[#242430] px-6 py-2.5 rounded-full font-medium text-sm transition">Dulces</button>
-            <button class="bg-[#181822] text-gray-300 hover:bg-purple-950/50 border border-[#242430] px-6 py-2.5 rounded-full font-medium text-sm transition">Coleccionables</button>
+            <button class="candy-filter-active bg-[#6d28d9] text-white px-6 py-2.5 rounded-full font-medium text-sm shadow-md shadow-black/30 border border-purple-400">Combos</button>
+            <button class="candy-filter bg-[#181822] text-gray-300 hover:bg-purple-950/50 border border-[#242430] px-6 py-2.5 rounded-full font-medium text-sm transition">Cotufas & Palomitas</button>
+            <button class="candy-filter bg-[#181822] text-gray-300 hover:bg-purple-950/50 border border-[#242430] px-6 py-2.5 rounded-full font-medium text-sm transition">Bebidas</button>
+            <button class="candy-filter bg-[#181822] text-gray-300 hover:bg-purple-950/50 border border-[#242430] px-6 py-2.5 rounded-full font-medium text-sm transition">Dulces</button>
+            <button class="candy-filter bg-[#181822] text-gray-300 hover:bg-purple-950/50 border border-[#242430] px-6 py-2.5 rounded-full font-medium text-sm transition">Coleccionables</button>
         </div>
 
         <!-- BENTO GRID DE PRODUCTOS: 3 COLUMNAS EN PANTALLA -->
@@ -55,7 +57,7 @@
             <!-- ================= COLUMNA 1 (IZQUIERDA) ================= -->
             <div class="flex flex-col gap-6 justify-between">
                 <!-- Card 1: Combo Temporada Siniestra -->
-                <div class="bg-[#14141a] border border-[#242430] rounded-2xl overflow-hidden shadow-xl hover:border-purple-600/50 transition group flex flex-col justify-between">
+                <div class="candy-card bg-[#14141a] border border-[#242430] rounded-2xl overflow-hidden shadow-xl hover:border-purple-600/50 transition group flex flex-col justify-between">
                     <div>
                         <div class="relative h-52 overflow-hidden">
                             <span class="absolute top-3 left-3 z-10 bg-[#6d28d9] text-white text-[10px] font-bold tracking-wider px-3 py-1 rounded uppercase shadow">Destacado del día</span>
@@ -76,7 +78,7 @@
                 </div>
 
                 <!-- Card 2: Cotufa de Autor -->
-                <div class="bg-[#14141a] border border-[#242430] rounded-2xl overflow-hidden shadow-xl hover:border-purple-600/50 transition group flex flex-col justify-between">
+                <div class="candy-card bg-[#14141a] border border-[#242430] rounded-2xl overflow-hidden shadow-xl hover:border-purple-600/50 transition group flex flex-col justify-between">
                     <div>
                         <div class="relative h-48 overflow-hidden">
                             <div class="absolute top-3 left-3 z-10 flex space-x-2">
@@ -124,7 +126,7 @@
             <div class="flex flex-col gap-6 justify-between">
                 
                 <!-- Card 1: Combo Pareja Suprema -->
-                <div class="bg-[#14141a] border border-[#242430] rounded-2xl overflow-hidden shadow-xl hover:border-purple-600/50 transition group flex flex-col justify-between">
+                <div class="candy-card bg-[#14141a] border border-[#242430] rounded-2xl overflow-hidden shadow-xl hover:border-purple-600/50 transition group flex flex-col justify-between">
                     <div>
                         <div class="relative h-52 overflow-hidden">
                             <span class="absolute top-3 left-3 z-10 bg-[#6d28d9] text-white text-[10px] font-bold px-3 py-1 rounded uppercase shadow">Popular</span>
@@ -145,7 +147,7 @@
                 </div>
 
                 <!-- Card 2: Nachos con Queso Extra (Borde Neón Amarillo) -->
-                <div class="bg-[#14141a] border-2 border-yellow-400 shadow-[0_0_22px_rgba(250,204,21,0.45)] hover:shadow-[0_0_30px_rgba(250,204,21,0.7)] hover:border-yellow-300 rounded-2xl overflow-hidden transition-all duration-300 group flex flex-col justify-between">
+                <div class="candy-card bg-[#14141a] border-2 border-yellow-400 shadow-[0_0_22px_rgba(250,204,21,0.45)] hover:shadow-[0_0_30px_rgba(250,204,21,0.7)] hover:border-yellow-300 rounded-2xl overflow-hidden transition-all duration-300 group flex flex-col justify-between">
                     <div>
                         <div class="relative h-48 overflow-hidden">
                             <img src="https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?auto=format&fit=crop&w=600&q=80" alt="Nachos con Queso" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
@@ -169,6 +171,8 @@
         </div>
 
     </main>
+
+    <div id="app-footer"></div>
 
     <!-- Script Oficial de Inyección de Layout y Carrito -->
     <script src="../assets/js/layout.js"></script>
