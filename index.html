@@ -4,10 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CinePleX - Tu Cine Premium</title>
+
+  <!-- Global & Navbar Styles Oficiales -->
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Inter -->
+  <!-- Google Fonts: Inter & Material Symbols -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -15,8 +21,8 @@
         extend: {
           colors: {
             brand: {
-              DEFAULT: '#7E22CE', // Morado principal
-              hover: '#6B21A8',
+              DEFAULT: '#6D28D9', // Morado sobrio
+              hover: '#5B21B6',
               accent: '#06B6D4', // Cian secundario para tags
             }
           },
@@ -28,43 +34,10 @@
     }
   </script>
 </head>
-<body class="bg-gray-950 text-gray-100 font-sans antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-[#0b0415] text-gray-100 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- ================= NAV BAR ================= -->
-  <header class="sticky top-0 z-40 bg-gray-900/90 backdrop-blur-md border-b border-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      
-      <!-- LOGO -->
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 bg-brand rounded-xl flex items-center justify-center font-extrabold text-2xl shadow-lg shadow-purple-900/50">
-          X
-        </div>
-        <span class="text-2xl font-bold tracking-wider text-white">Cine<span class="text-purple-500">PleX</span></span>
-      </div>
-
-      <!-- BUSCADOR PRINCIPAL -->
-      <div class="hidden md:flex flex-1 max-w-md mx-8">
-        <div class="relative w-full">
-          <input type="text" placeholder="Buscar películas, actores, salas..." class="w-full bg-gray-800 text-sm text-gray-200 placeholder-gray-400 rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-600 border border-gray-700" />
-          <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-          </svg>
-        </div>
-      </div>
-
-      <!-- MENÚ Y LOGIN -->
-      <nav class="flex items-center space-x-6">
-        <a href="#cartelera" class="hidden sm:inline text-sm font-medium hover:text-purple-400 transition">Cartelera</a>
-        <a href="#estrenos" class="hidden sm:inline text-sm font-medium hover:text-purple-400 transition">Estrenos</a>
-        <a href="#dulceria" class="hidden sm:inline text-sm font-medium hover:text-purple-400 transition">Dulcería</a>
-        <a href="#promos" class="hidden sm:inline text-sm font-medium hover:text-purple-400 transition">Promos</a>
-        <button class="bg-brand hover:bg-brand-hover text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-md transition">
-          Iniciar Sesión
-        </button>
-      </nav>
-    </div>
-  </header>
-
+  <!-- ================= NAV BAR OFICIAL (IDÉNTICO A TODOS LOS APARTADOS) ================= -->
+  <div id="app-navbar"></div>
 
   <!-- ================= HERO SECTION & ACCESO RÁPIDO A ENTRADAS ================= -->
   <section class="relative bg-gradient-to-b from-gray-900 to-gray-950 py-12 md:py-20 border-b border-gray-800">
@@ -119,8 +92,9 @@
           </div>
 
           <!-- Alerta de Entradas Agotadas (Ejemplo dinámico) -->
-          <div class="hidden p-3 bg-red-900/40 border border-red-700/50 rounded-lg text-xs text-red-300">
-            ⚠️ No hay entradas disponibles para la función seleccionada.
+          <div class="hidden p-3 bg-red-900/40 border border-red-700/50 rounded-lg text-xs text-red-300 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">warning</span>
+            <span>No hay entradas disponibles para la función seleccionada.</span>
           </div>
 
           <button type="button" class="w-full bg-brand hover:bg-brand-hover text-white font-bold py-3 rounded-lg shadow-lg shadow-purple-900/40 transition">
@@ -140,7 +114,7 @@
         <h2 class="text-3xl font-extrabold text-white">En Cartelera</h2>
         <p class="text-sm text-gray-400">Selecciona tu película y compra tus entradas</p>
       </div>
-      <a href="#" class="text-sm text-purple-400 hover:underline font-semibold">Ver todas →</a>
+      <a href="views/home.html#cartelera" class="text-sm text-purple-400 hover:underline font-semibold">Ver todas →</a>
     </div>
 
     <!-- GRID DE PELÍCULAS -->
@@ -160,9 +134,9 @@
         <div class="p-4 space-y-2">
           <h3 class="text-lg font-bold text-white truncate">Spider-Man: Beyond</h3>
           <p class="text-xs text-gray-400">Duración: 140 min | Doblada / Subtitulada</p>
-          <button class="w-full mt-3 bg-gray-800 hover:bg-brand text-white text-sm font-semibold py-2 rounded-lg border border-gray-700 transition">
+          <a href="views/comprar-ticket.html?pelicula=spider-man" class="block text-center w-full mt-3 bg-gray-800 hover:bg-brand text-white text-sm font-semibold py-2 rounded-lg border border-gray-700 transition">
             Comprar Entradas
-          </button>
+          </a>
         </div>
       </div>
 
@@ -180,9 +154,9 @@
         <div class="p-4 space-y-2">
           <h3 class="text-lg font-bold text-white truncate">Oppenheimer</h3>
           <p class="text-xs text-gray-400">Duración: 180 min | Subtitulada</p>
-          <button class="w-full mt-3 bg-gray-800 hover:bg-brand text-white text-sm font-semibold py-2 rounded-lg border border-gray-700 transition">
+          <a href="views/comprar-ticket.html?pelicula=oppenheimer" class="block text-center w-full mt-3 bg-gray-800 hover:bg-brand text-white text-sm font-semibold py-2 rounded-lg border border-gray-700 transition">
             Comprar Entradas
-          </button>
+          </a>
         </div>
       </div>
 
@@ -198,6 +172,7 @@
           <h2 class="text-3xl font-extrabold text-white">Dulcería & Combos</h2>
           <p class="text-sm text-gray-400">Agrega tus snacks ahora y retíralos sin filas en la taquilla</p>
         </div>
+        <a href="views/carameleria.html" class="text-sm text-purple-400 hover:underline font-semibold">Ver caramelería completa →</a>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -232,5 +207,7 @@
     </div>
   </footer>
 
+  <!-- Script Oficial de Inyección de Layout y Carrito -->
+  <script src="assets/js/layout.js"></script>
 </body>
 </html>

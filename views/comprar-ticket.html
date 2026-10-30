@@ -1,739 +1,905 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CinePleX - Proceso de Compra</title>
+  <title>CinePleX - Comprar Entradas</title>
+
+  <!-- Global & Navbar System del Proyecto -->
   <link rel="stylesheet" href="../assets/css/global.css">
   <link rel="stylesheet" href="../assets/css/navbar.css">
-  <link rel="stylesheet" href="../assets/css/footer.css">
+
+  <!-- Google Material Symbols Outlined -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#6d28d9',
+              hover: '#5b21b6',
+              accent: '#8b5cf6',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    /* ==========================================
-       ESTILOS: FLUJO DE COMPRA DE TICKETS & CHECKOUT
-       ========================================== */
-    .checkout-main-container {
-      max-width: 1200px;
-      margin: 2.5rem auto 5rem auto;
-      padding: 0 1.5rem;
+    body {
+      background-color: #0c0c11;
+      color: #f1f5f9;
+      font-family: 'Inter', sans-serif;
     }
 
-    /* Stepper / Indicador de Pasos */
-    .checkout-stepper {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 3rem;
-      position: relative;
-    }
-
-    .checkout-stepper::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 10%;
-      right: 10%;
+    /* Stepper connectors */
+    .stepper-connector {
+      flex: 1;
       height: 2px;
-      background: var(--border-color);
-      z-index: 1;
-      transform: translateY(-50%);
+      background-color: #23232c;
+      margin: 0 0.8rem;
     }
 
-    .step-item {
-      position: relative;
-      z-index: 2;
-      background-color: var(--bg-card);
-      border: 2px solid var(--border-color);
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      font-weight: 900;
-      color: var(--text-muted);
-      transition: all 0.3s ease;
+    .stepper-connector.completed {
+      background-color: #6d28d9;
     }
 
-    .step-item.active {
-      border-color: var(--primary-light);
-      background-color: var(--primary-purple);
-      color: #ffffff;
-      box-shadow: 0 0 15px var(--shadow-color);
-    }
-
-    .step-item.completed {
-      border-color: #10b981;
-      background-color: #10b981;
-      color: #ffffff;
-    }
-
-    /* Contenedor de Pasos */
-    .checkout-step-content {
-      display: none;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 3rem;
-      box-shadow: 0 20px 40px var(--shadow-color);
-    }
-
-    .checkout-step-content.active {
-      display: block;
-    }
-
-    .step-title-header {
-      font-size: 1.6rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--text-white);
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-
-    .step-title-header span {
-      display: inline-block;
-      width: 5px;
-      height: 20px;
-      background: var(--primary-purple);
-      border-radius: 2px;
-    }
-
-    .step-subtitle {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      margin-bottom: 2.5rem;
-    }
-
-    /* PASO 1: CANTIDAD DE ENTRADAS */
-    .tickets-type-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .ticket-row-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      padding: 1.2rem 1.8rem;
-      border-radius: var(--radius-md);
-    }
-
-    .ticket-info h4 {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--text-white);
-      margin-bottom: 0.2rem;
-    }
-
-    .ticket-info span {
-      font-size: 0.82rem;
-      color: var(--primary-light);
-      font-weight: 700;
-    }
-
-    .counter-control {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .btn-counter {
-      width: 36px;
-      height: 36px;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      color: var(--text-white);
-      border-radius: 50%;
-      font-weight: 900;
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s, border-color 0.2s;
-    }
-
-    .btn-counter:hover {
-      background-color: var(--primary-purple);
-      border-color: var(--primary-light);
-    }
-
-    .counter-value {
-      font-size: 1.15rem;
-      font-weight: 900;
-      color: var(--text-white);
-      min-width: 24px;
-      text-align: center;
-    }
-
-    /* PASO 2: MAPA DE BUTACAS */
-    .cinema-screen-indicator {
-      width: 80%;
-      height: 10px;
-      background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
-      margin: 0 auto 2.5rem auto;
-      border-radius: 50%;
-      box-shadow: 0 10px 20px var(--shadow-color);
-      text-align: center;
-    }
-    .screen-label {
-      font-size: 0.7rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--text-muted);
-      display: block;
-      padding-top: 15px;
-    }
-
-    .seats-grid-layout {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 0.75rem;
-      max-width: 600px;
-      margin: 0 auto 2.5rem auto;
-    }
-
+    /* Asientos de cine */
     .seat-box {
-      aspect-ratio: 1;
-      background-color: var(--bg-main);
-      border: 1px solid var(--border-color);
+      width: 32px;
+      height: 32px;
       border-radius: 6px;
-      font-size: 0.7rem;
-      font-weight: 800;
-      color: var(--text-muted);
-      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
       transition: all 0.2s ease;
+      background-color: #16161f;
+      border: 1px solid #282834;
+      color: #94a3b8;
+      user-select: none;
     }
 
     .seat-box:hover:not(.occupied) {
-      border-color: var(--primary-light);
-      background-color: rgba(126, 34, 206, 0.2);
+      border-color: #8b5cf6;
       color: #ffffff;
+      transform: scale(1.06);
     }
 
     .seat-box.selected {
-      background-color: var(--primary-purple);
-      border-color: #c084fc;
-      color: #ffffff;
-      box-shadow: 0 0 12px var(--shadow-color);
+      background-color: #6d28d9 !important;
+      border-color: #8b5cf6 !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 8px rgba(109, 40, 217, 0.4);
+      font-weight: 800;
     }
 
     .seat-box.occupied {
-      background-color: #262626;
-      border-color: #404040;
-      color: #737373;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .seats-legend-row {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-bottom: 2rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    .legend-item-flex {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .legend-box-sample {
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
-    }
-
-    /* PASO 3: SNACKS Y CARAMELERÍA */
-    .snacks-grid-checkout {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .snack-card-item {
-      background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 1.2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .snack-card-item h5 {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--text-white);
-      margin-bottom: 0.2rem;
-    }
-
-    .snack-card-item p {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-    }
-
-    .snack-footer-flex {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    /* PASO 4: PAGO Y RESUMEN */
-    .checkout-final-grid {
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 2.5rem;
-    }
-
-    .payment-methods-box {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .payment-method-card {
-      background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      padding: 1.2rem 1.5rem;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-
-    .payment-method-card input {
-      accent-color: var(--primary-purple);
-      width: 18px;
-      height: 18px;
-    }
-
-    .payment-method-card label {
-      font-size: 0.9rem;
-      font-weight: 800;
-      color: var(--text-white);
-      cursor: pointer;
-    }
-
-    .order-summary-box {
-      background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 1.8rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .summary-row-line {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .summary-row-line.total {
-      border-top: 1px solid var(--border-color);
-      padding-top: 1rem;
-      font-size: 1.2rem;
-      font-weight: 900;
-      color: var(--text-white);
-    }
-
-    .summary-row-line.total span:last-child {
-      color: var(--primary-light);
-    }
-
-    /* Botones de Navegación del Flujo */
-    .checkout-buttons-row {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 2.5rem;
-      border-top: 1px solid var(--border-color);
-      padding-top: 1.5rem;
-    }
-
-    .btn-step-action {
-      background: linear-gradient(135deg, #7e22ce, #6b21a8);
-      color: #ffffff;
-      border: 1px solid #c084fc;
-      padding: 0.85rem 2.2rem;
-      border-radius: 50px;
-      font-size: 0.88rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      box-shadow: 0 8px 20px var(--shadow-color);
-      transition: all 0.2s ease;
-    }
-
-    .btn-step-action:hover {
-      background: linear-gradient(135deg, #9333ea, #7e22ce);
-      transform: translateY(-2px);
-    }
-
-    .btn-step-back {
-      background: var(--bg-main);
-      color: var(--text-white);
-      border: 1px solid var(--border-color);
-      padding: 0.85rem 2rem;
-      border-radius: 50px;
-      font-size: 0.88rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
-    .btn-step-back:hover {
-      border-color: var(--primary-purple);
-    }
-
-    @media (max-width: 900px) {
-      .checkout-final-grid {
-        grid-template-columns: 1fr;
-      }
-      .checkout-step-content {
-        padding: 1.5rem;
-      }
+      background-color: #191921 !important;
+      border-color: #22222d !important;
+      color: #475569 !important;
+      cursor: not-allowed !important;
     }
   </style>
 </head>
-<body>
 
-  <!-- APPBAR INYECTADO POR LAYOUT.JS -->
+<body class="min-h-screen flex flex-col justify-between selection:bg-purple-700 selection:text-white">
+
+  <!-- ================= NAVBAR SUPERIOR OFICIAL ================= -->
   <div id="app-navbar"></div>
 
-  <main class="checkout-main-container">
+  <!-- ================= CONTENIDO PRINCIPAL ================= -->
+  <main class="max-w-[1280px] w-full mx-auto px-6 pt-8 pb-20 flex-grow">
 
-    <!-- STEPPER INDICADOR -->
-    <div class="checkout-stepper">
-      <div class="step-item active" id="indicator1">1</div>
-      <div class="step-item" id="indicator2">2</div>
-      <div class="step-item" id="indicator3">3</div>
-      <div class="step-item" id="indicator4">4</div>
-    </div>
-
-    <!-- ================= PASO 1: ENTRADAS ================= -->
-    <div class="checkout-step-content active" id="step1">
-      <h2 class="step-title-header"><span></span> Selección de Entradas</h2>
-      <p class="step-subtitle">Elige la cantidad de boletos que necesitas para tu función.</p>
-
-      <div class="tickets-type-grid">
-        <div class="ticket-row-item">
-          <div class="ticket-info">
-            <h4>Entrada General (2D)</h4>
-            <span>$7.00 USD c/u</span>
-          </div>
-          <div class="counter-control">
-            <button class="btn-counter" onclick="cambiarCantidad('general', -1)">-</button>
-            <span class="counter-value" id="countGeneral">1</span>
-            <button class="btn-counter" onclick="cambiarCantidad('general', 1)">+</button>
-          </div>
-        </div>
-
-        <div class="ticket-row-item">
-          <div class="ticket-info">
-            <h4>Entrada Sala VIP Reclinable</h4>
-            <span>$10.00 USD c/u</span>
-          </div>
-          <div class="counter-control">
-            <button class="btn-counter" onclick="cambiarCantidad('vip', -1)">-</button>
-            <span class="counter-value" id="countVip">0</span>
-            <button class="btn-counter" onclick="cambiarCantidad('vip', 1)">+</button>
-          </div>
-        </div>
-
-        <div class="ticket-row-item">
-          <div class="ticket-info">
-            <h4>Experiencia 4D E-Motion</h4>
-            <span>$12.50 USD c/u</span>
-          </div>
-          <div class="counter-control">
-            <button class="btn-counter" onclick="cambiarCantidad('4d', -1)">-</button>
-            <span class="counter-value" id="count4d">0</span>
-            <button class="btn-counter" onclick="cambiarCantidad('4d', 1)">+</button>
-          </div>
+    <!-- STEPPER DE COMPRA SOBRIO -->
+    <div class="max-w-xl mx-auto flex items-center justify-between mb-8">
+      <!-- Paso 1: Entradas & Butacas (Activo) -->
+      <div class="flex items-center">
+        <div id="ind1"
+          class="w-9 h-9 rounded-full bg-[#6d28d9] text-white font-extrabold text-xs flex items-center justify-center border-2 border-[#8b5cf6]/60 shadow-md">
+          1
         </div>
       </div>
+      <div class="stepper-connector" id="conn1"></div>
 
-      <div class="checkout-buttons-row">
-        <div></div>
-        <button type="button" class="btn-step-action" onclick="irAlPaso(2)">Siguiente: Elegir Butacas ➔</button>
+      <!-- Paso 2: Snacks -->
+      <div class="flex items-center">
+        <div id="ind2"
+          class="w-9 h-9 rounded-full bg-[#181820] text-zinc-400 font-extrabold text-xs flex items-center justify-center border border-[#2b2b36]">
+          2
+        </div>
+      </div>
+      <div class="stepper-connector" id="conn2"></div>
+
+      <!-- Paso 3: Pago -->
+      <div class="flex items-center">
+        <div id="ind3"
+          class="w-9 h-9 rounded-full bg-[#181820] text-zinc-400 font-extrabold text-xs flex items-center justify-center border border-[#2b2b36]">
+          3
+        </div>
+      </div>
+      <div class="stepper-connector" id="conn3"></div>
+
+      <!-- Paso 4: Confirmación -->
+      <div class="flex items-center">
+        <div id="ind4"
+          class="w-9 h-9 rounded-full bg-[#181820] text-zinc-400 font-extrabold text-xs flex items-center justify-center border border-[#2b2b36]">
+          4
+        </div>
       </div>
     </div>
 
 
-    <!-- ================= PASO 2: BUTACAS ================= -->
-    <div class="checkout-step-content" id="step2">
-      <h2 class="step-title-header"><span></span> Mapa de Butacas</h2>
-      <p class="step-subtitle">Selecciona tus asientos favoritos en la sala. Debes elegir exactamente la cantidad de boletos solicitados.</p>
+    <!-- ================= BANNER COMPACTO DE LA PELÍCULA SELECCIONADA ================= -->
+    <div
+      class="bg-[#14141a] border border-[#242430] rounded-2xl p-4 sm:p-5 mb-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-5 shadow-lg">
+      <img id="peliculaPosterImg"
+        src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=400&q=80"
+        alt="Poster Película"
+        class="w-16 h-24 sm:w-20 sm:h-28 object-cover rounded-xl border border-[#2d2d3a] shadow flex-shrink-0">
 
-      <div class="cinema-screen-indicator">
-        <span class="screen-label">Pantalla CinePleX</span>
+      <div class="flex-grow text-center sm:text-left space-y-1.5 w-full">
+        <div class="flex items-center justify-center sm:justify-start gap-2">
+          <span
+            class="px-2.5 py-0.5 rounded bg-[#201a2e] text-[#a78bfa] text-[10px] font-bold uppercase tracking-wider">PELÍCULA
+            SELECCIONADA</span>
+          <span id="peliculaRatingTxt"
+            class="px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 text-[10px] font-bold">+13</span>
+        </div>
+
+        <h1 id="peliculaTituloTxt" class="text-xl sm:text-2xl font-black text-white tracking-tight">
+          Dune: Parte Dos
+        </h1>
+
+        <div id="peliculaMetaTxt"
+          class="text-xs text-zinc-400 flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3">
+          <!-- Renderizado dinámico -->
+        </div>
+
+        <!-- Selector de Horarios Disponibles (No forzado, limpio y moderno) -->
+        <div class="pt-1 flex flex-wrap items-center justify-center sm:justify-start gap-2">
+          <span class="text-xs text-zinc-400 font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm text-purple-400">schedule</span> Horario de función:
+          </span>
+          <div id="horariosSelectorContainer" class="flex flex-wrap gap-1.5">
+            <!-- Pills generadas dinámicamente -->
+          </div>
+        </div>
       </div>
 
-      <div class="seats-grid-layout" id="seatsContainer">
-        <!-- Generado dinámicamente por JS -->
-      </div>
-
-      <div class="seats-legend-row">
-        <div class="legend-item-flex"><span class="legend-box-sample" style="background:var(--bg-main); border:1px solid var(--border-color);"></span> Disponible</div>
-        <div class="legend-item-flex"><span class="legend-box-sample" style="background:var(--primary-purple);"></span> Seleccionada</div>
-        <div class="legend-item-flex"><span class="legend-box-sample" style="background:#262626;"></span> Ocupada</div>
-      </div>
-
-      <div class="checkout-buttons-row">
-        <button type="button" class="btn-step-back" onclick="irAlPaso(1)">‹ Volver</button>
-        <button type="button" class="btn-step-action" onclick="irAlPaso(3)">Siguiente: Añadir Snacks ➔</button>
+      <div class="flex flex-col sm:flex-row lg:flex-col gap-2 self-center sm:self-start flex-shrink-0">
+        <a id="btnVerTrailerDetalle" href="detalle.html?pelicula=dune-2"
+          class="text-xs font-bold text-purple-300 hover:text-white uppercase tracking-wider px-3.5 py-2 rounded-xl border border-purple-800/60 bg-purple-950/30 hover:bg-purple-900/40 transition whitespace-nowrap flex items-center justify-center shadow-sm">
+          Ver Tráiler
+        </a>
+        <a href="home.html#cartelera"
+          class="text-xs font-semibold text-zinc-400 hover:text-white uppercase tracking-wider px-3.5 py-2 rounded-xl border border-[#2d2d3a] hover:bg-[#1e1e28] transition whitespace-nowrap text-center">
+          Cambiar Película
+        </a>
       </div>
     </div>
 
 
-    <!-- ================= PASO 3: SNACKS / CARAMELERÍA ================= -->
-    <div class="checkout-step-content" id="step3">
-      <h2 class="step-title-header"><span></span> ¿Deseas acompañarlo con algo de Caramelería?</h2>
-      <p class="step-subtitle">Añade tus favoritos sin hacer filas y recójalos listos al ingresar.</p>
+    <!-- ================= CONTENEDOR UNIFICADO: ENTRADAS & MAPA DE BUTACAS ================= -->
+    <div id="viewStep1" class="bg-[#14141a] border border-[#242430] rounded-2xl p-6 sm:p-8 shadow-xl">
 
-      <div class="snacks-grid-checkout">
-        
-        <div class="snack-card-item">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+
+        <!-- ================= COLUMNA IZQUIERDA: SELECCIÓN DE SALA Y TIPO DE ENTRADA ================= -->
+        <div class="lg:col-span-5 flex flex-col justify-between h-full space-y-6">
           <div>
-            <h5>Combo Pareja Suprema</h5>
-            <p>1 Cotufa grande + 2 refrescos medianos + chocolate.</p>
+            <!-- Encabezado -->
+            <div class="flex items-center space-x-2.5 mb-1.5">
+              <span class="w-1.5 h-5 bg-[#6d28d9] rounded-full inline-block"></span>
+              <h2 class="text-lg font-bold uppercase tracking-wider text-white">
+                SELECCIÓN DE SALA Y ENTRADA
+              </h2>
+            </div>
+            <p class="text-zinc-400 text-xs mb-4">
+              Selecciona uno de los 3 tipos de salas para desbloquear la distribución de asientos:
+            </p>
+
+            <!-- Lista de 3 Tipos de Sala -->
+            <div class="space-y-3">
+
+              <!-- Opción 1: Entrada Normal (2D) -->
+              <div id="cardSala-normal" onclick="seleccionarSala('normal')"
+                class="sala-card bg-[#0e0e13] border border-[#20202a] hover:border-[#6d28d9] rounded-xl p-4 cursor-pointer transition flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                  <div id="iconSala-normal"
+                    class="w-10 h-10 rounded-xl bg-[#181822] text-zinc-400 group-hover:text-purple-300 flex items-center justify-center border border-[#282836] transition">
+                    <span class="material-symbols-outlined text-xl">theaters</span>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-bold text-sm flex items-center gap-1.5">
+                      <span>Entrada Normal (2D)</span>
+                      <span
+                        class="text-[9px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 font-semibold uppercase">Sala
+                        Estándar</span>
+                    </h4>
+                    <p class="text-zinc-400 text-xs mt-0.5">Pantalla panorámica tradicional 2D</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-white font-black text-base block">$7.00</span>
+                  <span class="text-[10px] text-zinc-400">USD c/u</span>
+                </div>
+              </div>
+
+              <!-- Opción 2: Entrada Sala VIP Reclinable -->
+              <div id="cardSala-vip" onclick="seleccionarSala('vip')"
+                class="sala-card bg-[#0e0e13] border border-[#20202a] hover:border-[#6d28d9] rounded-xl p-4 cursor-pointer transition flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                  <div id="iconSala-vip"
+                    class="w-10 h-10 rounded-xl bg-[#181822] text-zinc-400 group-hover:text-purple-300 flex items-center justify-center border border-[#282836] transition">
+                    <span class="material-symbols-outlined text-xl">chair</span>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-bold text-sm flex items-center gap-1.5">
+                      <span>Entrada Sala VIP Reclinable</span>
+                      <span
+                        class="text-[9px] px-2 py-0.5 rounded bg-purple-950/70 text-purple-300 border border-purple-800/40 font-semibold uppercase">Sala
+                        VIP</span>
+                    </h4>
+                    <p class="text-zinc-400 text-xs mt-0.5">Butacas dobles de cuero y pasillos amplios</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-white font-black text-base block">$10.00</span>
+                  <span class="text-[10px] text-zinc-400">USD c/u</span>
+                </div>
+              </div>
+
+              <!-- Opción 3: Experiencia 4D E-Motion -->
+              <div id="cardSala-4d" onclick="seleccionarSala('4d')"
+                class="sala-card bg-[#0e0e13] border border-[#20202a] hover:border-[#6d28d9] rounded-xl p-4 cursor-pointer transition flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                  <div id="iconSala-4d"
+                    class="w-10 h-10 rounded-xl bg-[#181822] text-zinc-400 group-hover:text-purple-300 flex items-center justify-center border border-[#282836] transition">
+                    <span class="material-symbols-outlined text-xl">motion_photos_on</span>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-bold text-sm flex items-center gap-1.5">
+                      <span>Experiencia 4D E-Motion</span>
+                      <span
+                        class="text-[9px] px-2 py-0.5 rounded bg-amber-950/70 text-amber-300 border border-amber-800/40 font-semibold uppercase">Sala
+                        4D</span>
+                    </h4>
+                    <p class="text-zinc-400 text-xs mt-0.5">Módulos móviles con efectos de viento y agua</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-white font-black text-base block">$12.50</span>
+                  <span class="text-[10px] text-zinc-400">USD c/u</span>
+                </div>
+              </div>
+
+            </div>
           </div>
-          <div class="snack-footer-flex">
-            <span class="product-price-txt" style="font-weight:900; color:var(--primary-light);">$12.50</span>
-            <button class="btn-square-add" onclick="agregarSnackCheckout('Combo Pareja Suprema', 12.50)">Agregar</button>
+
+          <!-- Resumen Rápido de la Selección Actual -->
+          <div id="resumenSeleccionBox" class="bg-[#0e0e13] border border-[#20202a] rounded-xl p-4 text-xs space-y-2">
+            <div class="flex justify-between text-zinc-400">
+              <span>Sala seleccionada:</span>
+              <strong id="resumenSalaTxt" class="text-white">Ninguna</strong>
+            </div>
+            <div class="flex justify-between text-zinc-400">
+              <span>Butacas elegidas:</span>
+              <strong id="resumenButacasTxt" class="text-purple-300 font-mono">0 seleccionadas</strong>
+            </div>
+            <div class="border-t border-[#20202a] pt-2 flex justify-between items-baseline">
+              <span class="font-bold text-white uppercase text-[11px]">Subtotal:</span>
+              <span id="resumenSubtotalTxt" class="text-base font-black text-white">$0.00 USD</span>
+            </div>
+          </div>
+
+          <!-- Botón Volver (Escritorio) -->
+          <div class="hidden lg:block pt-2">
+            <a href="home.html"
+              class="inline-flex items-center px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-zinc-300 bg-[#0e0e13] border border-[#252533] hover:border-zinc-500 transition">
+              &lsaquo; Volver a Cartelera
+            </a>
           </div>
         </div>
 
-        <div class="snack-card-item">
+
+        <!-- ================= COLUMNA DERECHA: MAPA DE BUTACAS DINÁMICO ================= -->
+        <div class="lg:col-span-7 flex flex-col justify-between h-full space-y-6">
           <div>
-            <h5>Cotufa Grande Mantequilla</h5>
-            <p>Clásica, crujiente y caliente con toque de mantequilla.</p>
-          </div>
-          <div class="snack-footer-flex">
-            <span class="product-price-txt" style="font-weight:900; color:var(--primary-light);">$5.00</span>
-            <button class="btn-square-add" onclick="agregarSnackCheckout('Cotufa Grande Mantequilla', 5.00)">Agregar</button>
-          </div>
-        </div>
+            <!-- Encabezado -->
+            <div class="flex items-center space-x-2.5 mb-1.5">
+              <span class="w-1.5 h-5 bg-[#6d28d9] rounded-full inline-block"></span>
+              <h2 class="text-lg font-bold uppercase tracking-wider text-white">
+                MAPA DE BUTACAS
+              </h2>
+            </div>
+            <p id="seatsStatusSubtext" class="text-zinc-400 text-xs mb-5">
+              Selecciona una sala para ver la distribución de butacas.
+            </p>
 
-        <div class="snack-card-item">
-          <div>
-            <h5>Tequeños de Queso (6 pzas)</h5>
-            <p>Deditos de queso blanco crujientes con salsa.</p>
-          </div>
-          <div class="snack-footer-flex">
-            <span class="product-price-txt" style="font-weight:900; color:var(--primary-light);">$4.50</span>
-            <button class="btn-square-add" onclick="agregarSnackCheckout('Tequeños de Queso', 4.50)">Agregar</button>
-          </div>
-        </div>
+            <!-- ESTADO 1: PLACEHOLDER (ANTES DE SELECCIONAR SALA) -->
+            <div id="seatsPlaceholder"
+              class="flex flex-col items-center justify-center py-20 px-6 text-center border-2 border-dashed border-[#242432] rounded-2xl bg-[#0f0f15]/60 space-y-3">
+              <div
+                class="w-14 h-14 rounded-2xl bg-[#181822] border border-[#2b2b38] flex items-center justify-center text-[#a78bfa]">
+                <span class="material-symbols-outlined text-3xl">event_seat</span>
+              </div>
+              <div>
+                <h3 class="text-white font-extrabold text-sm sm:text-base tracking-wide uppercase">
+                  SELECCIONE UNA DE LAS 3 TIPOS DE ENTRADAS
+                </h3>
+                <p class="text-zinc-400 text-xs max-w-sm mt-1 leading-relaxed">
+                  Haz clic en Entrada Normal (2D), Sala VIP o Experiencia 4D en el panel izquierdo para cargar la
+                  distribución correspondiente de butacas.
+                </p>
+              </div>
+            </div>
 
-        <div class="snack-card-item">
-          <div>
-            <h5>Refresco Grande (32 oz)</h5>
-            <p>Coca-Cola o Sprite bien frío con refill.</p>
-          </div>
-          <div class="snack-footer-flex">
-            <span class="product-price-txt" style="font-weight:900; color:var(--primary-light);">$3.00</span>
-            <button class="btn-square-add" onclick="agregarSnackCheckout('Refresco Grande', 3.00)">Agregar</button>
-          </div>
-        </div>
+            <!-- ESTADO 2: CONTENEDOR ACTIVO DE BUTACAS -->
+            <div id="seatsActiveContainer" class="hidden">
 
-      </div>
+              <!-- Pantalla CinePleX Curva -->
+              <div class="w-full flex flex-col items-center mb-6">
+                <div
+                  class="w-4/5 h-2.5 border-t-2 border-[#6d28d9] rounded-t-[100%] shadow-[0_-3px_10px_rgba(109,40,217,0.3)]">
+                </div>
+                <span id="screenLabelTxt"
+                  class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mt-1.5">PANTALLA CINEPLEX</span>
+              </div>
 
-      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; font-weight: 700;" id="snacksAgregadosMsg">
-        Snacks en la orden: Ninguno
-      </div>
+              <!-- Grilla de Butacas Dinámica según Sala -->
+              <div class="flex justify-center overflow-x-auto pb-4">
+                <div id="seatsGrid" class="flex flex-col items-center gap-2.5 min-w-max">
+                  <!-- Renderizado con JS -->
+                </div>
+              </div>
 
-      <div class="checkout-buttons-row">
-        <button type="button" class="btn-step-back" onclick="irAlPaso(2)">‹ Volver</button>
-        <button type="button" class="btn-step-action" onclick="irAlPaso(4)">Siguiente: Pagar ➔</button>
-      </div>
-    </div>
+              <!-- Leyenda de Estados de Butaca -->
+              <div
+                class="flex items-center justify-center space-x-6 text-xs text-zinc-400 mt-3 pt-2 border-t border-[#20202a]">
+                <div class="flex items-center space-x-2">
+                  <span class="w-3.5 h-3.5 rounded bg-[#16161f] border border-[#282834] inline-block"></span>
+                  <span>Disponible</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="w-3.5 h-3.5 rounded bg-[#6d28d9] border border-[#8b5cf6] inline-block"></span>
+                  <span class="text-zinc-200 font-bold">Seleccionada</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="w-3.5 h-3.5 rounded bg-[#191921] border border-[#22222d] inline-block"></span>
+                  <span>Ocupada</span>
+                </div>
+              </div>
 
-
-    <!-- ================= PASO 4: PAGO Y RESUMEN ================= -->
-    <div class="checkout-step-content" id="step4">
-      <h2 class="step-title-header"><span></span> Resumen y Pago Seguro</h2>
-      <p class="step-subtitle">Confirma tu pedido y selecciona tu método de pago preferido.</p>
-
-      <div class="checkout-final-grid">
-        
-        <div class="payment-methods-box">
-          <div class="payment-method-card">
-            <input type="radio" name="pago" id="pago1" checked>
-            <label for="pago1">Tarjeta de Crédito / Débito (Visa / Mastercard)</label>
-          </div>
-          <div class="payment-method-card">
-            <input type="radio" name="pago" id="pago2">
-            <label for="pago2">Pago Móvil Nacional</label>
-          </div>
-          <div class="payment-method-card">
-            <input type="radio" name="pago" id="pago3">
-            <label for="pago3">USDT / Criptomonedas</label>
-          </div>
-        </div>
-
-        <div class="order-summary-box">
-          <div class="summary-row-line">
-            <span>Entradas seleccionadas</span>
-            <span id="sumEntradas">$7.00</span>
-          </div>
-          <div class="summary-row-line">
-            <span>Caramelería / Snacks</span>
-            <span id="sumSnacks">$0.00</span>
-          </div>
-          <div class="summary-row-line">
-            <span>Tasas e Impuestos</span>
-            <span>$0.50</span>
-          </div>
-          <div class="summary-row-line total">
-            <span>Total a Pagar</span>
-            <span id="sumTotal">$7.50 USD</span>
+            </div>
           </div>
 
-          <button type="button" class="btn-step-action" style="width: 100%; text-align: center; margin-top: 1rem;" onclick="finalizarCompra()">
-            Completar Compra ➔
-          </button>
+          <!-- Botón de Acción Siguiente: Dispara la Alerta de Snacks -->
+          <div class="flex items-center justify-between lg:justify-end pt-4">
+            <a href="home.html"
+              class="lg:hidden px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-zinc-300 bg-[#0e0e13] border border-[#252533] hover:border-zinc-500 transition">
+              &lsaquo; Volver
+            </a>
+            <button type="button" onclick="procesarEntradasYAlertar()"
+              class="px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider text-white bg-[#6d28d9] hover:bg-[#5b21b6] shadow-lg shadow-black/40 transition duration-200 hover:scale-105 flex items-center gap-2">
+              <span>SIGUIENTE: AÑADIR SNACKS &rarr;</span>
+            </button>
+          </div>
+
         </div>
 
       </div>
 
-      <div class="checkout-buttons-row">
-        <button type="button" class="btn-step-back" onclick="irAlPaso(3)">‹ Volver</button>
-      </div>
     </div>
 
   </main>
 
-  <!-- FOOTER INYECTADO POR LAYOUT.JS -->
-  <div id="app-footer"></div>
 
-  <!-- SCRIPT DE LÓGICA DEL FLUJO DE COMPRA -->
+  <!-- ================= MODAL ELEGANTE DE INVITACIÓN A SNACKS (CENTRADO EXACTO ENTRE NAVBAR Y FONDO) ================= -->
+  <div id="snackAlertModal"
+    class="hidden fixed left-0 right-0 bottom-0 z-[2000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+    style="top: 80px; height: calc(100vh - 80px);">
+    <div
+      class="relative bg-[#14141b] border border-[#272735] shadow-2xl rounded-2xl max-w-md w-full overflow-hidden text-center my-auto">
+
+      <!-- Botón de cerrar discreto -->
+      <button type="button" onclick="cerrarSnackAlert()"
+        class="absolute top-3 right-3 z-20 w-7 h-7 rounded-full bg-black/60 hover:bg-black text-zinc-300 hover:text-white flex items-center justify-center text-xs transition">
+        ✕
+      </button>
+
+      <!-- Imagen de la Pareja en el Cine -->
+      <div class="relative h-40 sm:h-44 w-full overflow-hidden bg-black">
+        <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=700&q=80"
+          alt="Pareja en el cine disfrutando cotufas" class="w-full h-full object-cover opacity-90">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#14141b] via-transparent to-transparent"></div>
+        <div
+          class="absolute top-3 left-3 bg-[#1e172e]/90 text-[#c4b5fd] text-[10px] font-bold uppercase px-3 py-1 rounded-full border border-[#4c3b6e] flex items-center gap-1">
+          <span class="material-symbols-outlined text-xs">local_activity</span>
+          <span>Experiencia CinePleX</span>
+        </div>
+      </div>
+
+      <!-- Contenido de la Alerta -->
+      <div class="p-5 sm:p-6 pt-1 text-center space-y-3.5">
+
+        <h3 class="text-xl font-black text-white tracking-tight">
+          ¿Vas a ver la función sin cotufas?
+        </h3>
+
+        <!-- Frase Criolla Aleatoria en caja neutra oscura -->
+        <div class="bg-[#0e0e13] border-l-4 border-[#6d28d9] rounded-r-xl p-3.5 text-left shadow-inner">
+          <p id="alertMessageText" class="text-zinc-200 text-sm font-medium leading-relaxed italic">
+            <!-- Texto dinámico -->
+          </p>
+        </div>
+
+        <!-- Confirmación de boletos asegurados -->
+        <div
+          class="flex items-center justify-center gap-1.5 text-xs text-emerald-400 font-semibold bg-emerald-950/30 border border-emerald-500/20 py-2 px-3 rounded-lg">
+          <span class="material-symbols-outlined text-sm">check_circle</span>
+          <span id="alertSummaryDetail">Entradas guardadas en tu orden</span>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="flex flex-col gap-2 pt-1">
+          <a href="carameleria.html"
+            class="w-full bg-[#6d28d9] hover:bg-[#5b21b6] text-white font-bold text-xs uppercase py-3.5 px-6 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-base">fastfood</span>
+            <span>ACCEDER A SNACKS</span>
+          </a>
+
+          <div class="flex items-center gap-2 pt-0.5">
+            <a href="pagos.html"
+              class="flex-1 text-center py-2.5 px-3 rounded-xl text-xs font-bold text-zinc-300 hover:text-white bg-[#1c1c26] hover:bg-[#252533] border border-[#2c2c3a] transition">
+              Ir a Pagar &rarr;
+            </a>
+            <button type="button" onclick="cerrarSnackAlert()"
+              class="flex-1 py-2.5 px-3 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white transition">
+              Seguir en la web
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Script Oficial de Inyección de Layout y Carrito -->
+  <script src="../assets/js/layout.js"></script>
+
+  <!-- Lógica Interactiva de la Pantalla de Compra & Catálogo de Películas -->
   <script>
-    let estadoCompra = {
-      entradas: { general: 1, vip: 0, '4d': 0 },
-      precios: { general: 7.00, vip: 10.00, '4d': 12.50 },
-      butacasSeleccionadas: [],
-      snacks: []
+    // Catálogo de Películas Disponibles en CinePleX con Múltiples Horarios
+    const PELICULAS_CATALOGO = {
+      "dune-2": {
+        titulo: "Dune: Parte Dos",
+        genero: "Ciencia Ficción • IMAX / 4D",
+        duracion: "2h 46m",
+        clasificacion: "+13",
+        horarios: ["15:00", "17:45", "20:30", "22:45"],
+        poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=400&q=80"
+      },
+      "siniestra": {
+        titulo: "Temporada Siniestra",
+        genero: "Terror / Suspenso",
+        duracion: "1h 55m",
+        clasificacion: "+16",
+        horarios: ["16:30", "19:00", "21:15", "23:00"],
+        poster: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=400&q=80"
+      },
+      "spider-verse": {
+        titulo: "Spider-Man: Across the Spider-Verse",
+        genero: "Animación / Acción",
+        duracion: "2h 20m",
+        clasificacion: "ATP",
+        horarios: ["14:00", "16:45", "19:30", "22:15"],
+        poster: "https://images.unsplash.com/photo-1635805737707-575885ab0820?auto=format&fit=crop&w=400&q=80"
+      },
+      "oppenheimer": {
+        titulo: "Oppenheimer",
+        genero: "Drama / Historia • IMAX",
+        duracion: "3h 00m",
+        clasificacion: "+16",
+        horarios: ["15:30", "18:45", "21:30"],
+        poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=400&q=80"
+      },
+      "deadpool": {
+        titulo: "Deadpool & Wolverine",
+        genero: "Acción / Comedia • 2D / 4D",
+        duracion: "2h 08m",
+        clasificacion: "+18",
+        horarios: ["16:00", "18:30", "21:00", "23:15"],
+        poster: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80"
+      },
+      "joker-2": {
+        titulo: "Joker: Folie à Deux",
+        genero: "Drama / Suspenso • VIP",
+        duracion: "2h 18m",
+        clasificacion: "+16",
+        horarios: ["16:15", "19:00", "21:45"],
+        poster: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=400&q=80"
+      },
+      "gladiador-2": {
+        titulo: "Gladiador II",
+        genero: "Acción / Épica • IMAX",
+        duracion: "2h 28m",
+        clasificacion: "+16",
+        horarios: ["15:15", "18:00", "20:45"],
+        poster: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80"
+      },
+      "venom-3": {
+        titulo: "Venom: El Último Baile",
+        genero: "Acción / Sci-Fi",
+        duracion: "1h 50m",
+        clasificacion: "+13",
+        horarios: ["15:00", "17:30", "20:00", "22:15"],
+        poster: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80"
+      },
+      "rohirrim": {
+        titulo: "El Señor de los Anillos: Rohirrim",
+        genero: "Fantasía / Animación",
+        duracion: "2h 14m",
+        clasificacion: "+13",
+        horarios: ["16:00", "18:45", "21:30"],
+        poster: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=400&q=80"
+      }
     };
 
-    function cambiarCantidad(tipo, cambio) {
-      if (estadoCompra.entradas[tipo] + cambio >= 0) {
-        if (tipo === 'general' && estadoCompra.entradas.general + cambio === 0 && getTotalEntradas() === 1) return;
-        estadoCompra.entradas[tipo] += cambio;
-        document.getElementById(`count${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`).innerText = estadoCompra.entradas[tipo];
+    // Configuración de los 3 Tipos de Sala
+    const SALAS_CONFIG = {
+      normal: {
+        tipo: 'normal',
+        nombre: 'Sala 03 Estándar 2D',
+        etiqueta: 'Entrada Normal (2D)',
+        precio: 7.00
+      },
+      vip: {
+        tipo: 'vip',
+        nombre: 'Sala 01 VIP Reclinable',
+        etiqueta: 'Entrada Sala VIP Reclinable',
+        precio: 10.00
+      },
+      '4d': {
+        tipo: '4d',
+        nombre: 'Sala 02 4D E-Motion',
+        etiqueta: 'Experiencia 4D E-Motion',
+        precio: 12.50
       }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const peliculaId = urlParams.get('pelicula') || 'dune-2';
+    const peliculaActual = PELICULAS_CATALOGO[peliculaId] || PELICULAS_CATALOGO['dune-2'];
+
+    // Estado del Formulario: ¡Inicialmente nada preseleccionado!
+    let horarioActual = peliculaActual.horarios[0];
+    let salaSeleccionada = null; // No preseleccionada
+    let butacasSeleccionadas = []; // No preseleccionadas
+
+    // Colección de Frases Criollas en Tono Humorístico
+    const ALERTAS_COTUFAS = [
+      "¡¡EPA!! ¿Esa película la vas a ver sin cotufas? No seas tacaño con la jeva y accede al apartado de snacks... ¡Ella te lo agradecerá!",
+      "¡¡SEÑOR COTUFAS TE ESTÁ ESPERANDO!! Por eso accede a nuestro apartado de snacks. ¡No le falles a Señor Cotufas!",
+      "¡¡EPA!! ¿Tienes hambre verdad? ¿No te provocan unas cotufas? Te tengo la solución: accede a nuestro apartado de snacks y no te arrepentirás de darnos tu dinero.",
+      "Como dice el dicho: Si del cielo te caen limones... ¡accede a nuestro apartado de snacks y pide un combo gigante con queso fundido!",
+      "Consejo de pana: Una película sin cotufas ni tequeños es como ir a la playa y no meterse al agua. ¡Entra a los snacks ya!",
+      "¡Alerta de Conciencia! Ver 2 horas de película escuchando cómo el de al lado come cotufas y tú pasando hambre... Piénsalo bien. Pásate por snacks.",
+      "Tu subconsciente te está diciendo: 'Huelen demasiado ricas esas cotufas recién hechas'. Hazle caso y entra a la caramelería."
+    ];
+
+    function inicializarPeliculaSeleccionada() {
+      document.getElementById('peliculaPosterImg').src = peliculaActual.poster;
+      document.getElementById('peliculaRatingTxt').innerText = peliculaActual.clasificacion;
+      document.getElementById('peliculaTituloTxt').innerText = peliculaActual.titulo;
+      const btnTrailer = document.getElementById('btnVerTrailerDetalle');
+      if (btnTrailer) btnTrailer.href = `detalle.html?pelicula=${peliculaId}`;
+      actualizarMetaYHorarios();
+      document.title = `CinePleX - Comprar Entradas: ${peliculaActual.titulo}`;
     }
 
-    function getTotalEntradas() {
-      return estadoCompra.entradas.general + estadoCompra.entradas.vip + estadoCompra.entradas['4d'];
+    function actualizarMetaYHorarios() {
+      const salaTxt = salaSeleccionada ? SALAS_CONFIG[salaSeleccionada].nombre : 'Selecciona una sala abajo';
+      document.getElementById('peliculaMetaTxt').innerHTML = `
+        <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-xs">theater_comedy</span> ${peliculaActual.genero}</span> &bull;
+        <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-xs">schedule</span> ${peliculaActual.duracion}</span> &bull;
+        <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-xs">meeting_room</span> ${salaTxt}</span> &bull;
+        <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-xs">access_time</span> Función: <strong class="text-white">${horarioActual}</strong></span>
+      `;
+
+      // Renderizar pastillas de horarios
+      const container = document.getElementById('horariosSelectorContainer');
+      container.innerHTML = peliculaActual.horarios.map(hora => {
+        const isActive = (hora === horarioActual);
+        return `
+          <button type="button" onclick="seleccionarHorario('${hora}')" 
+                  class="px-2.5 py-1 rounded-lg text-xs font-bold transition ${isActive
+            ? 'bg-[#6d28d9] text-white border border-[#8b5cf6] shadow-sm'
+            : 'bg-[#181822] text-zinc-400 hover:text-white border border-[#282836]'
+          }">
+            ${hora}
+          </button>
+        `;
+      }).join('');
     }
 
-    function generarMapaButacas() {
-      const container = document.getElementById('seatsContainer');
-      container.innerHTML = '';
-      const filas = ['A', 'B', 'C', 'D'];
-      filas.forEach(fila => {
-        for (let i = 1; i <= 10; i++) {
-          const seatId = `${fila}${i}`;
-          const seat = document.createElement('div');
-          seat.className = 'seat-box';
-          seat.innerText = seatId;
-          
-          // Simular algunas butacas ocupadas al azar
-          if (seatId === 'A3' || seatId === 'B7' || seatId === 'C2') {
-            seat.classList.add('occupied');
-          } else {
-            seat.addEventListener('click', () => {
-              if (seat.classList.contains('selected')) {
-                seat.classList.remove('selected');
-                estadoCompra.butacasSeleccionadas = estadoCompra.butacasSeleccionadas.filter(s => s !== seatId);
-              } else {
-                if (estadoCompra.butacasSeleccionadas.length < getTotalEntradas()) {
-                  seat.classList.add('selected');
-                  estadoCompra.butacasSeleccionadas.push(seatId);
-                } else {
-                  alert(`Solo puedes seleccionar ${getTotalEntradas()} butacas según los boletos elegidos.`);
-                }
-              }
-            });
-          }
-          container.appendChild(seat);
+    function seleccionarHorario(hora) {
+      horarioActual = hora;
+      actualizarMetaYHorarios();
+    }
+
+    function seleccionarSala(tipo) {
+      salaSeleccionada = tipo;
+      butacasSeleccionadas = []; // Reiniciar butacas al cambiar de sala
+
+      // 1. Estilos visuales de las 3 tarjetas de sala
+      const tipos = ['normal', 'vip', '4d'];
+      tipos.forEach(t => {
+        const card = document.getElementById(`cardSala-${t}`);
+        const icon = document.getElementById(`iconSala-${t}`);
+        if (t === tipo) {
+          card.className = 'sala-card bg-[#1a1426] border-2 border-[#8b5cf6] rounded-xl p-4 cursor-pointer transition flex items-center justify-between shadow-lg shadow-purple-950/30';
+          icon.className = 'w-10 h-10 rounded-xl bg-[#6d28d9] text-white flex items-center justify-center border border-purple-400 transition';
+        } else {
+          card.className = 'sala-card bg-[#0e0e13] border border-[#20202a] hover:border-[#6d28d9] rounded-xl p-4 cursor-pointer transition flex items-center justify-between group';
+          icon.className = 'w-10 h-10 rounded-xl bg-[#181822] text-zinc-400 group-hover:text-purple-300 flex items-center justify-center border border-[#282836] transition';
         }
       });
+
+      // 2. Alternar entre Placeholder y Mapa Activo
+      document.getElementById('seatsPlaceholder').classList.add('hidden');
+      document.getElementById('seatsActiveContainer').classList.remove('hidden');
+
+      const config = SALAS_CONFIG[tipo];
+      document.getElementById('screenLabelTxt').innerText = `PANTALLA CINEPLEX • ${config.nombre.toUpperCase()}`;
+      document.getElementById('seatsStatusSubtext').innerText = `Haz clic en las butacas para seleccionarlas. Precio: $${config.precio.toFixed(2)} USD c/u.`;
+
+      // 3. Renderizar la distribución específica de la sala elegida
+      renderizarMapaSegunSala(tipo);
+      actualizarResumenSeleccion();
+      actualizarMetaYHorarios();
     }
 
-    function agregarSnackCheckout(nombre, precio) {
-      estadoCompra.snacks.push({ nombre, precio });
-      const nombres = estadoCompra.snacks.map(s => s.nombre).join(', ');
-      document.getElementById('snacksAgregadosMsg').innerText = `Snacks en la orden: ${nombres}`;
-    }
+    function renderizarMapaSegunSala(tipo) {
+      const container = document.getElementById('seatsGrid');
+      container.innerHTML = '';
 
-    function calcularTotales() {
-      let subTotalEntradas = (estadoCompra.entradas.general * estadoCompra.precios.general) +
-                             (estadoCompra.entradas.vip * estadoCompra.precios.vip) +
-                             (estadoCompra.entradas['4d'] * estadoCompra.precios['4d']);
-      
-      let subTotalSnacks = estadoCompra.snacks.reduce((acc, curr) => acc + curr.precio, 0);
-      let totalFinal = subTotalEntradas + subTotalSnacks + 0.50;
+      if (tipo === 'normal') {
+        // ================= DISTRIBUCIÓN NORMAL (2D): Tradicional 4 filas x 10 columnas =================
+        const filas = ['A', 'B', 'C', 'D'];
+        const ocupadas = ['A3', 'B7', 'C2', 'D8'];
 
-      document.getElementById('sumEntradas').innerText = `$${subTotalEntradas.toFixed(2)}`;
-      document.getElementById('sumSnacks').innerText = `$${subTotalSnacks.toFixed(2)}`;
-      document.getElementById('sumTotal').innerText = `$${totalFinal.toFixed(2)} USD`;
-    }
+        filas.forEach(fila => {
+          const rowEl = document.createElement('div');
+          rowEl.className = 'flex items-center gap-2 justify-center my-1';
 
-    function irAlPaso(paso) {
-      if (paso === 2) {
-        generarMapaButacas();
+          const label = document.createElement('span');
+          label.className = 'text-[10px] text-zinc-500 font-mono font-bold w-4 text-center';
+          label.innerText = fila;
+          rowEl.appendChild(label);
+
+          const gridRow = document.createElement('div');
+          gridRow.className = 'grid grid-cols-10 gap-2';
+
+          for (let num = 1; num <= 10; num++) {
+            const seatId = `${fila}${num}`;
+            const seatEl = crearElementoButaca(seatId, ocupadas.includes(seatId));
+            gridRow.appendChild(seatEl);
+          }
+
+          rowEl.appendChild(gridRow);
+          container.appendChild(rowEl);
+        });
+
+      } else if (tipo === 'vip') {
+        // ================= DISTRIBUCIÓN VIP: Butacas dobles con pasillos amplios (3 filas x 3 parejas) =================
+        const filas = ['A', 'B', 'C'];
+        const ocupadas = ['A2', 'B4', 'C5'];
+
+        filas.forEach(fila => {
+          const rowEl = document.createElement('div');
+          rowEl.className = 'flex items-center gap-5 justify-center my-1.5';
+
+          const label = document.createElement('span');
+          label.className = 'text-[10px] text-purple-400 font-mono font-bold w-4 text-center';
+          label.innerText = fila;
+          rowEl.appendChild(label);
+
+          // Pareja 1 (1, 2)
+          const pair1 = document.createElement('div');
+          pair1.className = 'flex gap-2 p-1 rounded-xl bg-[#12121a] border border-[#22222d] shadow-sm';
+          pair1.appendChild(crearElementoButaca(`${fila}1`, ocupadas.includes(`${fila}1`)));
+          pair1.appendChild(crearElementoButaca(`${fila}2`, ocupadas.includes(`${fila}2`)));
+          rowEl.appendChild(pair1);
+
+          // Pareja 2 (3, 4)
+          const pair2 = document.createElement('div');
+          pair2.className = 'flex gap-2 p-1 rounded-xl bg-[#12121a] border border-[#22222d] shadow-sm';
+          pair2.appendChild(crearElementoButaca(`${fila}3`, ocupadas.includes(`${fila}3`)));
+          pair2.appendChild(crearElementoButaca(`${fila}4`, ocupadas.includes(`${fila}4`)));
+          rowEl.appendChild(pair2);
+
+          // Pareja 3 (5, 6)
+          const pair3 = document.createElement('div');
+          pair3.className = 'flex gap-2 p-1 rounded-xl bg-[#12121a] border border-[#22222d] shadow-sm';
+          pair3.appendChild(crearElementoButaca(`${fila}5`, ocupadas.includes(`${fila}5`)));
+          pair3.appendChild(crearElementoButaca(`${fila}6`, ocupadas.includes(`${fila}6`)));
+          rowEl.appendChild(pair3);
+
+          container.appendChild(rowEl);
+        });
+
+      } else if (tipo === '4d') {
+        // ================= DISTRIBUCIÓN 4D E-MOTION: 2 Módulos dinámicos de 4 butacas con pasillo central =================
+        const filas = ['A', 'B', 'C'];
+        const ocupadas = ['A4', 'B5', 'C2'];
+
+        filas.forEach(fila => {
+          const rowEl = document.createElement('div');
+          rowEl.className = 'flex items-center gap-6 sm:gap-8 justify-center my-1.5';
+
+          const label = document.createElement('span');
+          label.className = 'text-[10px] text-amber-400 font-mono font-bold w-4 text-center';
+          label.innerText = fila;
+          rowEl.appendChild(label);
+
+          // Módulo Izquierdo (1 a 4)
+          const podLeft = document.createElement('div');
+          podLeft.className = 'flex gap-2 p-1.5 rounded-xl bg-[#13121d] border border-amber-900/30 shadow-sm';
+          for (let n = 1; n <= 4; n++) {
+            podLeft.appendChild(crearElementoButaca(`${fila}${n}`, ocupadas.includes(`${fila}${n}`)));
+          }
+          rowEl.appendChild(podLeft);
+
+          // Módulo Derecho (5 a 8)
+          const podRight = document.createElement('div');
+          podRight.className = 'flex gap-2 p-1.5 rounded-xl bg-[#13121d] border border-amber-900/30 shadow-sm';
+          for (let n = 5; n <= 8; n++) {
+            podRight.appendChild(crearElementoButaca(`${fila}${n}`, ocupadas.includes(`${fila}${n}`)));
+          }
+          rowEl.appendChild(podRight);
+
+          container.appendChild(rowEl);
+        });
       }
-      if (paso === 4) {
-        calcularTotales();
-      }
-
-      // Cambiar clases activas del contenido
-      document.querySelectorAll('.checkout-step-content').forEach(el => el.classList.remove('active'));
-      document.getElementById(`step${paso}`).classList.add('active');
-
-      // Actualizar indicadores del stepper
-      for (let i = 1; i <= 4; i++) {
-        const ind = document.getElementById(`indicator${i}`);
-        ind.classList.remove('active', 'completed');
-        if (i < paso) ind.classList.add('completed');
-        if (i === paso) ind.classList.add('active');
-      }
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function finalizarCompra() {
-      alert('¡Compra realizada con éxito! Tus entradas y código QR han sido enviados a tu correo.');
-      window.location.href = 'home.html';
+    function crearElementoButaca(seatId, estaOcupada) {
+      const seatEl = document.createElement('div');
+      seatEl.className = 'seat-box';
+      seatEl.innerText = seatId;
+
+      if (estaOcupada) {
+        seatEl.classList.add('occupied');
+      } else {
+        if (butacasSeleccionadas.includes(seatId)) {
+          seatEl.classList.add('selected');
+        }
+
+        seatEl.addEventListener('click', () => {
+          if (seatEl.classList.contains('selected')) {
+            seatEl.classList.remove('selected');
+            butacasSeleccionadas = butacasSeleccionadas.filter(s => s !== seatId);
+          } else {
+            seatEl.classList.add('selected');
+            butacasSeleccionadas.push(seatId);
+          }
+          actualizarResumenSeleccion();
+        });
+      }
+
+      return seatEl;
     }
+
+    function actualizarResumenSeleccion() {
+      if (!salaSeleccionada) {
+        document.getElementById('resumenSalaTxt').innerText = 'Ninguna';
+        document.getElementById('resumenButacasTxt').innerText = '0 seleccionadas';
+        document.getElementById('resumenSubtotalTxt').innerText = '$0.00 USD';
+        return;
+      }
+
+      const config = SALAS_CONFIG[salaSeleccionada];
+      const count = butacasSeleccionadas.length;
+      const subtotal = count * config.precio;
+
+      document.getElementById('resumenSalaTxt').innerText = `${config.nombre} ($${config.precio.toFixed(2)} c/u)`;
+      document.getElementById('resumenButacasTxt').innerText = count > 0 ? `${count} (${butacasSeleccionadas.join(', ')})` : '0 seleccionadas';
+      document.getElementById('resumenSubtotalTxt').innerText = `$${subtotal.toFixed(2)} USD`;
+    }
+
+    function procesarEntradasYAlertar() {
+      if (!salaSeleccionada) {
+        alert('Por favor selecciona una de las 3 opciones de sala (Normal, VIP o 4D) antes de continuar.');
+        return;
+      }
+
+      if (butacasSeleccionadas.length === 0) {
+        alert('Por favor selecciona al menos una butaca en el mapa interactivo para continuar con tu compra.');
+        return;
+      }
+
+      const config = SALAS_CONFIG[salaSeleccionada];
+      const count = butacasSeleccionadas.length;
+      const subtotal = count * config.precio;
+      const butacasTxt = butacasSeleccionadas.join(', ');
+      const ticketId = 'ticket-' + Date.now();
+
+      // Objeto de grupo de tickets oficial para esta película
+      const nuevoTicketGrupo = {
+        id: ticketId,
+        peliculaId: peliculaId,
+        pelicula: peliculaActual.titulo,
+        poster: peliculaActual.poster,
+        horario: horarioActual,
+        salaTipo: salaSeleccionada,
+        salaNombre: config.nombre,
+        tipoEntrada: config.etiqueta,
+        precioUnitario: config.precio,
+        butacas: [...butacasSeleccionadas],
+        cantidad: count,
+        precioTotal: subtotal,
+        fecha: 'martes 29 octubre 2026'
+      };
+
+      // Guardar en la colección de boletos de la orden
+      let ticketsExistentes = JSON.parse(localStorage.getItem('cineplex_tickets_carrito') || '[]');
+      ticketsExistentes.push(nuevoTicketGrupo);
+      localStorage.setItem('cineplex_tickets_carrito', JSON.stringify(ticketsExistentes));
+
+      // Agregar a CineCart para reflejar en el appbar
+      if (window.CineCart) {
+        CineCart.addItem({
+          id: ticketId,
+          nombre: `Entrada: ${peliculaActual.titulo} (${config.etiqueta}) - Butacas: ${butacasTxt}`,
+          precio: subtotal,
+          tipo: 'Entrada',
+          img: peliculaActual.poster,
+          cantidad: 1,
+          pelicula: peliculaActual.titulo,
+          salaNombre: config.nombre,
+          tipoEntrada: config.etiqueta,
+          horario: horarioActual,
+          butacas: [...butacasSeleccionadas],
+          precioUnitario: config.precio
+        });
+      }
+
+      // Preparar Modal de Alerta
+      const indiceRandom = Math.floor(Math.random() * ALERTAS_COTUFAS.length);
+      document.getElementById('alertMessageText').innerText = ALERTAS_COTUFAS[indiceRandom];
+      document.getElementById('alertSummaryDetail').innerText = `${peliculaActual.titulo} (${config.etiqueta}) • ${horarioActual} • Butacas: ${butacasTxt} • $${subtotal.toFixed(2)} USD`;
+
+      // Mostrar Modal Centrado
+      document.getElementById('snackAlertModal').classList.remove('hidden');
+    }
+
+    function cerrarSnackAlert() {
+      document.getElementById('snackAlertModal').classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      inicializarPeliculaSeleccionada();
+      actualizarResumenSeleccion();
+    });
   </script>
-
-  <script src="../assets/js/layout.js"></script>
 </body>
+
 </html>

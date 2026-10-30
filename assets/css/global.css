@@ -4,23 +4,23 @@
 
 /* 1. MODO OSCURO (POR DEFECTO) */
 :root {
-  --bg-main: #0d0814;          /* Fondo base morado oscuro */
-  --bg-card: #180f24;          /* Tarjetas y contenedores */
-  --bg-input: #231636;         /* Botones y campos secundarios */
+  --bg-main: #0c0c11;          /* Fondo base morado oscuro */
+  --bg-card: #15151c;          /* Tarjetas y contenedores */
+  --bg-input: #1c1c24;         /* Botones y campos secundarios */
   
-  --primary-purple: #7e22ce;   /* Morado principal CinePleX */
-  --primary-hover: #9333ea;    /* Morado hover */
-  --primary-light: #c084fc;    /* Morado claro para acentos */
+  --primary-purple: #6d28d9;   /* Morado principal CinePleX */
+  --primary-hover: #5b21b6;    /* Morado hover */
+  --primary-light: #8b5cf6;    /* Morado claro para acentos */
   
   --accent-cyan: #06b6d4;
   --accent-red: #ef4444;
   
   --text-white: #ffffff;
-  --text-muted: #a78bfa;
-  --border-color: #3b1d5a;
+  --text-muted: #94a3b8;
+  --border-color: #262633;
   
-  --nav-bg: rgba(13, 8, 20, 0.92);
-  --shadow-color: rgba(126, 34, 206, 0.25);
+  --nav-bg: rgba(12, 12, 17, 0.94);
+  --shadow-color: rgba(0, 0, 0, 0.45);
 
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
   --radius-sm: 6px;
@@ -34,7 +34,7 @@
   --bg-card: #ffffff;          /* Tarjetas en blanco puro */
   --bg-input: #f1f5f9;         /* Campos y botones secundarios claros */
   
-  --primary-purple: #7e22ce;   /* Mantiene el morado característico */
+  --primary-purple: #6d28d9;   /* Mantiene el morado característico */
   --primary-hover: #6b21a8;    
   --primary-light: #7e22ce;    
   
@@ -49,15 +49,24 @@
   --shadow-color: rgba(126, 34, 206, 0.12);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Espacio superior para que el navbar fijo de 80px no tape los títulos ni posters al deslizar */
+section[id], div[id] {
+  scroll-margin-top: 100px;
+}
+
 body {
   background-color: var(--bg-main);
-  background-image: radial-gradient(circle at 50% 0%, var(--shadow-color) 0%, var(--bg-main) 70%);
+  background-image: none;
   color: var(--text-white);
   font-family: var(--font-main);
   line-height: 1.5;

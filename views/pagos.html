@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinePleX - Pasarela de Pago & Facturación</title>
+
+  <!-- Global & Navbar System del Proyecto -->
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/navbar.css">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Google Material Symbols Outlined -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <!-- html2pdf.js para generación y descarga del Boleto en PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#6d28d9',
+              hover: '#6B21A8',
+              accent: '#0686D4',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0c0c11;
+      color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Stepper connectors */
+    .stepper-connector {
+      flex: 1;
+      height: 2px;
+      background-color: #23232c;
+      margin: 0 0.8rem;
+    }
+    .stepper-connector.completed {
+      background-color: #6d28d9;
+    }
+
+    .payment-option-card {
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .payment-option-card.selected {
+      border-color: #8b5cf6 !important;
+      background: linear-gradient(145deg, rgba(30, 16, 53, 0.9) 0%, rgba(18, 9, 36, 0.95) 100%) !important;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      #app-navbar, .navbar, .stepper-connector, .max-w-xl, a, button {
+        display: none !important;
+      }
+      #checkoutSuccessSection {
+        display: block !important;
+      }
+      .ticket-voucher-card {
+        box-shadow: none !important;
+        border: 2px solid #000 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+    }
+
+    .ticket-voucher-card {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-[#6d28d9] selection:text-white">
+
+  <!-- ================= NAVBAR OFICIAL (INTACTO) ================= -->
+  <div id="app-navbar"></div>
+
+  <!-- ================= CONTENIDO PRINCIPAL ================= -->
+  <main class="max-w-[1280px] w-full mx-auto px-6 pt-10 pb-20 flex-grow">
+
+    <!-- STEPPER DE COMPRA -->
+    <div class="max-w-xl mx-auto flex items-center justify-between mb-8">
+      <!-- Paso 1: Entradas -->
+      <div class="flex items-center">
+        <div class="w-9 h-9 rounded-full bg-[#3b1778] text-white font-extrabold text-xs flex items-center justify-center border border-purple-600">
+          1
+        </div>
+      </div>
+      <div class="stepper-connector completed"></div>
+
+      <!-- Paso 2: Snacks -->
+      <div class="flex items-center">
+        <div class="w-9 h-9 rounded-full bg-[#3b1778] text-white font-extrabold text-xs flex items-center justify-center border border-purple-600">
+          2
+        </div>
+      </div>
+      <div class="stepper-connector completed"></div>
+
+      <!-- Paso 3: Pago (Activo) -->
+      <div class="flex items-center">
+        <div id="step3Ind" class="w-9 h-9 rounded-full bg-[#6d28d9] text-white font-extrabold text-xs flex items-center justify-center shadow-md shadow-black/40 border-2 border-[#8b5cf6]/60">
+          3
+        </div>
+      </div>
+      <div class="stepper-connector" id="conn3"></div>
+
+      <!-- Paso 4: Boleto & QR -->
+      <div class="flex items-center">
+        <div id="step4Ind" class="w-9 h-9 rounded-full bg-[#180e28] text-gray-400 font-extrabold text-xs flex items-center justify-center border border-[#282836]">
+          4
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ================= CONTENEDOR DE PAGO Y FACTURACIÓN ================= -->
+    <div id="checkoutMainSection" class="bg-[#14141a] border border-[#242430] rounded-3xl p-6 sm:p-10 shadow-2xl">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+
+        <!-- ================= COLUMNA IZQUIERDA: MÉTODOS DE PAGO ================= -->
+        <div class="lg:col-span-7 space-y-6">
+          <div>
+            <div class="flex items-center space-x-2.5 mb-2">
+              <span class="w-1.5 h-6 bg-[#6d28d9] rounded-full inline-block"></span>
+              <h2 class="text-xl font-black uppercase tracking-wider text-white">
+                MÉTODOS DE PAGO DISPONIBLES
+              </h2>
+            </div>
+            <p class="text-gray-400 text-xs">
+              Selecciona tu forma de pago preferida para procesar tu orden de forma segura:
+            </p>
+          </div>
+
+          <!-- Selector de Métodos (Pills / Cards) -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            
+            <!-- Opción 1: Tarjeta -->
+            <div id="cardTabTarj" onclick="seleccionarMetodo('tarjeta')" class="payment-option-card selected bg-[#0e0e13] border border-[#20202a] p-4 rounded-2xl flex flex-col items-center text-center">
+              <span class="material-symbols-outlined text-2xl mb-1 text-zinc-300">credit_card</span>
+              <h4 class="text-white font-bold text-xs">Tarjeta de Crédito / Débito</h4>
+              <span class="text-[10px] text-zinc-400 mt-1">Visa / Mastercard</span>
+            </div>
+
+            <!-- Opción 2: Pago Móvil -->
+            <div id="cardTabPM" onclick="seleccionarMetodo('pagomovil')" class="payment-option-card bg-[#0e0e13] border border-[#20202a] p-4 rounded-2xl flex flex-col items-center text-center">
+              <span class="material-symbols-outlined text-2xl mb-1 text-emerald-400">smartphone</span>
+              <h4 class="text-white font-bold text-xs">Pago Móvil Nacional</h4>
+              <span class="text-[10px] text-emerald-400 mt-1">Banesco / Bs.</span>
+            </div>
+
+            <!-- Opción 3: Binance -->
+            <div id="cardTabBin" onclick="seleccionarMetodo('binance')" class="payment-option-card bg-[#0e0e13] border border-[#20202a] p-4 rounded-2xl flex flex-col items-center text-center">
+              <span class="material-symbols-outlined text-2xl mb-1 text-amber-400">account_balance_wallet</span>
+              <h4 class="text-white font-bold text-xs">Binance Pay / Cripto</h4>
+              <span class="text-[10px] text-amber-400 mt-1">USDT (Cero Comisiones)</span>
+            </div>
+
+          </div>
+
+
+          <!-- ================= FORMULARIO 1: TARJETA DE CRÉDITO / DÉBITO ================= -->
+          <div id="formTarjeta" class="space-y-4 pt-2">
+            <div class="bg-[#0e0e13] border border-[#20202a] rounded-2xl p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-[#20202a] pb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-purple-300">Datos de la Tarjeta</span>
+                <div class="flex items-center space-x-2 text-xs text-gray-400">
+                  <span class="px-2 py-0.5 rounded bg-purple-950 text-purple-300 font-bold">VISA</span>
+                  <span class="px-2 py-0.5 rounded bg-purple-950 text-purple-300 font-bold">MASTERCARD</span>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Nombre del Titular</label>
+                <input type="text" id="tarjNombre" value="Usuario Prueba" class="w-full bg-[#181822] border border-[#282836] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500 transition">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Número de Tarjeta</label>
+                <input type="text" id="tarjNumero" placeholder="4532 8920 1823 9012" maxlength="19" class="w-full bg-[#181822] border border-[#282836] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500 font-mono tracking-wider transition">
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Vencimiento (MM/AA)</label>
+                  <input type="text" id="tarjVenc" placeholder="12/28" maxlength="5" class="w-full bg-[#181822] border border-[#282836] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500 font-mono transition">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Código CVV / CVC</label>
+                  <input type="password" id="tarjCvv" placeholder="•••" maxlength="4" class="w-full bg-[#181822] border border-[#282836] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500 font-mono transition">
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- ================= FORMULARIO 2: PAGO MÓVIL ================= -->
+          <div id="formPagoMovil" class="hidden space-y-4 pt-2">
+            <!-- Datos del Cine para Transferir -->
+            <div class="bg-gradient-to-r from-emerald-950/60 to-[#0e0e13] border border-emerald-500/40 rounded-2xl p-4 text-xs space-y-2">
+              <span class="font-extrabold text-emerald-400 block uppercase tracking-wider text-[11px]">
+                DATOS OFICIALES PARA PAGO MÓVIL (TASA BCV: 48.50 Bs/USD)
+              </span>
+              <div class="grid grid-cols-2 gap-2 text-gray-300">
+                <div><span class="text-gray-500 block">Banco:</span> Banesco (0134)</div>
+                <div><span class="text-gray-500 block">Teléfono:</span> 0414-2463759</div>
+                <div><span class="text-gray-500 block">RIF:</span> J-50123456-7</div>
+                <div><span class="text-gray-500 block">Titular:</span> CinePleX Entretenimiento C.A.</div>
+              </div>
+            </div>
+
+            <div class="bg-[#0e0e13] border border-[#20202a] rounded-2xl p-5 space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Banco Emisor</label>
+                  <select class="w-full bg-[#181822] border border-[#282836] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500 transition">
+                    <option>Banesco</option>
+                    <option>Banco de Venezuela</option>
+                    <option>Mercantil</option>
+                    <option>BBVA Provincial</option>
+                    <option>Bancamiga</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Teléfono del Pagador</label>
+                  <input type="text" placeholder="0412-1234567" class="w-full bg-[#181822] border border-[#282836] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500 transition">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Cédula del Titular</label>
+                  <input type="text" value="V-00000000" class="w-full bg-[#181822] border border-[#282836] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500 transition">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-300 uppercase mb-1">N° de Referencia (Últimos 6 dígitos)</label>
+                  <input type="text" placeholder="948123" maxlength="8" class="w-full bg-[#181822] border border-[#282836] rounded-xl px-4 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-purple-500 transition">
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- ================= FORMULARIO 3: BINANCE PAY ================= -->
+          <div id="formBinance" class="hidden space-y-4 pt-2">
+            <!-- Datos de Binance -->
+            <div class="bg-gradient-to-r from-yellow-950/60 to-[#0e0e13] border border-yellow-500/40 rounded-2xl p-4 flex items-center justify-between">
+              <div class="space-y-1 text-xs text-gray-300">
+                <span class="font-extrabold text-yellow-400 block uppercase tracking-wider text-[11px]">
+                  DATOS DE PAGO EN BINANCE PAY
+                </span>
+                <div><span class="text-gray-500">Binance Pay ID:</span> <strong class="text-white font-mono">293847102</strong></div>
+                <div><span class="text-gray-500">Nick Oficial:</span> <strong class="text-white">CinePleX_Pay</strong></div>
+                <div><span class="text-gray-500">Criptomoneda:</span> USDT (Red BEP-20)</div>
+              </div>
+              <div class="w-20 h-20 bg-white p-1 rounded-xl flex items-center justify-center">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=BINANCE-PAY-293847102" alt="QR Binance" class="w-full h-full">
+              </div>
+            </div>
+
+            <div class="bg-[#0e0e13] border border-[#20202a] rounded-2xl p-5 space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Binance Pay Order ID / TxID</label>
+                <input type="text" placeholder="Ej: 29849201948123984" class="w-full bg-[#181822] border border-[#282836] rounded-xl px-4 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-purple-500 transition">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Tu Correo / ID de Binance</label>
+                <input type="text" value="usuario.prueba@cineplex.com" class="w-full bg-[#181822] border border-[#282836] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500 transition">
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón de Confirmación Principal -->
+          <div class="pt-2">
+            <button type="button" onclick="procesarPagoFinal()" class="w-full bg-gradient-to-r from-[#6d28d9] to-[#5b21b6] hover:from-purple-500 hover:to-purple-600 text-white font-black text-sm uppercase tracking-wider py-4 rounded-2xl shadow-xl shadow-black/40 transition duration-200 hover:scale-[1.01] active:scale-95 flex items-center justify-center space-x-2">
+              <span id="btnPayText">CONFIRMAR PAGO Y GENERAR COMPROBANTE</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+          </div>
+
+        </div>
+
+
+        <!-- ================= COLUMNA DERECHA: RESUMEN DE COMPRA & DATOS DEL CLIENTE ================= -->
+        <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
+          
+          <div>
+            <div class="flex items-center space-x-2.5 mb-2">
+              <span class="w-1.5 h-6 bg-[#6d28d9] rounded-full inline-block"></span>
+              <h2 class="text-xl font-black uppercase tracking-wider text-white">
+                RESUMEN DE TU COMPRA
+              </h2>
+            </div>
+            <p class="text-gray-400 text-xs mb-6">
+              Verifica los artículos de tu orden antes de completar el pago:
+            </p>
+
+            <!-- Lista de Artículos en el Carrito -->
+            <div id="orderItemsContainer" class="bg-[#0e0e13] border border-[#20202a] rounded-2xl p-5 space-y-3 max-h-72 overflow-y-auto">
+              <!-- Renderizado dinámico desde CineCart -->
+            </div>
+          </div>
+
+          <!-- Tarjeta de Facturación y Totales -->
+          <div class="bg-[#0e0e13] border border-[#242430] rounded-2xl p-6 space-y-3">
+            <!-- Datos del Cliente Solicitados -->
+            <div class="border-b border-[#20202a] pb-3 mb-3 text-xs space-y-1">
+              <span class="text-gray-500 uppercase font-bold tracking-wider block text-[10px]">Facturado a nombre de:</span>
+              <div class="flex justify-between text-gray-300">
+                <span>Cliente:</span>
+                <strong class="text-white">Usuario Prueba</strong>
+              </div>
+              <div class="flex justify-between text-gray-300">
+                <span>Cédula de Identidad:</span>
+                <strong class="text-white font-mono">V-00000000</strong>
+              </div>
+            </div>
+
+            <!-- Desglose Económico -->
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between text-gray-300">
+                <span>Subtotal Artículos:</span>
+                <span id="orderSubtotalTxt" class="font-bold text-white">$0.00</span>
+              </div>
+              <div class="flex justify-between text-gray-300">
+                <span>Tasa de Servicio / Emisión:</span>
+                <span class="font-bold text-white">$0.50</span>
+              </div>
+              <div class="border-t border-[#20202a] pt-3 flex justify-between items-baseline">
+                <span class="text-sm font-black text-white uppercase tracking-wider">Total a Pagar:</span>
+                <div class="text-right">
+                  <span id="orderTotalUsdTxt" class="text-2xl font-black text-purple-400 block leading-none">$0.50 USD</span>
+                  <span id="orderTotalBsTxt" class="text-[11px] text-emerald-400 font-bold block mt-1">≈ 24.25 Bs.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================= SECCIÓN INTEGRADA DE ENTREGA DE BOLETOS & COMPROBANTE (PASO 4) ================= -->
+    <div id="checkoutSuccessSection" class="hidden space-y-8">
+      
+      <!-- Encabezado Celebratorio Oficial -->
+      <div class="text-center space-y-2 max-w-xl mx-auto">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/15 border-2 border-emerald-400 text-emerald-400 mb-1">
+          <span class="material-symbols-outlined text-3xl">check</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-white uppercase tracking-wider">
+          ¡PAGO CONFIRMADO CON ÉXITO!
+        </h2>
+        <p class="text-zinc-400 text-xs sm:text-sm">
+          Transacción validada <strong class="text-white font-mono" id="transIdTxt">#CPX-118605</strong> &bull; Facturado a <strong class="text-white">Usuario Prueba</strong> (C.I: <span class="font-mono text-zinc-300">00000000</span>)
+        </p>
+      </div>
+
+      <!-- Barra Superior de Acciones de Entrega -->
+      <div class="flex flex-wrap items-center justify-center gap-3 py-2">
+        <button type="button" onclick="descargarBoletoPdf()" class="bg-[#6d28d9] hover:bg-[#5b21b6] text-white font-bold text-xs uppercase tracking-wider px-7 py-3.5 rounded-full shadow-lg shadow-black/40 hover:scale-105 transition flex items-center gap-2">
+          <span class="material-symbols-outlined text-base">download</span>
+          <span>DESCARGAR BOLETO OFICIAL (PDF)</span>
+        </button>
+
+        <button type="button" onclick="window.print()" class="bg-[#181822] hover:bg-[#252533] border border-[#2d2d3a] text-zinc-200 font-bold text-xs uppercase px-6 py-3.5 rounded-full transition flex items-center gap-2">
+          <span class="material-symbols-outlined text-base">print</span>
+          <span>IMPRIMIR</span>
+        </button>
+
+        <a href="home.html" class="bg-[#101016] hover:bg-[#181822] border border-[#252533] text-zinc-400 hover:text-white font-bold text-xs uppercase px-6 py-3.5 rounded-full transition">
+          Volver a Cartelera
+        </a>
+      </div>
+
+      <!-- ================= CONTENEDOR CENTRADO DE BOLETOS DE CINE (ESTILO OFICIAL DE ENTRADA) ================= -->
+      <div id="ticketVouchersContainer" class="max-w-[650px] mx-auto space-y-6">
+        <!-- Renderizado dinámicamente con la estructura idéntica a la entrada física -->
+      </div>
+
+      <!-- ================= VOUCHER DE CARAMELERÍA (SI COMPRÓ SNACKS) - QR EN EL CENTRO EXACTO ================= -->
+      <div id="snacksSuccessBox" class="hidden max-w-[580px] mx-auto bg-[#14141a] border-2 border-yellow-400/80 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center space-y-4 shadow-xl">
+        
+        <!-- Badge Centrado -->
+        <div class="flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/40 text-yellow-300 text-xs font-bold uppercase tracking-wider mx-auto">
+          <span class="material-symbols-outlined text-base">receipt_long</span>
+          <span>VOUCHER OFICIAL DE CARAMELERÍA</span>
+        </div>
+
+        <!-- CÓDIGO QR EN EL CENTRO EXACTO -->
+        <div class="bg-white p-3.5 rounded-2xl shadow-xl mx-auto flex items-center justify-center">
+          <img id="snacksQrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=CINEPLEX-SNACKS-ORD-118605" alt="QR Retiro Snacks" class="w-40 h-40 object-contain block mx-auto">
+        </div>
+
+        <!-- Mensaje Centrado -->
+        <p class="text-yellow-300 font-bold text-sm sm:text-base leading-snug max-w-md mx-auto text-center">
+          "¡TU COMPRA ESTÁ LISTA! Muestra este código QR al personal del cine para retirar tus snacks en caramelería sin hacer colas."
+        </p>
+      </div>
+
+      <!-- Botón de Navegación Inferior -->
+      <div class="text-center pt-4">
+        <a href="home.html" class="inline-block px-8 py-3 rounded-full text-xs font-black uppercase tracking-wider text-purple-300 hover:text-white bg-[#150a26] border border-purple-800 hover:border-purple-500 transition">
+          &larr; FINALIZAR Y VOLVER AL INICIO
+        </a>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Script Oficial de Inyección de Layout y Carrito -->
+  <script src="../assets/js/layout.js"></script>
+
+  <!-- Lógica de Pasarela de Pagos & Generación de Boletos Oficiales -->
+  <script>
+    let metodoActual = 'tarjeta';
+    let tieneEntradas = false;
+    let tieneSnacks = false;
+
+    function seleccionarMetodo(metodo) {
+      metodoActual = metodo;
+      
+      // Actualizar tabs visuales
+      document.getElementById('cardTabTarj').classList.toggle('selected', metodo === 'tarjeta');
+      document.getElementById('cardTabPM').classList.toggle('selected', metodo === 'pagomovil');
+      document.getElementById('cardTabBin').classList.toggle('selected', metodo === 'binance');
+
+      // Alternar formularios
+      document.getElementById('formTarjeta').classList.toggle('hidden', metodo !== 'tarjeta');
+      document.getElementById('formPagoMovil').classList.toggle('hidden', metodo !== 'pagomovil');
+      document.getElementById('formBinance').classList.toggle('hidden', metodo !== 'binance');
+    }
+
+    function cargarResumenOrden() {
+      const container = document.getElementById('orderItemsContainer');
+      if (!container) return;
+
+      const items = window.CineCart ? CineCart.getItems() : [];
+      
+      if (items.length === 0) {
+        tieneEntradas = false;
+        tieneSnacks = false;
+        container.innerHTML = `
+          <div class="text-center py-10 space-y-2">
+            <span class="material-symbols-outlined text-3xl text-zinc-600">shopping_cart_off</span>
+            <p class="text-zinc-300 text-xs font-bold">Tu orden de compra está vacía.</p>
+            <p class="text-zinc-500 text-[11px]">No has seleccionado ninguna entrada ni producto.</p>
+            <a href="home.html#cartelera" class="inline-block mt-3 px-5 py-2 rounded-xl text-xs font-bold bg-[#181822] text-purple-300 border border-purple-800/60 hover:bg-purple-900/40 transition">
+              Explorar Cartelera
+            </a>
+          </div>
+        `;
+        document.getElementById('orderSubtotalTxt').innerText = '$0.00';
+        document.getElementById('orderTotalUsdTxt').innerText = '$0.00 USD';
+        document.getElementById('orderTotalBsTxt').innerText = '0.00 Bs.';
+        return;
+      }
+
+      tieneEntradas = items.some(i => i.tipo === 'Entrada' || i.nombre.toLowerCase().includes('entrada'));
+      tieneSnacks = items.some(i => i.tipo === 'Snack' || i.tipo === 'Combo VIP' || i.tipo === 'Cotufa' || i.tipo === 'Bebida');
+
+      container.innerHTML = items.map(item => `
+        <div class="flex items-center justify-between text-xs py-2 border-b border-[#20202a]/50 last:border-none">
+          <div class="flex items-center space-x-2.5">
+            <span class="w-2.5 h-2.5 rounded-full ${item.tipo === 'Entrada' ? 'bg-purple-500' : 'bg-yellow-400'}"></span>
+            <div>
+              <span class="font-bold text-white block">${item.nombre}</span>
+              <span class="text-zinc-400 text-[10px]">${item.cantidad}x • $${item.precio.toFixed(2)} c/u</span>
+            </div>
+          </div>
+          <span class="font-extrabold text-white">$${(item.precio * item.cantidad).toFixed(2)}</span>
+        </div>
+      `).join('');
+
+      const subtotal = items.reduce((sum, i) => sum + (i.precio * i.cantidad), 0);
+      const fee = 0.50;
+      const total = subtotal + fee;
+      const tasaBcv = 48.50;
+      const totalBs = (total * tasaBcv).toFixed(2);
+
+      document.getElementById('orderSubtotalTxt').innerText = `$${subtotal.toFixed(2)}`;
+      document.getElementById('orderTotalUsdTxt').innerText = `$${total.toFixed(2)} USD`;
+      document.getElementById('orderTotalBsTxt').innerText = `≈ ${totalBs} Bs.`;
+    }
+
+    function procesarPagoFinal() {
+      const items = window.CineCart ? CineCart.getItems() : [];
+      if (items.length === 0) {
+        alert('No has seleccionado ninguna entrada de cine ni snacks en tu orden. Por favor regresa a la cartelera para elegir tus películas y butacas antes de continuar.');
+        return;
+      }
+
+      const btn = document.getElementById('btnPayText');
+      btn.innerText = 'PROCESANDO PAGO...';
+
+      setTimeout(() => {
+        btn.innerText = 'CONFIRMAR PAGO Y GENERAR COMPROBANTE';
+        
+        // Generar ID de transacción
+        const transId = Math.floor(100000 + Math.random() * 900000);
+        document.getElementById('transIdTxt').innerText = `#CPX-${transId}`;
+
+        // Obtener todos los grupos de boletos adquiridos en esta sesión
+        let ticketsOrden = JSON.parse(localStorage.getItem('cineplex_tickets_carrito') || '[]');
+
+        // Si no estaban en localStorage pero sí en el carrito, reconstruimos
+        if (ticketsOrden.length === 0) {
+          const ticketItems = items.filter(i => i.tipo === 'Entrada' || i.nombre.toLowerCase().includes('entrada'));
+          ticketItems.forEach(item => {
+            ticketsOrden.push({
+              id: item.id,
+              pelicula: item.pelicula || item.nombre.replace(/^Entrada:\s*/, ''),
+              poster: item.img || 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=160&q=80',
+              salaNombre: item.salaNombre || 'Sala 03 Estándar 2D',
+              tipoEntrada: item.tipoEntrada || 'Entrada General (2D)',
+              horario: item.horario || '19:30',
+              butacas: item.butacas || ['A4'],
+              precioUnitario: item.precio
+            });
+          });
+        }
+        
+        // Renderizar Boletos Oficiales para TODAS las películas elegidas
+        renderizarBoletosOficiales(ticketsOrden, transId);
+
+        // Si compró snacks, actualizar y mostrar voucher de snacks
+        const snacksBox = document.getElementById('snacksSuccessBox');
+        if (tieneSnacks) {
+          document.getElementById('snacksQrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=CINEPLEX-SNACKS-ORD-${transId}`;
+          snacksBox.classList.remove('hidden');
+        } else {
+          snacksBox.classList.add('hidden');
+        }
+
+        // Actualizar Stepper al Paso 4
+        document.getElementById('step3Ind').className = 'w-9 h-9 rounded-full bg-[#3b1778] text-white font-extrabold text-xs flex items-center justify-center border border-purple-600';
+        document.getElementById('conn3').classList.add('completed');
+        document.getElementById('step4Ind').className = 'w-9 h-9 rounded-full bg-[#6d28d9] text-white font-black text-xs flex items-center justify-center shadow-md shadow-black/40 border-2 border-[#8b5cf6]/60';
+
+        // Ocultar formulario de pago y mostrar sección integrada de entrega
+        document.getElementById('checkoutMainSection').classList.add('hidden');
+        document.getElementById('checkoutSuccessSection').classList.remove('hidden');
+
+        // Scroll suave arriba
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Limpiar carrito
+        if (window.CineCart) CineCart.clear();
+      }, 1000);
+    }
+
+    // Generador de Boletos de Cine Oficiales (Soporta múltiples películas y butacas)
+    function renderizarBoletosOficiales(ticketsOrden, transId) {
+      const container = document.getElementById('ticketVouchersContainer');
+      if (!container) return;
+
+      const fechaAudit = '29 octubre 2026 @ 19:15';
+      let html = '';
+
+      // Si por algún motivo la lista viniera vacía de entradas, fallback informativo
+      if (!ticketsOrden || ticketsOrden.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 text-center text-zinc-400 bg-[#121218] border border-[#232330] rounded-xl text-xs">
+            Esta orden no contiene entradas de cine para emitir boletos. Revisa tu voucher de caramelería abajo si compraste snacks.
+          </div>
+        `;
+        return;
+      }
+
+      // Calcular total de butacas para no dejar divisor huérfano al final
+      let totalButacas = 0;
+      ticketsOrden.forEach(t => {
+        totalButacas += (t.butacas && t.butacas.length > 0) ? t.butacas.length : 1;
+      });
+      let indexButaca = 0;
+
+      ticketsOrden.forEach(ticket => {
+        const pelicula = ticket.pelicula || 'Función CinePleX';
+        const poster = ticket.poster || 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=160&q=80';
+        const sala = ticket.salaNombre || 'Sala 03 Estándar 2D';
+        const tipoEntrada = ticket.tipoEntrada || 'Entrada General';
+        const horario = ticket.horario ? `martes 29 octubre 2026 - ${ticket.horario}` : 'martes 29 octubre 2026 - 19:30';
+        const precioUnitario = Number(ticket.precioUnitario || 7.00);
+        const precioTotalBoleto = (precioUnitario + 0.50).toFixed(2);
+        const butacas = (ticket.butacas && ticket.butacas.length > 0) ? ticket.butacas : ['A1'];
+
+        butacas.forEach((asiento) => {
+          indexButaca++;
+          const fila = asiento.charAt(0);
+          const numButaca = asiento.slice(1);
+
+          html += `
+            <!-- TICKET BOLETO DE CINE OFICIAL (DISEÑO BLINDADO PARA PDF / IMPRESIÓN) -->
+            <div class="ticket-voucher-card" style="background: #ffffff; color: #111827; border: 2.5px solid #09090b; border-radius: 14px; padding: 22px 24px 28px 24px; margin: 16px auto; max-width: 620px; box-sizing: border-box; page-break-inside: avoid; break-inside: avoid; font-family: Inter, system-ui, sans-serif;">
+              
+              <!-- Fila Superior: Marca CinePleX + Mini Poster -->
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid #e5e7eb; padding-bottom: 12px; margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="width: 32px; height: 32px; border-radius: 8px; background: #6d28d9; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #ffffff; font-size: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                    X
+                  </div>
+                  <div>
+                    <span style="font-size: 20px; font-weight: 900; letter-spacing: -0.02em; color: #09090b;">Cine<span style="color: #6d28d9;">PleX</span></span>
+                    <span style="font-size: 9px; display: block; text-transform: uppercase; letter-spacing: 0.12em; color: #6b7280; font-weight: 800;">Boleto de Acceso Oficial</span>
+                  </div>
+                </div>
+
+                <!-- Poster miniatura de la película elegida -->
+                <img src="${poster}" 
+                     crossorigin="anonymous"
+                     alt="Poster ${pelicula}" 
+                     width="56"
+                     height="80"
+                     style="width: 56px; height: 80px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 1px solid #d1d5db;">
+              </div>
+
+              <!-- Título de la Película -->
+              <h2 style="font-size: 22px; font-weight: 900; color: #09090b; letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 8px 0;">
+                ${pelicula}
+              </h2>
+
+              <!-- Fecha, Hora y Sala -->
+              <div style="margin-bottom: 14px;">
+                <div style="font-size: 15px; font-weight: 800; color: #111827; line-height: 1.3;">
+                  ${horario}
+                </div>
+                <div style="font-size: 16px; font-weight: 900; color: #4c1d95; margin-top: 2px;">
+                  ${sala} &bull; <span style="color: #4b5563; font-size: 13px; font-weight: 700; text-transform: uppercase;">${tipoEntrada}</span>
+                </div>
+              </div>
+
+              <!-- Estructura Flex Robusta: Butaca & Datos / Precios & QR -->
+              <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #e5e7eb; padding-top: 14px; gap: 16px;">
+                
+                <!-- Columna Izquierda: Ubicación del Asiento y Datos del Cliente -->
+                <div style="flex: 1; min-width: 0;">
+                  <div style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+                    ${tipoEntrada}
+                  </div>
+
+                  <div style="font-size: 26px; font-weight: 900; color: #09090b; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 10px;">
+                    Fila: <span style="color: #6d28d9;">${fila}</span> &nbsp;&nbsp; Butaca: <span style="color: #6d28d9;">${numButaca}</span>
+                  </div>
+
+                  <div style="font-family: monospace; font-size: 11px; color: #4b5563; border-top: 1px solid #f3f4f6; padding-top: 8px; line-height: 1.5;">
+                    <div>Cliente: <strong style="color: #09090b;">Usuario Prueba</strong></div>
+                    <div>C.I.: <strong style="color: #581c87; font-weight: 800;">00000000</strong></div>
+                    <div style="font-size: 10px; color: #9ca3af; margin-top: 4px;">CINEPLEX &bull; Audit: ${transId} &bull; ${fechaAudit}</div>
+                  </div>
+                </div>
+
+                <!-- Columna Derecha: Precios y Código QR de Entrada -->
+                <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; text-align: right;">
+                  <div style="font-size: 11px; color: #4b5563; line-height: 1.45; margin-bottom: 8px;">
+                    <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                      <span>Precio entrada (IVA incl.):</span>
+                      <strong style="color: #09090b; font-weight: 700;">$${precioUnitario.toFixed(2)}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                      <span>Coste distribución (IVA incl.):</span>
+                      <strong style="color: #09090b; font-weight: 700;">$0.50</strong>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid #d1d5db; padding-top: 4px; margin-top: 4px; font-size: 12px; color: #09090b; font-weight: 900;">
+                      <span>PRECIO TOTAL:</span>
+                      <span>$${precioTotalBoleto} USD</span>
+                    </div>
+                  </div>
+
+                  <!-- QR Oficial de Entrada con dimensiones fijas -->
+                  <div style="background: #ffffff; padding: 4px; border: 2px solid #09090b; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=CINEPLEX-ENTRADA-${fila}${numButaca}-${transId}" 
+                         crossorigin="anonymous"
+                         alt="QR Boleto" 
+                         width="84"
+                         height="84"
+                         style="width: 84px; height: 84px; display: block; object-fit: contain;">
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          `;
+
+          // Línea Perforada con Tijeras solo ENTRE boletos (nunca al final)
+          if (indexButaca < totalButacas) {
+            html += `
+              <div style="display: flex; align-items: center; justify-content: space-between; color: #71717a; margin: 20px 0; padding: 0 8px; select-none;">
+                <span class="material-symbols-outlined" style="font-size: 16px;">content_cut</span>
+                <span style="flex-grow: 1; border-bottom: 2px dashed #52525b; margin: 0 12px;"></span>
+                <span class="material-symbols-outlined" style="font-size: 16px;">content_cut</span>
+              </div>
+            `;
+          }
+        });
+      });
+
+      container.innerHTML = html;
+    }
+
+    function descargarBoletoPdf() {
+      const element = document.getElementById('ticketVouchersContainer');
+      if (!element) return;
+
+      const opt = {
+        margin:       [0.3, 0.4, 0.4, 0.4],
+        filename:     'Boletos_CinePleX_Oficial.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { 
+          scale: 2, 
+          useCORS: true,
+          scrollY: 0,
+          scrollX: 0,
+          backgroundColor: '#ffffff',
+          logging: false
+        },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+        pagebreak:    { mode: ['css', 'legacy'], avoid: '.ticket-voucher-card' }
+      };
+
+      html2pdf().set(opt).from(element).save();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarResumenOrden();
+    });
+  </script>
+</body>
+</html>

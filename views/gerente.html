@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinePleX - Portal de Gerencia</title>
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/navbar.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/footer.css">
+  <link rel="stylesheet" href="../assets/css/gerente.css">
+</head>
+
+<body>
+
+  <!-- APPBAR INYECTADO POR LAYOUT.JS -->
+  <div id="app-navbar"></div>
+
+  <main class="manager-dashboard">
+
+    <!-- ================= CABECERA DE GERENCIA ================= -->
+    <header class="manager-header">
+      <div class="manager-title-group">
+        <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+          <h1>Panel de Gerencia</h1>
+          <span class="manager-badge-role">Gerente General • Sede Central</span>
+        </div>
+        <p class="manager-subtitle">Administración operativa, cancelación de funciones en cartelera y control de
+          inventario de salas y caramelería.</p>
+      </div>
+
+      <div class="manager-meta-info">
+        <div class="system-status-indicator">
+          <span class="status-dot-pulse"></span>
+          <span>Sistema Operativo en Vivo</span>
+        </div>
+        <a href="home.html" class="btn-client-view" title="Volver a la vista de cliente">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <span>Vista de Cliente</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- ================= TARJETAS KPI ================= -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-info">
+          <span>En Cartelera</span>
+          <h3 id="kpiActiveMovies">4</h3>
+          <p>Películas con funciones hoy</p>
+        </div>
+        <div class="kpi-icon-box kpi-purple">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+            <line x1="7" y1="2" x2="7" y2="22"></line>
+            <line x1="17" y1="2" x2="17" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <line x1="2" y1="7" x2="7" y2="7"></line>
+            <line x1="2" y1="17" x2="7" y2="17"></line>
+            <line x1="17" y1="17" x2="22" y2="17"></line>
+            <line x1="17" y1="7" x2="22" y2="7"></line>
+          </svg>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-info">
+          <span>Canceladas</span>
+          <h3 id="kpiCancelledMovies" style="color: #f87171;">1</h3>
+          <p>Funciones suspendidas</p>
+        </div>
+        <div class="kpi-icon-box kpi-red">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-info">
+          <span>Ítems en Inventario</span>
+          <h3 id="kpiTotalItems">8</h3>
+          <p>Insumos y combos activos</p>
+        </div>
+        <div class="kpi-icon-box kpi-green">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+            </path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-info">
+          <span>Alertas de Stock</span>
+          <h3 id="kpiAlertItems" style="color: #facc15;">3</h3>
+          <p>Por debajo del mínimo</p>
+        </div>
+        <div class="kpi-icon-box kpi-yellow">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PESTAÑAS DE NAVEGACIÓN ================= -->
+    <nav class="manager-tabs-bar">
+      <button class="tab-btn active" onclick="cambiarPestana('tab-peliculas', this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+          <line x1="7" y1="2" x2="7" y2="22"></line>
+          <line x1="17" y1="2" x2="17" y2="22"></line>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+        </svg>
+        <span>Cancelación de Películas</span>
+        <span class="tab-counter" id="tabCountMovies">5</span>
+      </button>
+
+      <button class="tab-btn" onclick="cambiarPestana('tab-inventario', this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path
+            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+          </path>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+        <span>Administrar Inventario</span>
+        <span class="tab-counter" id="tabCountInventory">8</span>
+      </button>
+
+      <button class="tab-btn" onclick="cambiarPestana('tab-bitacora', this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span>Bitácora de Auditoría</span>
+      </button>
+
+      <button class="tab-btn" onclick="cambiarPestana('tab-estadisticas', this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Estadísticas de Usuario</span>
+        <span class="tab-counter" style="background: rgba(6, 182, 212, 0.25); color: #67e8f9; border: 1px solid rgba(6, 182, 212, 0.4);">Audiencia</span>
+      </button>
+    </nav>
+
+
+    <!-- ==========================================
+         PESTAÑA 1: CANCELACIÓN DE PELÍCULAS
+         ========================================== -->
+    <div id="tab-peliculas" class="tab-content active">
+
+      <!-- TOOLBAR DE PELÍCULAS -->
+      <div class="section-toolbar">
+        <div class="toolbar-filters">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="searchMovies" placeholder="Buscar película por título..."
+              oninput="filtrarPeliculas()">
+          </div>
+
+          <select class="select-filter" id="filterMovieStatus" onchange="filtrarPeliculas()">
+            <option value="todos">Todos los Estados</option>
+            <option value="activa">Solo Activas en Cartelera</option>
+            <option value="cancelada">Solo Canceladas / Suspendidas</option>
+          </select>
+
+          <select class="select-filter" id="filterMovieHall" onchange="filtrarPeliculas()">
+            <option value="todos">Todas las Salas</option>
+            <option value="Sala 1 (4D)">Sala 1 (4D E-Motion)</option>
+            <option value="Sala 2 (VIP)">Sala 2 (VIP Reclinable)</option>
+            <option value="Sala 3 (Estándar)">Sala 3 (Estándar HD)</option>
+            <option value="Sala 4 (IMAX)">Sala 4 (IMAX Atmos)</option>
+            <option value="Sala 5 (VIP)">Sala 5 (VIP)</option>
+          </select>
+        </div>
+
+        <div class="toolbar-actions">
+          <button class="btn-primary-action" onclick="abrirModalCancelacionGlobal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            <span>Cancelar Función Específica</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- GRID DE TARJETAS DE PELÍCULAS GESTIONABLES -->
+      <div class="movies-manage-grid" id="moviesGrid">
+
+        <!-- PELÍCULA 1: SPIDER-MAN -->
+        <div class="movie-manage-card" data-title="Spider-Man: Beyond the Spider-Verse" data-status="activa"
+          data-hall="Sala 1 (4D)">
+          <div class="card-movie-header">
+            <img src="https://images.unsplash.com/photo-1635805737707-575885ab0820?auto=format&fit=crop&w=400&q=80"
+              alt="Poster" class="card-movie-poster">
+            <div class="card-movie-details">
+              <h4>Spider-Man: Beyond</h4>
+              <div class="movie-meta-tags">
+                <span class="mini-tag">+13</span>
+                <span class="mini-tag">Sala 1 (4D)</span>
+                <span class="mini-tag">140 min</span>
+              </div>
+              <span class="status-badge status-active">
+                <span style="width: 7px; height: 7px; background: #22c55e; border-radius: 50%;"></span>
+                Activa en Cartelera
+              </span>
+            </div>
+          </div>
+
+          <div class="card-movie-schedules">
+            <div class="schedules-title">
+              <span>Horarios Programados Hoy:</span>
+              <span style="color: var(--primary-light);">3 Funciones</span>
+            </div>
+            <div class="schedule-chips">
+              <span class="chip-time">15:30</span>
+              <span class="chip-time">18:45</span>
+              <span class="chip-time">21:30</span>
+            </div>
+
+            <div class="tickets-occupancy-info">
+              <div>
+                <strong style="color: var(--text-white);">142 / 180</strong> boletos vendidos
+                <div class="occupancy-bar-container">
+                  <div class="occupancy-fill" style="width: 78%;"></div>
+                </div>
+              </div>
+              <span style="color: #4ade80; font-weight: 800;">78% Ocupación</span>
+            </div>
+          </div>
+
+          <div class="card-movie-footer">
+            <span style="font-size: 0.72rem; color: var(--text-muted);">Próxima: 18:45</span>
+            <button class="btn-cancel-movie"
+              onclick="abrirModalCancelar('Spider-Man: Beyond the Spider-Verse', 'Sala 1 (4D E-Motion)', ['15:30', '18:45', '21:30'], 142)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+              <span>Cancelar Película</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- PELÍCULA 2: DUNE 2 -->
+        <div class="movie-manage-card" data-title="Dune: Parte Dos" data-status="activa" data-hall="Sala 4 (IMAX)">
+          <div class="card-movie-header">
+            <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=400&q=80"
+              alt="Poster" class="card-movie-poster">
+            <div class="card-movie-details">
+              <h4>Dune: Parte Dos</h4>
+              <div class="movie-meta-tags">
+                <span class="mini-tag">TP</span>
+                <span class="mini-tag">Sala 4 (IMAX)</span>
+                <span class="mini-tag">166 min</span>
+              </div>
+              <span class="status-badge status-active">
+                <span style="width: 7px; height: 7px; background: #22c55e; border-radius: 50%;"></span>
+                Activa en Cartelera
+              </span>
+            </div>
+          </div>
+
+          <div class="card-movie-schedules">
+            <div class="schedules-title">
+              <span>Horarios Programados Hoy:</span>
+              <span style="color: var(--primary-light);">3 Funciones</span>
+            </div>
+            <div class="schedule-chips">
+              <span class="chip-time">16:00</span>
+              <span class="chip-time">19:30</span>
+              <span class="chip-time">22:45</span>
+            </div>
+
+            <div class="tickets-occupancy-info">
+              <div>
+                <strong style="color: var(--text-white);">110 / 220</strong> boletos vendidos
+                <div class="occupancy-bar-container">
+                  <div class="occupancy-fill" style="width: 50%;"></div>
+                </div>
+              </div>
+              <span style="color: #4ade80; font-weight: 800;">50% Ocupación</span>
+            </div>
+          </div>
+
+          <div class="card-movie-footer">
+            <span style="font-size: 0.72rem; color: var(--text-muted);">Próxima: 19:30</span>
+            <button class="btn-cancel-movie"
+              onclick="abrirModalCancelar('Dune: Parte Dos', 'Sala 4 (IMAX Atmos)', ['16:00', '19:30', '22:45'], 110)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+              <span>Cancelar Película</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- PELÍCULA 3: OPPENHEIMER -->
+        <div class="movie-manage-card" data-title="Oppenheimer" data-status="activa" data-hall="Sala 2 (VIP)">
+          <div class="card-movie-header">
+            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=400&q=80"
+              alt="Poster" class="card-movie-poster">
+            <div class="card-movie-details">
+              <h4>Oppenheimer</h4>
+              <div class="movie-meta-tags">
+                <span class="mini-tag"
+                  style="background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4);">+18</span>
+                <span class="mini-tag">Sala 2 (VIP)</span>
+                <span class="mini-tag">180 min</span>
+              </div>
+              <span class="status-badge status-active">
+                <span style="width: 7px; height: 7px; background: #22c55e; border-radius: 50%;"></span>
+                Activa en Cartelera
+              </span>
+            </div>
+          </div>
+
+          <div class="card-movie-schedules">
+            <div class="schedules-title">
+              <span>Horarios Programados Hoy:</span>
+              <span style="color: var(--primary-light);">2 Funciones</span>
+            </div>
+            <div class="schedule-chips">
+              <span class="chip-time">17:00</span>
+              <span class="chip-time">20:30</span>
+            </div>
+
+            <div class="tickets-occupancy-info">
+              <div>
+                <strong style="color: var(--text-white);">48 / 60</strong> boletos vendidos
+                <div class="occupancy-bar-container">
+                  <div class="occupancy-fill" style="width: 80%;"></div>
+                </div>
+              </div>
+              <span style="color: #4ade80; font-weight: 800;">80% Ocupación</span>
+            </div>
+          </div>
+
+          <div class="card-movie-footer">
+            <span style="font-size: 0.72rem; color: var(--text-muted);">Próxima: 20:30</span>
+            <button class="btn-cancel-movie"
+              onclick="abrirModalCancelar('Oppenheimer', 'Sala 2 (VIP Reclinable)', ['17:00', '20:30'], 48)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+              <span>Cancelar Película</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- PELÍCULA 4: GLADIADOR II -->
+        <div class="movie-manage-card" data-title="Gladiador II" data-status="activa" data-hall="Sala 3 (Estándar)">
+          <div class="card-movie-header">
+            <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=400&q=80"
+              alt="Poster" class="card-movie-poster">
+            <div class="card-movie-details">
+              <h4>Gladiador II</h4>
+              <div class="movie-meta-tags">
+                <span class="mini-tag">+14</span>
+                <span class="mini-tag">Sala 3 (Estándar)</span>
+                <span class="mini-tag">150 min</span>
+              </div>
+              <span class="status-badge status-active">
+                <span style="width: 7px; height: 7px; background: #22c55e; border-radius: 50%;"></span>
+                Activa en Cartelera
+              </span>
+            </div>
+          </div>
+
+          <div class="card-movie-schedules">
+            <div class="schedules-title">
+              <span>Horarios Programados Hoy:</span>
+              <span style="color: var(--primary-light);">2 Funciones</span>
+            </div>
+            <div class="schedule-chips">
+              <span class="chip-time">14:00</span>
+              <span class="chip-time">17:30</span>
+            </div>
+
+            <div class="tickets-occupancy-info">
+              <div>
+                <strong style="color: var(--text-white);">65 / 150</strong> boletos vendidos
+                <div class="occupancy-bar-container">
+                  <div class="occupancy-fill" style="width: 43%;"></div>
+                </div>
+              </div>
+              <span style="color: #4ade80; font-weight: 800;">43% Ocupación</span>
+            </div>
+          </div>
+
+          <div class="card-movie-footer">
+            <span style="font-size: 0.72rem; color: var(--text-muted);">Próxima: 17:30</span>
+            <button class="btn-cancel-movie"
+              onclick="abrirModalCancelar('Gladiador II', 'Sala 3 (Estándar HD)', ['14:00', '17:30'], 65)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+              <span>Cancelar Película</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- PELÍCULA 5: KRAVEN (YA CANCELADA - EJEMPLO) -->
+        <div class="movie-manage-card cancelled" data-title="Kraven el Cazador" data-status="cancelada"
+          data-hall="Sala 5 (VIP)">
+          <div class="card-movie-header">
+            <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80"
+              alt="Poster" class="card-movie-poster" style="filter: grayscale(80%);">
+            <div class="card-movie-details">
+              <h4>Kraven el Cazador</h4>
+              <div class="movie-meta-tags">
+                <span class="mini-tag">+14</span>
+                <span class="mini-tag">Sala 5 (VIP)</span>
+                <span class="mini-tag">125 min</span>
+              </div>
+              <span class="status-badge status-cancelled">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="15" y1="9" x2="9" y2="15"></line>
+                  <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+                Cancelada
+              </span>
+            </div>
+          </div>
+
+          <div class="card-movie-schedules">
+            <div class="schedules-title">
+              <span>Horarios Afectados:</span>
+              <span style="color: #f87171;">Suspendida</span>
+            </div>
+            <div class="schedule-chips">
+              <span class="chip-time cancelled-time">21:00</span>
+            </div>
+
+            <div class="tickets-occupancy-info" style="border-color: rgba(239, 68, 68, 0.3);">
+              <div>
+                <strong style="color: #fca5a5;">Falla en Proyector Láser</strong>
+                <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem;">Reembolso emitido a 24
+                  usuarios</p>
+              </div>
+              <span style="color: #f87171; font-weight: 800;">Cancelada</span>
+            </div>
+          </div>
+
+          <div class="card-movie-footer">
+            <span style="font-size: 0.72rem; color: #f87171;">Motivo Técnico</span>
+            <button class="btn-reactivate-movie" onclick="reactivarPelicula('Kraven el Cazador')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+              </svg>
+              <span>Reanudar Película</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ==========================================
+         PESTAÑA 2: ADMINISTRAR INVENTARIO
+         ========================================== -->
+    <div id="tab-inventario" class="tab-content">
+
+      <!-- TOOLBAR DE INVENTARIO -->
+      <div class="section-toolbar">
+        <div class="toolbar-filters">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="searchInventory" placeholder="Buscar insumo o producto..."
+              oninput="filtrarInventario()">
+          </div>
+
+          <select class="select-filter" id="filterCategory" onchange="filtrarInventario()">
+            <option value="todos">Todas las Categorías</option>
+            <option value="Caramelería">Caramelería & Snacks</option>
+            <option value="Bebidas">Bebidas & Refrescos</option>
+            <option value="Combos">Combos Preparados</option>
+            <option value="Golosinas">Golosinas & Chocolates</option>
+            <option value="Desechables">Desechables & Empaques</option>
+            <option value="Operaciones">Operaciones de Sala</option>
+          </select>
+
+          <select class="select-filter" id="filterStockStatus" onchange="filtrarInventario()">
+            <option value="todos">Todos los Estados</option>
+            <option value="normal">Stock Normal</option>
+            <option value="bajo">Stock Bajo (Alerta)</option>
+            <option value="agotado">Agotado (0 unidades)</option>
+          </select>
+        </div>
+
+        <div class="toolbar-actions">
+          <button class="btn-primary-action" onclick="abrirModalNuevoProducto()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Nuevo Producto / Insumo</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TABLA DE INVENTARIO -->
+      <div class="table-responsive">
+        <table class="manager-table" id="inventoryTable">
+          <thead>
+            <tr>
+              <th>Producto / Insumo</th>
+              <th>Categoría</th>
+              <th>Nivel de Stock (Actual / Mínimo)</th>
+              <th>Precio Venta</th>
+              <th>Estado</th>
+              <th>Ajuste Rápido</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- ITEM 1 -->
+            <tr data-category="Caramelería" data-status="normal" data-name="Cotufas / Maíz Popcorn (Saco 25kg)">
+              <td>
+                <div class="product-item-cell">
+                  <div class="product-icon-avatar">🍿</div>
+                  <div>
+                    <strong>Maíz Popcorn (Saco 25kg)</strong>
+                    <span>SKU: CAR-POP-001</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="mini-tag">Caramelería</span></td>
+              <td>
+                <div class="stock-meter-cell">
+                  <div class="stock-count-wrapper">
+                    <span class="stock-current"><strong class="stock-number">18</strong> sacos</span>
+                    <span style="color: var(--text-muted);">Mín: 5</span>
+                  </div>
+                  <div class="stock-progress-track">
+                    <div class="stock-progress-bar stock-bar-green" style="width: 85%;"></div>
+                  </div>
+                </div>
+              </td>
+              <td><strong>$45.00</strong></td>
+              <td><span class="status-badge stock-tag-normal">En Stock</span></td>
+              <td>
+                <div class="table-quick-actions">
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, -1)" title="Restar 1">-</button>
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, 1)" title="Sumar 1">+</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ITEM 2 -->
+            <tr data-category="Desechables" data-status="bajo" data-name="Vasos CinePleX XL (Caja 500 uds)">
+              <td>
+                <div class="product-item-cell">
+                  <div class="product-icon-avatar">🥤</div>
+                  <div>
+                    <strong>Vasos CinePleX XL (500 uds)</strong>
+                    <span>SKU: DES-VAS-002</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="mini-tag">Desechables</span></td>
+              <td>
+                <div class="stock-meter-cell">
+                  <div class="stock-count-wrapper">
+                    <span class="stock-current"><strong class="stock-number" style="color: #facc15;">4</strong>
+                      cajas</span>
+                    <span style="color: var(--text-muted);">Mín: 10</span>
+                  </div>
+                  <div class="stock-progress-track">
+                    <div class="stock-progress-bar stock-bar-yellow" style="width: 25%;"></div>
+                  </div>
+                </div>
+              </td>
+              <td><strong>$32.00</strong></td>
+              <td><span class="status-badge stock-tag-low">Stock Bajo</span></td>
+              <td>
+                <div class="table-quick-actions">
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, -1)" title="Restar 1">-</button>
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, 1)" title="Sumar 1">+</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ITEM 3 -->
+            <tr data-category="Bebidas" data-status="normal" data-name="Sirope Coca-Cola BIB 20L">
+              <td>
+                <div class="product-item-cell">
+                  <div class="product-icon-avatar">🍾</div>
+                  <div>
+                    <strong>Sirope Coca-Cola BIB (20 Litros)</strong>
+                    <span>SKU: BEB-COC-003</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="mini-tag">Bebidas</span></td>
+              <td>
+                <div class="stock-meter-cell">
+                  <div class="stock-count-wrapper">
+                    <span class="stock-current"><strong class="stock-number">8</strong> cajas BIB</span>
+                    <span style="color: var(--text-muted);">Mín: 4</span>
+                  </div>
+                  <div class="stock-progress-track">
+                    <div class="stock-progress-bar stock-bar-green" style="width: 70%;"></div>
+                  </div>
+                </div>
+              </td>
+              <td><strong>$85.00</strong></td>
+              <td><span class="status-badge stock-tag-normal">En Stock</span></td>
+              <td>
+                <div class="table-quick-actions">
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, -1)" title="Restar 1">-</button>
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, 1)" title="Sumar 1">+</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ITEM 4 -->
+            <tr data-category="Combos" data-status="normal" data-name="Combo Pareja CinePleX">
+              <td>
+                <div class="product-item-cell">
+                  <div class="product-icon-avatar">🎟️</div>
+                  <div>
+                    <strong>Combo Pareja (1 Cotufa XL + 2 Bebidas)</strong>
+                    <span>SKU: COM-PAR-004</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="mini-tag">Combos</span></td>
+              <td>
+                <div class="stock-meter-cell">
+                  <div class="stock-count-wrapper">
+                    <span class="stock-current"><strong class="stock-number">64</strong> kits</span>
+                    <span style="color: var(--text-muted);">Mín: 20</span>
+                  </div>
+                  <div class="stock-progress-track">
+                    <div class="stock-progress-bar stock-bar-green" style="width: 80%;"></div>
+                  </div>
+                </div>
+              </td>
+              <td><strong>$12.00</strong></td>
+              <td><span class="status-badge stock-tag-normal">En Stock</span></td>
+              <td>
+                <div class="table-quick-actions">
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, -1)" title="Restar 1">-</button>
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, 1)" title="Sumar 1">+</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ITEM 5 -->
+            <tr data-category="Golosinas" data-status="bajo" data-name="Chocolates M&M Maní (Caja 24 uds)">
+              <td>
+                <div class="product-item-cell">
+                  <div class="product-icon-avatar">🍫</div>
+                  <div>
+                    <strong>Chocolates M&M Maní (24 uds)</strong>
+                    <span>SKU: GOL-MM-005</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="mini-tag">Golosinas</span></td>
+              <td>
+                <div class="stock-meter-cell">
+                  <div class="stock-count-wrapper">
+                    <span class="stock-current"><strong class="stock-number" style="color: #facc15;">2</strong>
+                      cajas</span>
+                    <span style="color: var(--text-muted);">Mín: 6</span>
+                  </div>
+                  <div class="stock-progress-track">
+                    <div class="stock-progress-bar stock-bar-yellow" style="width: 20%;"></div>
+                  </div>
+                </div>
+              </td>
+              <td><strong>$3.50</strong></td>
+              <td><span class="status-badge stock-tag-low">Stock Bajo</span></td>
+              <td>
+                <div class="table-quick-actions">
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, -1)" title="Restar 1">-</button>
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, 1)" title="Sumar 1">+</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ITEM 6 -->
+            <tr data-category="Operaciones" data-status="agotado" data-name="Lentes 3D Pasivos Reutilizables">
+              <td>
+                <div class="product-item-cell">
+                  <div class="product-icon-avatar">👓</div>
+                  <div>
+                    <strong>Lentes 3D Pasivos Reutilizables</strong>
+                    <span>SKU: OPE-3D-006</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="mini-tag">Operaciones</span></td>
+              <td>
+                <div class="stock-meter-cell">
+                  <div class="stock-count-wrapper">
+                    <span class="stock-current"><strong class="stock-number" style="color: #f87171;">0</strong>
+                      unidades</span>
+                    <span style="color: var(--text-muted);">Mín: 100</span>
+                  </div>
+                  <div class="stock-progress-track">
+                    <div class="stock-progress-bar stock-bar-red" style="width: 0%;"></div>
+                  </div>
+                </div>
+              </td>
+              <td><strong>$2.00</strong></td>
+              <td><span class="status-badge stock-tag-empty">Agotado</span></td>
+              <td>
+                <div class="table-quick-actions">
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, -1)" title="Restar 1">-</button>
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, 10)"
+                    title="Sumar lote (+10)">+10</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ITEM 7 -->
+            <tr data-category="Caramelería" data-status="normal" data-name="Nachos con Queso Cheddar">
+              <td>
+                <div class="product-item-cell">
+                  <div class="product-icon-avatar">🧀</div>
+                  <div>
+                    <strong>Nachos con Queso Caliente (Porción)</strong>
+                    <span>SKU: CAR-NAC-007</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="mini-tag">Caramelería</span></td>
+              <td>
+                <div class="stock-meter-cell">
+                  <div class="stock-count-wrapper">
+                    <span class="stock-current"><strong class="stock-number">35</strong> porciones</span>
+                    <span style="color: var(--text-muted);">Mín: 15</span>
+                  </div>
+                  <div class="stock-progress-track">
+                    <div class="stock-progress-bar stock-bar-green" style="width: 75%;"></div>
+                  </div>
+                </div>
+              </td>
+              <td><strong>$6.50</strong></td>
+              <td><span class="status-badge stock-tag-normal">En Stock</span></td>
+              <td>
+                <div class="table-quick-actions">
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, -1)" title="Restar 1">-</button>
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, 1)" title="Sumar 1">+</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ITEM 8 -->
+            <tr data-category="Bebidas" data-status="normal" data-name="Agua Mineral 500ml (Caja 24 uds)">
+              <td>
+                <div class="product-item-cell">
+                  <div class="product-icon-avatar">💧</div>
+                  <div>
+                    <strong>Agua Mineral 500ml (Caja 24 uds)</strong>
+                    <span>SKU: BEB-AGU-008</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="mini-tag">Bebidas</span></td>
+              <td>
+                <div class="stock-meter-cell">
+                  <div class="stock-count-wrapper">
+                    <span class="stock-current"><strong class="stock-number">12</strong> cajas</span>
+                    <span style="color: var(--text-muted);">Mín: 5</span>
+                  </div>
+                  <div class="stock-progress-track">
+                    <div class="stock-progress-bar stock-bar-green" style="width: 80%;"></div>
+                  </div>
+                </div>
+              </td>
+              <td><strong>$2.00</strong></td>
+              <td><span class="status-badge stock-tag-normal">En Stock</span></td>
+              <td>
+                <div class="table-quick-actions">
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, -1)" title="Restar 1">-</button>
+                  <button class="btn-stock-adjust" onclick="ajustarStock(this, 1)" title="Sumar 1">+</button>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- ==========================================
+         PESTAÑA 3: BITÁCORA DE AUDITORÍA
+         ========================================== -->
+    <div id="tab-bitacora" class="tab-content">
+      <div class="table-responsive">
+        <table class="manager-table">
+          <thead>
+            <tr>
+              <th>Fecha y Hora</th>
+              <th>Operación</th>
+              <th>Elemento / Película / Insumo</th>
+              <th>Detalle de Auditoría</th>
+              <th>Responsable</th>
+            </tr>
+          </thead>
+          <tbody id="auditLogsBody">
+            <tr>
+              <td style="color: var(--text-muted);">Hoy, 18:20</td>
+              <td><span class="status-badge status-cancelled">Cancelación</span></td>
+              <td><strong>Kraven el Cazador (Sala 5)</strong></td>
+              <td>Falla en proyector láser. Se notificaron 24 usuarios y se emitió reembolso.</td>
+              <td><span class="mini-tag">Gerente General</span></td>
+            </tr>
+            <tr>
+              <td style="color: var(--text-muted);">Hoy, 14:10</td>
+              <td><span class="status-badge stock-tag-normal">Reabastecimiento</span></td>
+              <td><strong>Maíz Popcorn (Saco 25kg)</strong></td>
+              <td>Ingreso de 10 sacos desde Almacén Central (Factura #FAC-9821).</td>
+              <td><span class="mini-tag">Gerente General</span></td>
+            </tr>
+            <tr>
+              <td style="color: var(--text-muted);">Ayer, 22:45</td>
+              <td><span class="status-badge stock-tag-low">Alerta Stock</span></td>
+              <td><strong>Lentes 3D Pasivos</strong></td>
+              <td>Inventario llegó a 0 unidades disponibles por rotación intensiva de fin de semana.</td>
+              <td><span class="mini-tag">Sistema Automático</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- ==========================================
+         PESTAÑA 4: ESTADÍSTICAS DE USUARIOS & AUDIENCIA
+         ========================================== -->
+    <div id="tab-estadisticas" class="tab-content">
+
+      <!-- TOOLBAR DE ESTADÍSTICAS -->
+      <div class="section-toolbar">
+        <div class="toolbar-filters">
+          <span style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase; color: var(--primary-light); display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
+              <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
+              <path d="M18 12a2 2 0 0 0 0 4h4v-4z"></path>
+            </svg>
+            Panel Analítico de Audiencia
+          </span>
+
+          <select class="select-filter" id="filterStatsPeriod" onchange="filtrarPeriodoStats(this.value)">
+            <option value="mes">Últimos 30 Días (Mes en Curso)</option>
+            <option value="trimestre">Este Trimestre (Oct - Dic 2026)</option>
+            <option value="ano">Año 2026 Completo</option>
+          </select>
+        </div>
+
+        <div class="toolbar-actions">
+          <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem;">
+            <span style="display: inline-block; width: 8px; height: 8px; background: #22c55e; border-radius: 50%;"></span>
+            <span>4,820 espectadores analizados</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID DE DOS COLUMNAS: CATEGORÍAS MÁS VISTAS & PELÍCULAS MÁS VISTAS -->
+      <div class="stats-dashboard-grid">
+
+        <!-- COLUMNA 1: CATEGORÍAS DE PELÍCULAS MÁS VISTAS -->
+        <div class="stats-card-panel">
+          <div class="panel-header-flex">
+            <div>
+              <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-light)" stroke-width="2">
+                  <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                  <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                </svg>
+                Categorías Más Vistas por los Usuarios
+              </h3>
+              <p class="panel-subtitle-muted">Distribución porcentual de géneros preferidos por la audiencia</p>
+            </div>
+            <span class="mini-tag" style="background: rgba(6, 182, 212, 0.2); color: #22d3ee; border-color: rgba(6, 182, 212, 0.4);">Top 5 Géneros</span>
+          </div>
+
+          <div class="category-stats-list" id="categoryStatsList">
+
+            <!-- CATEGORÍA 1: CIENCIA FICCIÓN -->
+            <div class="category-stat-item">
+              <div class="cat-stat-top">
+                <div class="cat-stat-name">
+                  <span class="cat-stat-icon">🚀</span>
+                  <span>Ciencia Ficción</span>
+                  <span class="cat-trend-tag trend-up">↗ +12%</span>
+                </div>
+                <div class="cat-stat-metrics">
+                  <span class="cat-stat-viewers">3,240 usuarios</span>
+                  <span class="cat-stat-pct">34%</span>
+                </div>
+              </div>
+              <div class="cat-progress-track">
+                <div class="cat-progress-fill" style="width: 34%;"></div>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.4rem; display: flex; justify-content: space-between;">
+                <span>Películas clave: Dune 2, Alien Romulus</span>
+                <span style="color: #4ade80;">Género #1 del Mes</span>
+              </div>
+            </div>
+
+            <!-- CATEGORÍA 2: ACCIÓN & AVENTURA -->
+            <div class="category-stat-item">
+              <div class="cat-stat-top">
+                <div class="cat-stat-name">
+                  <span class="cat-stat-icon">💥</span>
+                  <span>Acción / Aventura</span>
+                  <span class="cat-trend-tag trend-up">↗ +8%</span>
+                </div>
+                <div class="cat-stat-metrics">
+                  <span class="cat-stat-viewers">2,680 usuarios</span>
+                  <span class="cat-stat-pct">28%</span>
+                </div>
+              </div>
+              <div class="cat-progress-track">
+                <div class="cat-progress-fill" style="width: 28%; background: linear-gradient(90deg, #7e22ce, #06b6d4);"></div>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.4rem; display: flex; justify-content: space-between;">
+                <span>Películas clave: Spider-Man, Gladiador II</span>
+                <span>Alta demanda fines de semana</span>
+              </div>
+            </div>
+
+            <!-- CATEGORÍA 3: ANIMACIÓN -->
+            <div class="category-stat-item">
+              <div class="cat-stat-top">
+                <div class="cat-stat-name">
+                  <span class="cat-stat-icon">🎨</span>
+                  <span>Animación & Familiar</span>
+                  <span class="cat-trend-tag trend-up">↗ +5%</span>
+                </div>
+                <div class="cat-stat-metrics">
+                  <span class="cat-stat-viewers">1,530 usuarios</span>
+                  <span class="cat-stat-pct">16%</span>
+                </div>
+              </div>
+              <div class="cat-progress-track">
+                <div class="cat-progress-fill" style="width: 16%; background: linear-gradient(90deg, #9333ea, #a855f7);"></div>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.4rem; display: flex; justify-content: space-between;">
+                <span>Películas clave: Spider-Verse, Intensamente 2</span>
+                <span>Público juvenil y familiar</span>
+              </div>
+            </div>
+
+            <!-- CATEGORÍA 4: TERROR & SUSPENSO -->
+            <div class="category-stat-item">
+              <div class="cat-stat-top">
+                <div class="cat-stat-name">
+                  <span class="cat-stat-icon">👻</span>
+                  <span>Terror & Suspenso</span>
+                  <span class="cat-trend-tag trend-up">↗ +15%</span>
+                </div>
+                <div class="cat-stat-metrics">
+                  <span class="cat-stat-viewers">1,150 usuarios</span>
+                  <span class="cat-stat-pct">12%</span>
+                </div>
+              </div>
+              <div class="cat-progress-track">
+                <div class="cat-progress-fill" style="width: 12%; background: linear-gradient(90deg, #dc2626, #ef4444);"></div>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.4rem; display: flex; justify-content: space-between;">
+                <span>Películas clave: Temporada Siniestra, Nosferatu</span>
+                <span style="color: #f87171;">Fuerte subida por Halloween</span>
+              </div>
+            </div>
+
+            <!-- CATEGORÍA 5: DRAMA & HISTÓRICO -->
+            <div class="category-stat-item">
+              <div class="cat-stat-top">
+                <div class="cat-stat-name">
+                  <span class="cat-stat-icon">🎭</span>
+                  <span>Drama & Biográfico</span>
+                  <span class="cat-trend-tag" style="background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3);">↘ -2%</span>
+                </div>
+                <div class="cat-stat-metrics">
+                  <span class="cat-stat-viewers">960 usuarios</span>
+                  <span class="cat-stat-pct">10%</span>
+                </div>
+              </div>
+              <div class="cat-progress-track">
+                <div class="cat-progress-fill" style="width: 10%; background: linear-gradient(90deg, #475569, #94a3b8);"></div>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.4rem; display: flex; justify-content: space-between;">
+                <span>Películas clave: Oppenheimer</span>
+                <span>Preferencia en salas VIP Reclinables</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- COLUMNA 2: RANKING DE PELÍCULAS MÁS VISTAS POR LOS USUARIOS -->
+        <div class="stats-card-panel">
+          <div class="panel-header-flex">
+            <div>
+              <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-light)" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                Películas Más Vistas por los Usuarios
+              </h3>
+              <p class="panel-subtitle-muted">Ranking oficial de filmes con mayor cantidad de visualizaciones</p>
+            </div>
+            <span class="mini-tag" style="background: rgba(234, 179, 8, 0.2); color: #facc15; border-color: rgba(234, 179, 8, 0.4);">Top 5 Cartelera</span>
+          </div>
+
+          <div class="movies-ranking-list">
+
+            <!-- RANK 1: SPIDER-MAN -->
+            <div class="movie-ranking-row">
+              <div class="rank-badge rank-1">1</div>
+              <img src="https://images.unsplash.com/photo-1635805737707-575885ab0820?auto=format&fit=crop&w=400&q=80" alt="Poster" class="movie-rank-poster">
+              <div class="movie-rank-info">
+                <h4>Spider-Man: Beyond the Spider-Verse</h4>
+                <p>
+                  <span>Animación / Acción</span> • 
+                  <span style="color: #facc15;">★ 4.9 (96% satisfacción)</span>
+                </p>
+              </div>
+              <div class="movie-rank-stats">
+                <span class="rank-viewers-count">1,420</span>
+                <span class="rank-viewers-sub">visualizaciones</span>
+              </div>
+            </div>
+
+            <!-- RANK 2: OPPENHEIMER -->
+            <div class="movie-ranking-row">
+              <div class="rank-badge rank-2">2</div>
+              <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=400&q=80" alt="Poster" class="movie-rank-poster">
+              <div class="movie-rank-info">
+                <h4>Oppenheimer</h4>
+                <p>
+                  <span>Drama / Histórico</span> • 
+                  <span style="color: #facc15;">★ 4.8 (94% satisfacción)</span>
+                </p>
+              </div>
+              <div class="movie-rank-stats">
+                <span class="rank-viewers-count">1,180</span>
+                <span class="rank-viewers-sub">visualizaciones</span>
+              </div>
+            </div>
+
+            <!-- RANK 3: DUNE 2 -->
+            <div class="movie-ranking-row">
+              <div class="rank-badge rank-3">3</div>
+              <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=400&q=80" alt="Poster" class="movie-rank-poster">
+              <div class="movie-rank-info">
+                <h4>Dune: Parte Dos</h4>
+                <p>
+                  <span>Ciencia Ficción / Aventura</span> • 
+                  <span style="color: #facc15;">★ 4.9 (95% satisfacción)</span>
+                </p>
+              </div>
+              <div class="movie-rank-stats">
+                <span class="rank-viewers-count">1,050</span>
+                <span class="rank-viewers-sub">visualizaciones</span>
+              </div>
+            </div>
+
+            <!-- RANK 4: GLADIADOR II -->
+            <div class="movie-ranking-row">
+              <div class="rank-badge rank-other">4</div>
+              <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=400&q=80" alt="Poster" class="movie-rank-poster">
+              <div class="movie-rank-info">
+                <h4>Gladiador II</h4>
+                <p>
+                  <span>Acción / Épico</span> • 
+                  <span style="color: #facc15;">★ 4.6 (91% satisfacción)</span>
+                </p>
+              </div>
+              <div class="movie-rank-stats">
+                <span class="rank-viewers-count">890</span>
+                <span class="rank-viewers-sub">visualizaciones</span>
+              </div>
+            </div>
+
+            <!-- RANK 5: ALIEN ROMULUS -->
+            <div class="movie-ranking-row">
+              <div class="rank-badge rank-other">5</div>
+              <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80" alt="Poster" class="movie-rank-poster">
+              <div class="movie-rank-info">
+                <h4>Alien: Romulus</h4>
+                <p>
+                  <span>Terror / Ciencia Ficción</span> • 
+                  <span style="color: #facc15;">★ 4.5 (89% satisfacción)</span>
+                </p>
+              </div>
+              <div class="movie-rank-stats">
+                <span class="rank-viewers-count">720</span>
+                <span class="rank-viewers-sub">visualizaciones</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECCIÓN INFERIOR: HISTORIAL DE PELÍCULAS VISTAS POR USUARIOS REGISTRADOS -->
+      <div class="users-history-panel">
+        <div class="panel-header-flex">
+          <div>
+            <h3>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-light)" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              Películas que han Visto los Usuarios (Historial de Clientes)
+            </h3>
+            <p class="panel-subtitle-muted">Consulta de actividad individual de asistencia y preferencias por cliente</p>
+          </div>
+
+          <div style="display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
+            <div class="search-input-wrapper" style="min-width: 220px;">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="searchUserHistory" placeholder="Buscar usuario..." oninput="filtrarUsuariosStats()">
+            </div>
+
+            <select class="select-filter" id="filterUserGenre" onchange="filtrarUsuariosStats()">
+              <option value="todos">Todos los Géneros Favoritos</option>
+              <option value="Ciencia Ficción">Ciencia Ficción</option>
+              <option value="Acción / Aventura">Acción / Aventura</option>
+              <option value="Terror / Suspenso">Terror / Suspenso</option>
+              <option value="Animación">Animación</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- GRID DE PERFILES DE USUARIO CON SUS PELÍCULAS VISTAS -->
+        <div class="user-cards-grid" id="usersStatsGrid">
+
+          <!-- USUARIO 1: CARLOS MÉNDEZ -->
+          <div class="user-profile-card" data-name="Carlos Méndez" data-favgenre="Ciencia Ficción">
+            <div class="user-card-header">
+              <div class="user-avatar-circle">CM</div>
+              <div class="user-header-info">
+                <h4>Carlos Méndez</h4>
+                <span>carlos.mendez@email.com • ID #USR-841</span>
+              </div>
+              <span class="user-tier-badge tier-vip">Socio VIP</span>
+            </div>
+
+            <div class="user-metrics-pills">
+              <div class="user-metric-box">
+                <span>Películas Vistas</span>
+                <strong style="color: var(--primary-light);">12</strong>
+              </div>
+              <div class="user-metric-box">
+                <span>Género Favorito</span>
+                <strong style="font-size: 0.85rem; color: #38bdf8;">Ciencia Ficción</strong>
+              </div>
+            </div>
+
+            <div>
+              <div class="watched-movies-list-header">Últimas Películas Vistas:</div>
+              <div class="watched-movies-tags">
+                <div class="watched-movie-row">
+                  <span>🎬 Dune: Parte Dos (Sala IMAX)</span>
+                  <span class="watched-movie-date">18 Oct • ★★★★★</span>
+                </div>
+                <div class="watched-movie-row">
+                  <span>🎬 Spider-Man: Beyond (Sala 4D)</span>
+                  <span class="watched-movie-date">22 Oct • ★★★★★</span>
+                </div>
+                <div class="watched-movie-row">
+                  <span>🎬 Alien: Romulus (Sala VIP)</span>
+                  <span class="watched-movie-date">26 Oct • ★★★★☆</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- USUARIO 2: SOFÍA VALENZUELA -->
+          <div class="user-profile-card" data-name="Sofía Valenzuela" data-favgenre="Acción / Aventura">
+            <div class="user-card-header">
+              <div class="user-avatar-circle" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);">SV</div>
+              <div class="user-header-info">
+                <h4>Sofía Valenzuela</h4>
+                <span>sofia.valenzuela@email.com • ID #USR-512</span>
+              </div>
+              <span class="user-tier-badge tier-gold">Socio Oro</span>
+            </div>
+
+            <div class="user-metrics-pills">
+              <div class="user-metric-box">
+                <span>Películas Vistas</span>
+                <strong style="color: var(--primary-light);">8</strong>
+              </div>
+              <div class="user-metric-box">
+                <span>Género Favorito</span>
+                <strong style="font-size: 0.85rem; color: #38bdf8;">Acción / Aventura</strong>
+              </div>
+            </div>
+
+            <div>
+              <div class="watched-movies-list-header">Últimas Películas Vistas:</div>
+              <div class="watched-movies-tags">
+                <div class="watched-movie-row">
+                  <span>🎬 Gladiador II (Sala Estándar)</span>
+                  <span class="watched-movie-date">20 Oct • ★★★★☆</span>
+                </div>
+                <div class="watched-movie-row">
+                  <span>🎬 Spider-Man: Beyond (Sala 4D)</span>
+                  <span class="watched-movie-date">25 Oct • ★★★★★</span>
+                </div>
+                <div class="watched-movie-row">
+                  <span>🎬 Oppenheimer (Sala VIP)</span>
+                  <span class="watched-movie-date">27 Oct • ★★★★★</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- USUARIO 3: ALEJANDRO RAMOS -->
+          <div class="user-profile-card" data-name="Alejandro Ramos" data-favgenre="Terror / Suspenso">
+            <div class="user-card-header">
+              <div class="user-avatar-circle" style="background: linear-gradient(135deg, #ef4444, #991b1b);">AR</div>
+              <div class="user-header-info">
+                <h4>Alejandro Ramos</h4>
+                <span>alejandro.ramos@email.com • ID #USR-109</span>
+              </div>
+              <span class="user-tier-badge tier-vip">Socio VIP</span>
+            </div>
+
+            <div class="user-metrics-pills">
+              <div class="user-metric-box">
+                <span>Películas Vistas</span>
+                <strong style="color: var(--primary-light);">15</strong>
+              </div>
+              <div class="user-metric-box">
+                <span>Género Favorito</span>
+                <strong style="font-size: 0.85rem; color: #f87171;">Terror / Suspenso</strong>
+              </div>
+            </div>
+
+            <div>
+              <div class="watched-movies-list-header">Últimas Películas Vistas:</div>
+              <div class="watched-movies-tags">
+                <div class="watched-movie-row">
+                  <span>🎬 Temporada Siniestra (Sala VIP)</span>
+                  <span class="watched-movie-date">24 Oct • ★★★★★</span>
+                </div>
+                <div class="watched-movie-row">
+                  <span>🎬 Alien: Romulus (Sala 4D)</span>
+                  <span class="watched-movie-date">26 Oct • ★★★★☆</span>
+                </div>
+                <div class="watched-movie-row">
+                  <span>🎬 Oppenheimer (Sala VIP)</span>
+                  <span class="watched-movie-date">28 Oct • ★★★★★</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- USUARIO 4: VALENTINA CASTRO -->
+          <div class="user-profile-card" data-name="Valentina Castro" data-favgenre="Animación">
+            <div class="user-card-header">
+              <div class="user-avatar-circle" style="background: linear-gradient(135deg, #a855f7, #ec4899);">VC</div>
+              <div class="user-header-info">
+                <h4>Valentina Castro</h4>
+                <span>valentina.c@email.com • ID #USR-334</span>
+              </div>
+              <span class="user-tier-badge" style="background: rgba(255, 255, 255, 0.1); color: #e2e8f0;">Estándar</span>
+            </div>
+
+            <div class="user-metrics-pills">
+              <div class="user-metric-box">
+                <span>Películas Vistas</span>
+                <strong style="color: var(--primary-light);">6</strong>
+              </div>
+              <div class="user-metric-box">
+                <span>Género Favorito</span>
+                <strong style="font-size: 0.85rem; color: #e879f9;">Animación</strong>
+              </div>
+            </div>
+
+            <div>
+              <div class="watched-movies-list-header">Últimas Películas Vistas:</div>
+              <div class="watched-movies-tags">
+                <div class="watched-movie-row">
+                  <span>🎬 Spider-Man: Beyond (Sala Estándar)</span>
+                  <span class="watched-movie-date">15 Oct • ★★★★★</span>
+                </div>
+                <div class="watched-movie-row">
+                  <span>🎬 Dune: Parte Dos (Sala IMAX)</span>
+                  <span class="watched-movie-date">21 Oct • ★★★★☆</span>
+                </div>
+                <div class="watched-movie-row">
+                  <span>🎬 Intensamente 2 (Sala Estándar)</span>
+                  <span class="watched-movie-date">25 Oct • ★★★★★</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- ==========================================
+       MODAL: CONFIRMAR CANCELACIÓN DE PELÍCULA
+       ========================================== -->
+  <div class="modal-overlay" id="modalCancelarPelicula">
+    <div class="modal-window">
+      <div class="modal-header-box">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+          Cancelar Película / Función
+        </h3>
+        <button class="modal-close-btn" onclick="cerrarModal('modalCancelarPelicula')">&times;</button>
+      </div>
+
+      <div class="modal-body-box">
+        <div class="modal-warning-alert">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            style="flex-shrink: 0; margin-top: 2px;">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <div>
+            <strong>Acción Gerencial Irreversible:</strong>
+            <p style="margin-top: 0.2rem;">Al cancelar, las funciones se removerán de la cartelera pública. Se iniciará
+              el proceso de devolución automática a los usuarios afectados.</p>
+          </div>
+        </div>
+
+        <div class="form-group-modal">
+          <label>Película Seleccionada</label>
+          <input type="text" class="modal-input" id="cancelMovieTitle" readonly
+            style="font-weight: 800; color: #ffffff;">
+        </div>
+
+        <div class="form-group-modal">
+          <label>Sala Asignada</label>
+          <input type="text" class="modal-input" id="cancelMovieHall" readonly style="color: var(--text-muted);">
+        </div>
+
+        <div class="form-group-modal">
+          <label>Alcance de la Cancelación</label>
+          <select class="modal-select" id="cancelScope">
+            <option value="todas">Cancelar TODAS las funciones de hoy</option>
+            <option value="individual">Cancelar una función horaria específica</option>
+          </select>
+        </div>
+
+        <div class="form-group-modal">
+          <label>Motivo Obligatorio de Cancelación</label>
+          <select class="modal-select" id="cancelReason">
+            <option value="Falla técnica en proyector / equipo de audio">Falla técnica en proyector o equipo de audio
+            </option>
+            <option value="Mantenimiento correctivo urgente de sala">Mantenimiento correctivo urgente de sala</option>
+            <option value="Problemas de copia o distribución de la distribuidora">Problemas de copia o distribución de
+              la distribuidora</option>
+            <option value="Reestructuración o suspensión de programación">Reestructuración o suspensión de programación
+            </option>
+            <option value="Corte de energía o emergencia climática">Corte de energía o emergencia climática</option>
+          </select>
+        </div>
+
+        <div class="form-group-modal">
+          <label>Observaciones Adicionales / Notificación a Taquilla</label>
+          <textarea class="modal-textarea" id="cancelNotes" rows="2"
+            placeholder="Detalles para el personal de taquilla y clientes..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer-box">
+        <button class="btn-modal-cancel" onclick="cerrarModal('modalCancelarPelicula')">Regresar</button>
+        <button class="btn-modal-confirm-danger" onclick="confirmarCancelacion()">Confirmar Cancelación</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       MODAL: REGISTRAR NUEVO PRODUCTO EN INVENTARIO
+       ========================================== -->
+  <div class="modal-overlay" id="modalNuevoProducto">
+    <div class="modal-window">
+      <div class="modal-header-box">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-light)" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Registrar Producto en Inventario
+        </h3>
+        <button class="modal-close-btn" onclick="cerrarModal('modalNuevoProducto')">&times;</button>
+      </div>
+
+      <div class="modal-body-box">
+        <div class="form-group-modal">
+          <label>Nombre del Producto / Insumo</label>
+          <input type="text" class="modal-input" id="newProdName" placeholder="Ej: Tequeños con Queso (Caja 50 uds)">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group-modal">
+            <label>Categoría</label>
+            <select class="modal-select" id="newProdCat">
+              <option value="Caramelería">Caramelería & Snacks</option>
+              <option value="Bebidas">Bebidas & Refrescos</option>
+              <option value="Combos">Combos Preparados</option>
+              <option value="Golosinas">Golosinas</option>
+              <option value="Desechables">Desechables</option>
+              <option value="Operaciones">Operaciones de Sala</option>
+            </select>
+          </div>
+          <div class="form-group-modal">
+            <label>Icono / Emoji</label>
+            <input type="text" class="modal-input" id="newProdEmoji" value="🌭" maxlength="2">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group-modal">
+            <label>Stock Inicial</label>
+            <input type="number" class="modal-input" id="newProdStock" value="25" min="0">
+          </div>
+          <div class="form-group-modal">
+            <label>Stock Mínimo (Alerta)</label>
+            <input type="number" class="modal-input" id="newProdMin" value="10" min="1">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group-modal">
+            <label>Precio de Venta ($)</label>
+            <input type="number" class="modal-input" id="newProdPrice" value="5.50" step="0.25">
+          </div>
+          <div class="form-group-modal">
+            <label>Unidad de Medida</label>
+            <input type="text" class="modal-input" id="newProdUnit" value="unidades">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer-box">
+        <button class="btn-modal-cancel" onclick="cerrarModal('modalNuevoProducto')">Cancelar</button>
+        <button class="btn-modal-confirm-primary" onclick="guardarNuevoProducto()">Guardar Producto</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= TOAST NOTIFICATION ================= -->
+  <div class="toast-notification" id="toastBox">
+    <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+    <span id="toastMessage">Operación realizada con éxito</span>
+  </div>
+
+
+  <!-- FOOTER INYECTADO POR LAYOUT.JS -->
+  <div id="app-footer"></div>
+
+  <!-- SCRIPT DE INTERACTIVIDAD GERENCIAL -->
+  <script>
+    // 1. GESTIÓN DE PESTAÑAS (TABS)
+    function cambiarPestana(idTab, boton) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+      boton.classList.add('active');
+      const target = document.getElementById(idTab);
+      if (target) target.classList.add('active');
+    }
+
+    // 2. MODALES
+    function abrirModal(idModal) {
+      const modal = document.getElementById(idModal);
+      if (modal) modal.classList.add('active');
+    }
+
+    function cerrarModal(idModal) {
+      const modal = document.getElementById(idModal);
+      if (modal) modal.classList.remove('active');
+    }
+
+    // Cerrar modal al hacer click fuera del contenido
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.classList.remove('active');
+      });
+    });
+
+    // 3. TOAST FLOTANTE
+    function mostrarToast(mensaje) {
+      const toast = document.getElementById('toastBox');
+      const text = document.getElementById('toastMessage');
+      if (toast && text) {
+        text.textContent = mensaje;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3500);
+      }
+    }
+
+    // 4. CANCELACIÓN DE PELÍCULAS
+    let peliculaSeleccionadaCard = null;
+    const cancelScope = document.getElementById('cancelScope');
+    const cancelScopeField = cancelScope.closest('.form-group-modal');
+    const cancelShowtimeField = document.createElement('div');
+    cancelShowtimeField.className = 'form-group-modal';
+    cancelShowtimeField.hidden = true;
+    cancelShowtimeField.innerHTML = `
+      <label for="cancelShowtime">Horario que se cancelará</label>
+      <select class="modal-select" id="cancelShowtime"></select>
+    `;
+    cancelScopeField.after(cancelShowtimeField);
+
+    cancelScope.addEventListener('change', () => {
+      cancelShowtimeField.hidden = cancelScope.value !== 'individual';
+    });
+
+    function abrirModalCancelar(titulo, sala, horarios, boletos) {
+      peliculaSeleccionadaCard = Array.from(document.querySelectorAll('.movie-manage-card'))
+        .find(card => card.getAttribute('data-title') === titulo);
+
+      if (!peliculaSeleccionadaCard) {
+        mostrarToast('No se encontró la película seleccionada');
+        return;
+      }
+
+      document.getElementById('cancelMovieTitle').value = titulo;
+      document.getElementById('cancelMovieHall').value = sala;
+      cancelScope.value = 'todas';
+      cancelScopeField.hidden = peliculaSeleccionadaCard.getAttribute('data-status') === 'cancelada';
+      cancelShowtimeField.hidden = true;
+      const showtimeSelect = document.getElementById('cancelShowtime');
+      showtimeSelect.replaceChildren();
+      document.getElementById('cancelNotes').value = '';
+      peliculaSeleccionadaCard.querySelectorAll('.chip-time:not(.cancelled-time)').forEach(chip => {
+        const option = document.createElement('option');
+        option.value = chip.textContent.trim();
+        option.textContent = chip.textContent.trim();
+        showtimeSelect.append(option);
+      });
+      abrirModal('modalCancelarPelicula');
+    }
+
+    function abrirModalCancelacionGlobal() {
+      // Abre el modal con la primera película activa disponible
+      const primeraActiva = document.querySelector('.movie-manage-card[data-status="activa"]');
+      if (primeraActiva) {
+        const titulo = primeraActiva.getAttribute('data-title');
+        const sala = primeraActiva.getAttribute('data-hall');
+        abrirModalCancelar(titulo, sala);
+        cancelScope.value = 'individual';
+        cancelShowtimeField.hidden = false;
+      } else {
+        mostrarToast('No hay películas activas para cancelar');
+      }
+    }
+
+    function confirmarCancelacion() {
+      const titulo = document.getElementById('cancelMovieTitle').value;
+      const motivo = document.getElementById('cancelReason').value;
+
+      if (!peliculaSeleccionadaCard) {
+        mostrarToast('No se encontró la película seleccionada');
+        return;
+      }
+
+      const allChips = Array.from(peliculaSeleccionadaCard.querySelectorAll('.chip-time'));
+      const scope = cancelScope.value;
+      const selectedTime = document.getElementById('cancelShowtime').value;
+      const chipsToCancel = scope === 'individual'
+        ? allChips.filter(chip => chip.textContent.trim() === selectedTime && !chip.classList.contains('cancelled-time'))
+        : allChips.filter(chip => !chip.classList.contains('cancelled-time'));
+
+      if (chipsToCancel.length === 0) {
+        mostrarToast('No hay funciones disponibles para cancelar');
+        return;
+      }
+
+      chipsToCancel.forEach(chip => chip.classList.add('cancelled-time'));
+      const remainingChips = allChips.filter(chip => !chip.classList.contains('cancelled-time'));
+      const isFullyCancelled = remainingChips.length === 0;
+      const card = peliculaSeleccionadaCard;
+      const statusBadge = card.querySelector('.card-movie-details .status-badge');
+      const posterImg = card.querySelector('.card-movie-poster');
+      const scheduleCount = card.querySelector('.schedules-title span:last-child');
+
+      if (scheduleCount) {
+        scheduleCount.textContent = isFullyCancelled ? 'Suspendida' : `${remainingChips.length} Funciones`;
+        scheduleCount.style.color = isFullyCancelled ? '#f87171' : '';
+      }
+
+      if (isFullyCancelled) {
+        card.classList.add('cancelled');
+        card.setAttribute('data-status', 'cancelada');
+        if (posterImg) posterImg.style.filter = 'grayscale(80%)';
+        if (statusBadge) {
+          statusBadge.className = 'status-badge status-cancelled';
+          statusBadge.textContent = 'Cancelada';
+        }
+
+        const footer = card.querySelector('.card-movie-footer');
+        if (footer) {
+          footer.replaceChildren();
+          const reason = document.createElement('span');
+          reason.style.cssText = 'font-size: 0.72rem; color: #f87171;';
+          reason.textContent = `Motivo: ${motivo}`;
+          const reactivateButton = document.createElement('button');
+          reactivateButton.className = 'btn-reactivate-movie';
+          reactivateButton.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+            </svg>
+            <span>Reanudar Película</span>
+          `;
+          reactivateButton.onclick = () => reactivarPelicula(titulo);
+          footer.append(reason, reactivateButton);
+        }
+      } else {
+        const nextShow = card.querySelector('.card-movie-footer > span');
+        if (nextShow) nextShow.textContent = `Próxima: ${remainingChips[0].textContent.trim()}`;
+      }
+
+      const canceledTimes = chipsToCancel.map(chip => chip.textContent.trim()).join(', ');
+      const notes = document.getElementById('cancelNotes').value.trim();
+      const details = scope === 'individual'
+        ? `Función ${canceledTimes} cancelada por gerencia: ${motivo}.`
+        : `Funciones ${canceledTimes} canceladas por gerencia: ${motivo}.`;
+      agregarRegistroAuditoria('Cancelación', titulo, notes ? `${details} Observaciones: ${notes}` : details);
+      actualizarContadores();
+      filtrarPeliculas();
+      cerrarModal('modalCancelarPelicula');
+      mostrarToast(scope === 'individual'
+        ? `Función ${canceledTimes} de "${titulo}" cancelada`
+        : `Película "${titulo}" cancelada exitosamente`);
+    }
+
+    function reactivarPelicula(titulo) {
+      const card = Array.from(document.querySelectorAll('.movie-manage-card'))
+        .find(c => c.getAttribute('data-title') === titulo);
+
+      if (card) {
+        card.classList.remove('cancelled');
+        card.setAttribute('data-status', 'activa');
+
+        const posterImg = card.querySelector('.card-movie-poster');
+        if (posterImg) posterImg.style.filter = 'none';
+
+        const statusBadge = card.querySelector('.status-badge');
+        if (statusBadge) {
+          statusBadge.className = 'status-badge status-active';
+          statusBadge.innerHTML = `
+            <span style="width: 7px; height: 7px; background: #22c55e; border-radius: 50%;"></span>
+            Activa en Cartelera
+          `;
+        }
+
+        card.querySelectorAll('.chip-time').forEach(chip => {
+          chip.classList.remove('cancelled-time');
+        });
+        const scheduleCount = card.querySelector('.schedules-title span:last-child');
+        if (scheduleCount) {
+          scheduleCount.textContent = `${card.querySelectorAll('.chip-time').length} Funciones`;
+          scheduleCount.style.color = '';
+        }
+
+        const sala = card.getAttribute('data-hall') || 'Sala VIP';
+        const footer = card.querySelector('.card-movie-footer');
+        if (footer) {
+          footer.innerHTML = `
+            <span style="font-size: 0.72rem; color: var(--text-muted);">Reanudada</span>
+            <button class="btn-cancel-movie" onclick="abrirModalCancelar('${titulo}', '${sala}', [], 0)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+              <span>Cancelar Película</span>
+            </button>
+          `;
+        }
+
+        agregarRegistroAuditoria('Reanudación', titulo, 'Función restaurada nuevamente a la cartelera pública.');
+        actualizarContadores();
+        mostrarToast(`Película "${titulo}" reactivada en cartelera`);
+      }
+    }
+
+    // Filtros de películas
+    function filtrarPeliculas() {
+      const query = document.getElementById('searchMovies').value.toLowerCase();
+      const statusFilter = document.getElementById('filterMovieStatus').value;
+      const hallFilter = document.getElementById('filterMovieHall').value;
+
+      document.querySelectorAll('.movie-manage-card').forEach(card => {
+        const title = card.getAttribute('data-title').toLowerCase();
+        const status = card.getAttribute('data-status');
+        const hall = card.getAttribute('data-hall');
+
+        const matchQuery = title.includes(query);
+        const matchStatus = (statusFilter === 'todos') || (status === statusFilter);
+        const matchHall = (hallFilter === 'todos') || (hall && hall.includes(hallFilter));
+
+        if (matchQuery && matchStatus && matchHall) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // 5. ADMINISTRACIÓN DE INVENTARIO
+    function ajustarStock(btn, cantidad) {
+      const row = btn.closest('tr');
+      const stockNumberEl = row.querySelector('.stock-number');
+      const progressBar = row.querySelector('.stock-progress-bar');
+      const badge = row.querySelector('.status-badge');
+      const nombre = row.getAttribute('data-name');
+      const minimumText = row.querySelector('.stock-count-wrapper > span:last-child').textContent;
+      const stockMinimo = parseInt(minimumText.replace(/\D/g, ''), 10);
+
+      let stockActual = parseInt(stockNumberEl.textContent, 10);
+      stockActual = Math.max(0, stockActual + cantidad);
+      stockNumberEl.textContent = stockActual;
+      const porcentaje = Math.min(100, Math.round((stockActual / (stockMinimo * 2)) * 100));
+
+      // Calcular estado y colores
+      if (stockActual === 0) {
+        row.setAttribute('data-status', 'agotado');
+        stockNumberEl.style.color = '#f87171';
+        progressBar.className = 'stock-progress-bar stock-bar-red';
+        progressBar.style.width = `${porcentaje}%`;
+        badge.className = 'status-badge stock-tag-empty';
+        badge.textContent = 'Agotado';
+      } else if (stockActual <= stockMinimo) {
+        row.setAttribute('data-status', 'bajo');
+        stockNumberEl.style.color = '#facc15';
+        progressBar.className = 'stock-progress-bar stock-bar-yellow';
+        progressBar.style.width = `${porcentaje}%`;
+        badge.className = 'status-badge stock-tag-low';
+        badge.textContent = 'Stock Bajo';
+      } else {
+        row.setAttribute('data-status', 'normal');
+        stockNumberEl.style.color = '';
+        progressBar.className = 'stock-progress-bar stock-bar-green';
+        progressBar.style.width = `${porcentaje}%`;
+        badge.className = 'status-badge stock-tag-normal';
+        badge.textContent = 'En Stock';
+      }
+
+      actualizarContadores();
+      filtrarInventario();
+      mostrarToast(`Stock actualizado para "${nombre}": ${stockActual} unidades`);
+    }
+
+    function abrirModalNuevoProducto() {
+      abrirModal('modalNuevoProducto');
+    }
+
+    function guardarNuevoProducto() {
+      const nombre = document.getElementById('newProdName').value.trim();
+      const categoria = document.getElementById('newProdCat').value;
+      const emoji = document.getElementById('newProdEmoji').value.trim() || '📦';
+      const stock = Number(document.getElementById('newProdStock').value);
+      const min = Number(document.getElementById('newProdMin').value);
+      const precioIngresado = Number(document.getElementById('newProdPrice').value);
+      const unidad = document.getElementById('newProdUnit').value.trim() || 'unidades';
+
+      if (!nombre) {
+        alert('Por favor introduce un nombre para el producto');
+        return;
+      }
+
+      if (!Number.isInteger(stock) || stock < 0 || !Number.isInteger(min) || min < 1 ||
+          !Number.isFinite(precioIngresado) || precioIngresado < 0) {
+        alert('Verifica que el stock sea un entero no negativo, el mínimo sea al menos 1 y el precio no sea negativo.');
+        return;
+      }
+
+      const precio = precioIngresado.toFixed(2);
+      const tbody = document.querySelector('#inventoryTable tbody');
+      const tr = document.createElement('tr');
+      const status = stock === 0 ? 'agotado' : (stock <= min ? 'bajo' : 'normal');
+      tr.setAttribute('data-category', categoria);
+      tr.setAttribute('data-status', status);
+      tr.setAttribute('data-name', nombre);
+
+      const statusTagClass = status === 'agotado' ? 'stock-tag-empty' : (status === 'bajo' ? 'stock-tag-low' : 'stock-tag-normal');
+      const statusText = status === 'agotado' ? 'Agotado' : (status === 'bajo' ? 'Stock Bajo' : 'En Stock');
+      const barColor = status === 'agotado' ? 'stock-bar-red' : (status === 'bajo' ? 'stock-bar-yellow' : 'stock-bar-green');
+      const percent = Math.min(100, Math.round((stock / (min * 2)) * 100));
+      const productCell = document.createElement('td');
+      const productInfo = document.createElement('div');
+      productInfo.className = 'product-item-cell';
+      const icon = document.createElement('div');
+      icon.className = 'product-icon-avatar';
+      icon.textContent = emoji;
+      const productDetails = document.createElement('div');
+      const productName = document.createElement('strong');
+      productName.textContent = nombre;
+      const sku = document.createElement('span');
+      sku.textContent = `SKU: NEW-${Date.now()}`;
+      productDetails.append(productName, sku);
+      productInfo.append(icon, productDetails);
+      productCell.append(productInfo);
+
+      const categoryCell = document.createElement('td');
+      const categoryTag = document.createElement('span');
+      categoryTag.className = 'mini-tag';
+      categoryTag.textContent = categoria;
+      categoryCell.append(categoryTag);
+
+      const stockCell = document.createElement('td');
+      const stockMeter = document.createElement('div');
+      stockMeter.className = 'stock-meter-cell';
+      const stockWrapper = document.createElement('div');
+      stockWrapper.className = 'stock-count-wrapper';
+      const currentStock = document.createElement('span');
+      currentStock.className = 'stock-current';
+      const stockNumber = document.createElement('strong');
+      stockNumber.className = 'stock-number';
+      stockNumber.textContent = stock;
+      currentStock.append(stockNumber, ` ${unidad}`);
+      const minimum = document.createElement('span');
+      minimum.style.color = 'var(--text-muted)';
+      minimum.textContent = `Mín: ${min}`;
+      stockWrapper.append(currentStock, minimum);
+      const progressTrack = document.createElement('div');
+      progressTrack.className = 'stock-progress-track';
+      const progress = document.createElement('div');
+      progress.className = `stock-progress-bar ${barColor}`;
+      progress.style.width = `${percent}%`;
+      progressTrack.append(progress);
+      stockMeter.append(stockWrapper, progressTrack);
+      stockCell.append(stockMeter);
+
+      const priceCell = document.createElement('td');
+      const price = document.createElement('strong');
+      price.textContent = `$${precio}`;
+      priceCell.append(price);
+
+      const statusCell = document.createElement('td');
+      const statusTag = document.createElement('span');
+      statusTag.className = `status-badge ${statusTagClass}`;
+      statusTag.textContent = statusText;
+      statusCell.append(statusTag);
+
+      const actionsCell = document.createElement('td');
+      const actions = document.createElement('div');
+      actions.className = 'table-quick-actions';
+      [-1, 1].forEach(amount => {
+        const button = document.createElement('button');
+        button.className = 'btn-stock-adjust';
+        button.title = amount < 0 ? 'Restar 1' : 'Sumar 1';
+        button.textContent = amount < 0 ? '-' : '+';
+        button.onclick = () => ajustarStock(button, amount);
+        actions.append(button);
+      });
+      actionsCell.append(actions);
+      tr.append(productCell, categoryCell, stockCell, priceCell, statusCell, actionsCell);
+
+      tbody.prepend(tr);
+      cerrarModal('modalNuevoProducto');
+      document.getElementById('newProdName').value = '';
+      document.getElementById('newProdEmoji').value = '🌭';
+      document.getElementById('newProdStock').value = '25';
+      document.getElementById('newProdMin').value = '10';
+      document.getElementById('newProdPrice').value = '5.50';
+      document.getElementById('newProdUnit').value = 'unidades';
+      agregarRegistroAuditoria('Alta de Producto', nombre, `Registrado con stock inicial de ${stock} ${unidad}.`);
+      actualizarContadores();
+      filtrarInventario();
+      mostrarToast(`Producto "${nombre}" registrado con éxito`);
+    }
+
+    function filtrarInventario() {
+      const query = document.getElementById('searchInventory').value.toLowerCase();
+      const catFilter = document.getElementById('filterCategory').value;
+      const statusFilter = document.getElementById('filterStockStatus').value;
+
+      document.querySelectorAll('#inventoryTable tbody tr').forEach(row => {
+        const name = (row.getAttribute('data-name') || '').toLowerCase();
+        const category = row.getAttribute('data-category');
+        const status = row.getAttribute('data-status');
+
+        const matchQuery = name.includes(query);
+        const matchCat = (catFilter === 'todos') || (category === catFilter);
+        const matchStatus = (statusFilter === 'todos') || (status === statusFilter);
+
+        if (matchQuery && matchCat && matchStatus) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // 6. REGISTRO EN BITÁCORA DE AUDITORÍA
+    function agregarRegistroAuditoria(operacion, item, detalle) {
+      const tbody = document.getElementById('auditLogsBody');
+      if (!tbody) return;
+
+      const now = new Date();
+      const horaStr = `Hoy, ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+      let badgeClass = 'status-active';
+      if (operacion.includes('Cancelación')) badgeClass = 'status-cancelled';
+      if (operacion.includes('Alta') || operacion.includes('Reabastecimiento')) badgeClass = 'stock-tag-normal';
+
+      const tr = document.createElement('tr');
+      const dateCell = document.createElement('td');
+      dateCell.style.color = 'var(--text-muted)';
+      dateCell.textContent = horaStr;
+      const operationCell = document.createElement('td');
+      const operationBadge = document.createElement('span');
+      operationBadge.className = `status-badge ${badgeClass}`;
+      operationBadge.textContent = operacion;
+      operationCell.append(operationBadge);
+      const itemCell = document.createElement('td');
+      const itemName = document.createElement('strong');
+      itemName.textContent = item;
+      itemCell.append(itemName);
+      const detailCell = document.createElement('td');
+      detailCell.textContent = detalle;
+      const managerCell = document.createElement('td');
+      const managerTag = document.createElement('span');
+      managerTag.className = 'mini-tag';
+      managerTag.textContent = 'Gerente General';
+      managerCell.append(managerTag);
+      tr.append(dateCell, operationCell, itemCell, detailCell, managerCell);
+      tbody.prepend(tr);
+    }
+
+    // 7. ACTUALIZADOR DE CONTADORES KPI
+    function actualizarContadores() {
+      const activas = document.querySelectorAll('.movie-manage-card[data-status="activa"]').length;
+      const canceladas = document.querySelectorAll('.movie-manage-card[data-status="cancelada"]').length;
+      const totalPeliculas = document.querySelectorAll('.movie-manage-card').length;
+
+      const totalItems = document.querySelectorAll('#inventoryTable tbody tr').length;
+      const alertItems = document.querySelectorAll('#inventoryTable tbody tr[data-status="bajo"], #inventoryTable tbody tr[data-status="agotado"]').length;
+
+      document.getElementById('kpiActiveMovies').textContent = activas;
+      document.getElementById('kpiCancelledMovies').textContent = canceladas;
+      document.getElementById('kpiTotalItems').textContent = totalItems;
+      document.getElementById('kpiAlertItems').textContent = alertItems;
+
+      document.getElementById('tabCountMovies').textContent = totalPeliculas;
+      document.getElementById('tabCountInventory').textContent = totalItems;
+    }
+
+    // 8. FILTROS PARA ESTADÍSTICAS DE USUARIOS
+    function filtrarUsuariosStats() {
+      const query = document.getElementById('searchUserHistory').value.toLowerCase();
+      const genreFilter = document.getElementById('filterUserGenre').value;
+
+      document.querySelectorAll('#usersStatsGrid .user-profile-card').forEach(card => {
+        const name = card.getAttribute('data-name').toLowerCase();
+        const genre = card.getAttribute('data-favgenre');
+
+        const matchName = name.includes(query);
+        const matchGenre = (genreFilter === 'todos') || (genre === genreFilter);
+
+        if (matchName && matchGenre) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function filtrarPeriodoStats(periodo) {
+      let mensaje = 'Estadísticas actualizadas para: ';
+      if (periodo === 'mes') mensaje += 'Últimos 30 días';
+      if (periodo === 'trimestre') mensaje += 'Cuarto Trimestre 2026';
+      if (periodo === 'ano') mensaje += 'Año 2026 Completo';
+      mostrarToast(mensaje);
+    }
+  </script>
+
+  <script src="../assets/js/layout.js"></script>
+</body>
+
+</html>

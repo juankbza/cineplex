@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinePleX - Administración</title>
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/navbar.css">
+  <link rel="stylesheet" href="../assets/css/footer.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+  <div id="app-navbar"></div>
+
+  <main class="admin-shell">
+    <aside class="admin-sidebar" aria-label="Navegación de administración">
+      <div class="admin-sidebar-heading">
+        <span class="admin-sidebar-mark">X</span>
+        <div><strong>Administración</strong><small>Panel de control</small></div>
+      </div>
+      <nav class="admin-nav">
+        <button class="admin-nav-link active" data-view="overview"><span>◫</span> Resumen</button>
+        <p class="admin-nav-label">OPERACIONES</p>
+        <button class="admin-nav-link" data-view="movies"><span>▣</span> Películas y funciones</button>
+        <button class="admin-nav-link" data-view="rooms"><span>▤</span> Salas y asientos</button>
+        <button class="admin-nav-link" data-view="concessions"><span>◈</span> Dulcería e inventario</button>
+        <button class="admin-nav-link" data-view="promotions"><span>％</span> Promociones</button>
+        <button class="admin-nav-link" data-view="refunds"><span>↩</span> Devoluciones</button>
+        <p class="admin-nav-label">PERSONAS Y CONTROL</p>
+        <button class="admin-nav-link" data-view="customers"><span>♙</span> Clientes y personal</button>
+        <button class="admin-nav-link" data-view="audit"><span>≡</span> Auditoría</button>
+        <button class="admin-nav-link" data-view="reports"><span>▥</span> Reportes y ventas</button>
+        <button class="admin-nav-link" data-view="age-checks"><span>▧</span> Verificación de edad</button>
+        <button class="admin-nav-link" data-view="chatbot"><span>✳</span> Chatbot IA</button>
+        <button class="admin-nav-link" data-view="settings"><span>⚙</span> Ajustes del sistema</button>
+      </nav>
+      <a class="admin-back-link" href="gerente.html">← Volver a Gerencia</a>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div>
+          <span class="admin-eyebrow">CINEPLEX · OPERACIONES</span>
+          <h1 id="pageTitle">Resumen general</h1>
+        </div>
+        <div class="admin-topbar-actions">
+          <span class="admin-demo-pill"><i></i> Modo demostración</span>
+          <span class="admin-user-chip"><span class="admin-user-avatar">AG</span><span>Administrador<small>Admin</small></span></span>
+        </div>
+      </header>
+
+      <div class="admin-demo-notice">
+        <strong>Prototipo local:</strong> los cambios se guardan solo en este navegador. No se conectan pagos, reembolsos, usuarios reales, correo, chatbot ni servicios externos.
+      </div>
+
+      <section class="admin-view active" id="view-overview">
+        <div class="admin-welcome">
+          <div><p class="admin-eyebrow">CENTRO DE CONTROL</p><h2>Todo el cine, en un solo lugar.</h2><p>Resumen operativo de películas, funciones, inventario y ventas de demostración.</p></div>
+          <button class="admin-button primary" data-action="navigate" data-target="movies">＋ Crear película</button>
+        </div>
+        <div class="admin-stat-grid" id="overviewStats"></div>
+        <div class="admin-overview-grid">
+          <article class="admin-card">
+            <div class="admin-card-heading"><div><h3>Próximas funciones</h3><p>Funciones activas y futuras</p></div><button class="admin-button quiet" data-action="navigate" data-target="movies">Ver programación →</button></div>
+            <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Película</th><th>Sala</th><th>Fecha y hora</th><th>Estado</th></tr></thead><tbody id="overviewScreenings"></tbody></table></div>
+          </article>
+          <article class="admin-card">
+            <div class="admin-card-heading"><div><h3>Alertas de inventario</h3><p>Productos por debajo del mínimo configurado</p></div><button class="admin-button quiet" data-action="navigate" data-target="concessions">Ver inventario →</button></div>
+            <div class="admin-alert-list" id="overviewAlerts"></div>
+          </article>
+          <article class="admin-card">
+            <div class="admin-card-heading"><div><h3>Actividad reciente</h3><p>Últimos eventos de auditoría local</p></div><button class="admin-button quiet" data-action="navigate" data-target="audit">Ver bitácora →</button></div>
+            <div class="admin-activity-list" id="overviewActivity"></div>
+          </article>
+          <article class="admin-card admin-card-highlight">
+            <span class="admin-status-orb"></span><p class="admin-eyebrow">ESTADO DE LA PLATAFORMA</p><h3>Sistema listo para configurar</h3><p>Las operaciones reales requieren una API segura, permisos de servidor y conexión con los proveedores.</p><button class="admin-button secondary" data-action="navigate" data-target="settings">Configurar sistema →</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="admin-view" id="view-movies">
+        <div class="admin-section-intro"><div><p class="admin-eyebrow">CATÁLOGO Y CARTELERA</p><h2>Películas y funciones</h2><p>Gestiona publicaciones, tráilers, estado de cartelera y horarios por sala.</p></div><button class="admin-button primary" data-action="add-movie">＋ Nueva película</button></div>
+        <article class="admin-card"><div class="admin-card-heading"><div><h3>Catálogo de películas</h3><p>Archivar o desactivar está bloqueado si hay una función vigente o boletos vendidos.</p></div><input class="admin-search" id="movieSearch" type="search" placeholder="Buscar película..."></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Película</th><th>Estado</th><th>Tráiler</th><th>Funciones / boletos</th><th>Acciones</th></tr></thead><tbody id="moviesTable"></tbody></table></div></article>
+        <article class="admin-card admin-spaced"><div class="admin-card-heading"><div><h3>Programación de funciones</h3><p>Estándar, VIP y 4D · idioma, subtítulos, fecha, hora y precio.</p></div><button class="admin-button primary" data-action="add-screening">＋ Programar función</button></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Película</th><th>Sala / formato</th><th>Fecha y hora</th><th>Idioma / subtítulos</th><th>Precio</th><th>Boletos</th><th>Estado / acción</th></tr></thead><tbody id="screeningsTable"></tbody></table></div></article>
+      </section>
+
+      <section class="admin-view" id="view-rooms">
+        <div class="admin-section-intro"><div><p class="admin-eyebrow">INFRAESTRUCTURA</p><h2>Salas y asientos</h2><p>Deshabilita una sala o marca asientos individuales para mantenimiento.</p></div></div>
+        <div class="admin-room-grid" id="roomsGrid"></div>
+      </section>
+
+      <section class="admin-view" id="view-concessions">
+        <div class="admin-section-intro"><div><p class="admin-eyebrow">DULCERÍA</p><h2>Productos e inventario</h2><p>Productos, combos, existencias y niveles mínimos de alerta.</p></div><button class="admin-button primary" data-action="add-product">＋ Nuevo producto o combo</button></div>
+        <article class="admin-card"><div class="admin-card-heading"><div><h3>Inventario de dulcería</h3><p>El stock se actualiza al ajustar las unidades disponibles.</p></div><input class="admin-search" id="productSearch" type="search" placeholder="Buscar producto..."></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Producto / combo</th><th>Tipo</th><th>Stock</th><th>Mínimo</th><th>Precio</th><th>Alerta</th><th>Acciones</th></tr></thead><tbody id="productsTable"></tbody></table></div></article>
+      </section>
+
+      <section class="admin-view" id="view-promotions">
+        <div class="admin-section-intro"><div><p class="admin-eyebrow">PRECIOS Y CAMPAÑAS</p><h2>Promociones</h2><p>Define descuentos, códigos, vigencia y precios especiales de demostración.</p></div><button class="admin-button primary" data-action="add-promotion">＋ Nueva promoción</button></div>
+        <article class="admin-card"><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Promoción</th><th>Código</th><th>Descuento</th><th>Vigencia</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="promotionsTable"></tbody></table></div></article>
+      </section>
+
+      <section class="admin-view" id="view-refunds">
+        <div class="admin-section-intro"><div><p class="admin-eyebrow">ATENCIÓN AL CLIENTE</p><h2>Devoluciones y reembolsos</h2><p>Revisa solicitudes de muestra. Autorizar solo registra una aprobación local; no mueve dinero.</p></div></div>
+        <article class="admin-card"><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Solicitud</th><th>Cliente</th><th>Motivo</th><th>Monto</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="refundsTable"></tbody></table></div></article>
+      </section>
+
+      <section class="admin-view" id="view-customers">
+        <div class="admin-section-intro"><div><p class="admin-eyebrow">ACCESOS Y CUENTAS</p><h2>Clientes y personal</h2><p>Bloqueo y eliminación son acciones locales de demostración. Asigna roles al personal.</p></div><button class="admin-button primary" data-action="add-staff">＋ Crear cuenta de personal</button></div>
+        <article class="admin-card"><div class="admin-card-heading"><div><h3>Clientes</h3><p>Consultar, bloquear o eliminar cuentas de muestra.</p></div><input class="admin-search" id="customerSearch" type="search" placeholder="Buscar cliente..."></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Cliente</th><th>Correo</th><th>Registro</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="customersTable"></tbody></table></div></article>
+        <article class="admin-card admin-spaced"><div class="admin-card-heading"><div><h3>Personal y roles</h3><p>Roles de aplicación de muestra: Admin, Gerente y Cajero.</p></div></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="staffTable"></tbody></table></div></article>
+      </section>
+
+      <section class="admin-view" id="view-audit">
+        <div class="admin-section-intro"><div><p class="admin-eyebrow">TRAZABILIDAD</p><h2>Auditoría del personal</h2><p>Registro local de acciones realizadas en este prototipo.</p></div><button class="admin-button secondary" data-action="export-audit">Descargar CSV</button></div>
+        <article class="admin-card"><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Fecha y hora</th><th>Actor</th><th>Acción</th><th>Detalle</th></tr></thead><tbody id="auditTable"></tbody></table></div></article>
+      </section>
+
+      <section class="admin-view" id="view-reports">
+        <div class="admin-section-intro"><div><p class="admin-eyebrow">ANÁLISIS DE NEGOCIO</p><h2>Reportes y ventas</h2><p>Métricas y datos de muestra para validar la interfaz del panel.</p></div><button class="admin-button secondary" data-action="export-report">Descargar reporte CSV</button></div>
+        <div class="admin-stat-grid" id="reportStats"></div>
+        <article class="admin-card"><div class="admin-card-heading"><div><h3>Resumen financiero</h3><p>Ingresos simulados por categoría.</p></div></div><div class="admin-report-bars" id="reportBars"></div></article>
+        <p class="admin-footnote">Los importes y métricas son ficticios y no representan ventas reales.</p>
+      </section>
+
+      <section class="admin-view" id="view-age-checks">
+        <div class="admin-section-intro"><div><p class="admin-eyebrow">CONTROL DE ACCESO</p><h2>Verificación de edad</h2><p>Registros de muestra del flujo de reconocedor de cédulas. No se almacenan imágenes ni documentos.</p></div></div>
+        <article class="admin-card"><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Fecha</th><th>Referencia anonimizada</th><th>Edad declarada / detectada</th><th>Resultado</th><th>Revisión</th></tr></thead><tbody id="ageTable"></tbody></table></div></article>
+      </section>
+
+      <section class="admin-view" id="view-chatbot">
+        <div class="admin-section-intro"><div><p class="admin-eyebrow">ASISTENCIA AUTOMATIZADA</p><h2>Interacciones del Chatbot IA</h2><p>Conversaciones ficticias para supervisar temas y estado de revisión. No son chats reales.</p></div></div>
+        <article class="admin-card"><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Fecha</th><th>Sesión</th><th>Tema</th><th>Resumen anonimizado</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="chatTable"></tbody></table></div></article>
+      </section>
+
+      <section class="admin-view" id="view-settings">
+        <div class="admin-section-intro"><div><p class="admin-eyebrow">CONFIGURACIÓN</p><h2>Ajustes del sistema</h2><p>Preferencias locales. No se guardan credenciales ni se establece conexión real.</p></div></div>
+        <form class="admin-card admin-settings-form" id="settingsForm">
+          <div class="admin-card-heading"><div><h3>Pasarela de pagos (demostración)</h3><p>Seleccionar un proveedor no habilita cobros reales.</p></div><span class="admin-badge warning">Sin conexión</span></div>
+          <label class="admin-form-field">Proveedor de pasarela<select name="gateway"><option>Sin configurar</option><option>Stripe (demo)</option><option>Mercado Pago (demo)</option><option>Pasarela personalizada (demo)</option></select></label>
+          <label class="admin-form-field">Moneda de visualización<select name="currency"><option value="USD">USD — Dólar estadounidense</option><option value="VES">VES — Bolívar</option></select></label>
+          <label class="admin-form-field">Umbral global de alerta de stock<input name="defaultStockThreshold" type="number" min="0" required></label>
+          <label class="admin-checkbox"><input name="maintenanceMode" type="checkbox"> Mostrar modo de mantenimiento en este prototipo</label>
+          <div class="admin-form-actions"><button class="admin-button primary" type="submit">Guardar ajustes</button><button class="admin-button secondary" type="button" data-action="test-gateway">Probar conexión de demostración</button></div>
+        </form>
+        <article class="admin-card admin-spaced"><div class="admin-card-heading"><div><h3>Datos locales</h3><p>Restaurar la muestra eliminará los cambios hechos en este navegador.</p></div><button class="admin-button danger" data-action="reset-demo">Restablecer datos de demostración</button></div></article>
+      </section>
+    </div>
+  </main>
+
+  <div class="admin-toast" id="adminToast" role="status" aria-live="polite"></div>
+  <div id="app-footer"></div>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/admin.js"></script>
+</body>
+</html>
